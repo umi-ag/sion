@@ -1,0 +1,6 @@
+service : {
+    "increment": () -> ();
+    "get": () -> (nat) query;
+    "set": (nat) -> ();
+    "pg": () -> (bool) query;
+}

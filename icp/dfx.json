@@ -1,0 +1,30 @@
+{
+  "canisters": {
+    "icpx_backend": {
+      "candid": "src/icpx_backend/icpx_backend.did",
+      "package": "icpx_backend",
+      "type": "rust"
+    },
+    "icpx_frontend": {
+      "dependencies": [
+        "icpx_backend"
+      ],
+      "frontend": {
+        "entrypoint": "src/icpx_frontend/src/index.html"
+      },
+      "source": [
+        "src/icpx_frontend/assets",
+        "dist/icpx_frontend/"
+      ],
+      "type": "assets"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}
