@@ -1,5 +1,7 @@
 # bbs-icp
 
+## TypeScript
+
 To install dependencies:
 
 ```bash
