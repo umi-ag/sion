@@ -754,6 +754,7 @@ version = "0.1.0"
 dependencies = [
  "bbs",
  "candid 0.8.4",
+ "hex",
  "ic-cdk",
  "ic-cdk-macros 0.8.1",
  "ic-cdk-timers",
