@@ -4,6 +4,16 @@ sh -ci "$(curl -fsSL https://internetcomputer.org/install.sh)"
 rustup target add wasm32-unknown-unknown
 '''
 
+[tasks.'start:local']
+script = '''
+dfx start --background
+'''
+
+[tasks.'stop:local']
+script = '''
+dfx stop
+'''
+
 [tasks.deploy]
 script = '''
 dfx deploy
