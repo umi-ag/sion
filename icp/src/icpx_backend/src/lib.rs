@@ -9,7 +9,7 @@ thread_local! {
 }
 
 #[ic_cdk_macros::query]
-fn verify(signature_str: String, pk_str: String, messages: Vec<String>) -> bool {
+fn verify_signature(signature_str: String, pk_str: String, messages: Vec<String>) -> bool {
     let pk = bbs_utils::pk_from_str(pk_str.to_string());
     let messages = messages
         .iter()

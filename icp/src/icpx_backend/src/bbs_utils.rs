@@ -18,7 +18,6 @@ pub fn verify_signature(
     let signature = Signature::from(fixed);
 
     let valid = signature.verify(messages.as_slice(), &pk).unwrap();
-    assert!(valid);
 
     valid
 }
