@@ -15,3 +15,4 @@ ic-cdk-timers = "0.1"                              # Feel free to remove this de
 serde = { version = "1.0", features = ["derive"] }
 ic-cdk-macros = "0.8.0"
 bbs = "0.4.1"
+hex = "0.4.3"
