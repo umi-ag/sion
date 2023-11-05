@@ -1,0 +1,4 @@
+[tasks."sd"]
+script = '''
+cargo run --example sd
+'''
