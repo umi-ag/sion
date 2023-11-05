@@ -85,7 +85,7 @@ fn pk_from_str(pk_str: String) -> bbs::prelude::PublicKey {
     pk
 }
 
-fn verify_signature(
+fn verify(
     signature_str: String,
     pk: &bbs::prelude::PublicKey,
     messages: &Vec<SignatureMessage>,
@@ -120,10 +120,24 @@ fn pg() -> bool {
     ];
 
     let pk = pk_from_str(pk_str.to_string());
-    let valid = verify_signature(signature_str.to_string(), &pk, &messages);
+    let valid = verify(signature_str.to_string(), &pk, &messages);
 
     // sign();
     // proof();
+    valid
+}
+
+#[ic_cdk_macros::query]
+fn verify_signature(signature_str: String, pk_str: String, messages: Vec<String>) -> bool {
+    let pk = pk_from_str(pk_str.to_string());
+    let messages = messages
+        .iter()
+        .map(|m| SignatureMessage::hash(m.as_bytes()))
+        .collect();
+    dbg!(&signature_str, &pk_str, &messages);
+
+    let valid = verify(signature_str.to_string(), &pk, &messages);
+
     valid
 }
 

@@ -4,6 +4,7 @@ use bbs::prelude::KeyGenOption;
 use bbs::prelude::ProofMessage;
 use bbs::prelude::PublicKey;
 use bbs::ProofChallenge;
+use bbs::SignatureProof;
 use bbs::ToVariableLengthBytes;
 use bbs::{
     pm_hidden, pm_revealed, prelude::Issuer, prover::Prover, signature::Signature,
@@ -117,6 +118,7 @@ fn proof() {
         pm_revealed!(b"message_4"),
         pm_hidden!(b"message_5"),
     ];
+    dbg!(proof_messages.get(0).unwrap().get_message());
 
     let pok = Prover::commit_signature_pok(&proof_request, proof_messages.as_slice(), &signature)
         .unwrap();
@@ -133,6 +135,10 @@ fn proof() {
     let proof = Prover::generate_signature_pok(pok, &challenge).unwrap();
     dbg!(&proof.revealed_messages);
     dbg!(&proof.proof);
+    let bytes = proof.proof.to_bytes_compressed_form();
+    dbg!(&bytes[475]);
+    let proof2 = SignatureProof::from_bytes_compressed_form(bytes).unwrap();
+    dbg!(proof2.proof);
 
     // Send `proof` and `challenge` to Verifier
 
@@ -183,13 +189,29 @@ fn pg2() {
     verify_signature(signature_str, &pk, &messages);
 }
 
+fn pg3(signature_str: String, pk_str: String, messages: Vec<String>) -> bool {
+    let pk = pk_from_str(pk_str.to_string());
+    let messages = messages
+        .iter()
+        .map(|m| SignatureMessage::hash(m.as_bytes()))
+        .collect();
+    dbg!(&signature_str, &pk_str, &messages);
+
+    let valid = verify_signature(signature_str.to_string(), &pk, &messages);
+
+    valid
+}
+
 fn main() {
-    pg();
-
+    // pg();
     // pg2();
-
+    pg3(
+        "a".to_string(),
+        "b".to_string(),
+        vec!["c".to_string(), "d".to_string()],
+    );
     // println!("Hello, world!");
-
     // sign();
+
     // proof();
 }
