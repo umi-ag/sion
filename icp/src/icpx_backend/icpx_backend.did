@@ -4,4 +4,5 @@ service : {
     "set": (nat) -> ();
     "pg": () -> (bool) query;
     "verify_signature": (text, text, vec text) -> (bool) query;
+    "verify_proof": (text, text, text) -> (bool) query;
 }
