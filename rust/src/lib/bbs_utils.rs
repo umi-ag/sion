@@ -1,6 +1,7 @@
 use bbs::prelude::PublicKey;
+use bbs::verifier::Verifier;
 use bbs::{signature::Signature, SignatureMessage};
-use bbs::{HashElem, ProofNonce, ToVariableLengthBytes};
+use bbs::{HashElem, ProofNonce, ProofRequest, SignatureProof, ToVariableLengthBytes};
 
 pub fn serialize<T: ToVariableLengthBytes>(to_serialize: &T) -> String {
     let bytes = to_serialize.to_bytes_compressed_form();
@@ -51,7 +52,6 @@ pub fn pk_from_str(pk_str: String) -> bbs::prelude::PublicKey {
 pub fn verify_signature(
     signature_str: String,
     pk: &bbs::prelude::PublicKey,
-    // messages: &Vec<SignatureMessage>,
     messages: &[SignatureMessage],
 ) -> bool {
     let signature_bytes = hex::decode(signature_str).unwrap();
@@ -60,6 +60,21 @@ pub fn verify_signature(
 
     let valid = signature.verify(messages, &pk).unwrap();
     assert!(valid);
+
+    valid
+}
+
+pub fn verify_proof(
+    proof: &SignatureProof,
+    proof_request: &ProofRequest,
+    nonce: &ProofNonce,
+) -> bool {
+    let valid = match Verifier::verify_signature_pok(&proof_request, &proof, nonce) {
+        Ok(_) => true,   // check revealed messages
+        Err(_) => false, // Why did the proof failed
+    };
+
+    dbg!("proof ok");
 
     valid
 }

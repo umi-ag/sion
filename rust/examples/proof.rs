@@ -1,12 +1,10 @@
 use bbs::prelude::HiddenMessage;
 use bbs::prelude::ProofMessage;
 use bbs::prelude::PublicKey;
-use bbs::prelude::SecretKey;
 use bbs::ProofChallenge;
 use bbs::ProofNonce;
 use bbs::ProofRequest;
 use bbs::SignatureProof;
-use bbs::ToVariableLengthBytes;
 use bbs::{
     pm_hidden, pm_revealed, prelude::Issuer, prover::Prover, signature::Signature,
     verifier::Verifier, HashElem, SignatureMessage,
@@ -120,12 +118,15 @@ fn main() {
     // dbg!(proof_str);
     let proof_str = bbs_utils::serialize(&proof);
     let proof2 = bbs_utils::deserialize::<SignatureProof>(&proof_str);
+    dbg!(proof_str);
 
     let proof_request_str = bbs_utils::serialize(&proof_request);
     let proof_request2 = bbs_utils::deserialize::<ProofRequest>(&proof_request_str);
+    dbg!(proof_request_str);
 
     let nonce_str = bbs_utils::serialize_nonce(&nonce);
     let nonce2 = bbs_utils::deserialize_nonce(&nonce_str);
+    dbg!(nonce_str);
 
     verify_proof(&proof2, &proof_request2, &nonce2);
 }
