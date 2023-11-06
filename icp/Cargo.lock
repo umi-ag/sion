@@ -759,6 +759,7 @@ dependencies = [
  "ic-cdk-macros 0.8.1",
  "ic-cdk-timers",
  "serde",
+ "sion",
 ]
 
 [[package]]
@@ -1416,6 +1417,14 @@ dependencies = [
  "cfg-if",
  "cpufeatures",
  "digest 0.10.7",
+]
+
+[[package]]
+name = "sion"
+version = "0.1.0"
+dependencies = [
+ "bbs",
+ "hex",
 ]
 
 [[package]]
