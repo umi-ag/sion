@@ -3,8 +3,6 @@ use candid::types::number::Nat;
 use sion::bbs_utils;
 use std::cell::RefCell;
 
-// mod bbs_utils;
-
 thread_local! {
     static COUNTER: RefCell<Nat> = RefCell::new(Nat::from(0));
 }
