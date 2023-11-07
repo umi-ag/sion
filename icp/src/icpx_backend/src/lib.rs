@@ -23,14 +23,14 @@ fn verify_proof(
     nonce_str: String,
     challenge_hash: String,
 ) -> bool {
-    let proof = sion::proof::SignatureProof::from_str(&proof_str).unwrap();
-    let proof_request = sion::proof_request::ProofRequest::from_str(&proof_request_str).unwrap();
-    let nonce = sion::nonce::ProofNonce::from_str(&nonce_str).unwrap();
-
-    let (valid, verifier_challenge_hash) =
-        sion::verifier::verify_proof(&proof, &proof_request, &nonce, &[]);
-
-    valid && (challenge_hash == verifier_challenge_hash.to_string())
+    let valid = sion::entry::verify_proof(
+        proof_str.as_str(),
+        proof_request_str.as_str(),
+        nonce_str.as_str(),
+        challenge_hash.as_str(),
+        &[],
+    );
+    valid
 }
 
 #[ic_cdk_macros::query]
