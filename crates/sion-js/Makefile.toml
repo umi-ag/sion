@@ -3,6 +3,20 @@ script = '''
 curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
 '''
 
+[tasks.hot]
+dependencies = [
+  "release:js",
+  "test:js",
+]
+
+[tasks."test:js"]
+script = '''
+cd examples/nodejs
+pnpm i
+bun run scripts/verify_signature.js
+bun run scripts/verify_proof.js
+'''
+
 [tasks."build:js"]
 script = '''
 wasm-pack build --target nodejs
