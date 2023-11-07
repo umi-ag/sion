@@ -28,4 +28,7 @@ fn main() {
         sion::verifier::verify_proof(&proof, &proof_request, &proof_nonce, &claims);
     assert_eq!(prover_challenge_hash, verifier_challenge_hash);
     dbg!(res);
+
+    dbg!("proof", &proof.to_string());
+    dbg!("proof_request", &proof_request.to_string());
 }
