@@ -10,5 +10,5 @@ path = "src/lib/mod.rs"
 
 [dependencies]
 bbs = "0.4.1"
-bbs_plus = "0.16.0"
+# bbs_plus = "0.16.0"
 hex = "0.4.3"
