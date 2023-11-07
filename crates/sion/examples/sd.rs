@@ -1,3 +1,14 @@
+// use serde::{Deserialize, Serialize};
+
+// #[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug)]
+struct VerifierTuple {
+    proof: String,
+    request: String,
+    nonce: String,
+    challenge: String,
+}
+
 fn main() {
     // Issuer generates a signature
     let issuer = sion::issuer::IssuerModule::new(5);
@@ -29,6 +40,12 @@ fn main() {
     assert_eq!(prover_challenge_hash, verifier_challenge_hash);
     dbg!(res);
 
-    dbg!("proof", &proof.to_string());
-    dbg!("proof_request", &proof_request.to_string());
+    let tuple = VerifierTuple {
+        proof: proof.to_string(),
+        request: proof_request.to_string(),
+        nonce: proof_nonce.to_string(),
+        challenge: prover_challenge_hash.to_string(),
+    };
+
+    dbg!(tuple);
 }

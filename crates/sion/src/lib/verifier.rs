@@ -1,8 +1,9 @@
 use bbs::HashElem;
-use bbs::{prelude::PublicKey, verifier::Verifier, ProofChallenge, SignatureMessage};
+use bbs::{prelude::PublicKey, verifier::Verifier, SignatureMessage};
 
 use crate::nonce::ProofNonce;
 use crate::proof::SignatureProof;
+use crate::proof_challenge::ProofChallenge;
 use crate::proof_request::ProofRequest;
 use crate::signature::Signature;
 
@@ -44,6 +45,7 @@ pub fn verify_proof(
         Some(claims),
     )
     .unwrap();
+
     let res = proof
         .inner()
         .proof
@@ -53,5 +55,6 @@ pub fn verify_proof(
             &challenge,
         )
         .is_ok();
-    (res, challenge)
+
+    (res, ProofChallenge::from(challenge))
 }

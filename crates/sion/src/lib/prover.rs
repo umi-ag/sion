@@ -2,12 +2,12 @@ use bbs::prelude::HiddenMessage;
 use bbs::prelude::ProofMessage;
 use bbs::prover::Prover;
 use bbs::HashElem;
-use bbs::ProofChallenge;
 use bbs::SignatureMessage;
 use bbs::{pm_hidden, pm_revealed};
 
 use crate::nonce::ProofNonce;
 use crate::proof::SignatureProof;
+use crate::proof_challenge::ProofChallenge;
 use crate::proof_request::ProofRequest;
 use crate::signature::Signature;
 
@@ -36,5 +36,5 @@ pub fn generate_pok(
     let challenge =
         Prover::create_challenge_hash(&[pok.clone()], Some(&claims), nonce.inner()).unwrap();
     let proof = SignatureProof::new(pok, &challenge);
-    (proof, challenge)
+    (proof, ProofChallenge::from(challenge))
 }
