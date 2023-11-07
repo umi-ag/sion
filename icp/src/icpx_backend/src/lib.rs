@@ -1,6 +1,5 @@
 use candid::types::number::Nat;
-use sion::bbs_utils;
-use std::{cell::RefCell, str::FromStr};
+use std::cell::RefCell;
 
 thread_local! {
     static COUNTER: RefCell<Nat> = RefCell::new(Nat::from(0));
@@ -8,11 +7,8 @@ thread_local! {
 
 #[ic_cdk_macros::query]
 fn verify_signature(signature_str: String, pk_str: String, messages: Vec<String>) -> bool {
-    let signature = sion::signature::Signature::from_str(signature_str.as_str()).unwrap();
-    let pk = bbs_utils::pk_from_str(pk_str.to_string());
     let msgs: Vec<&str> = messages.iter().map(AsRef::as_ref).collect();
-
-    let valid = sion::verifier::verify_signature(&signature, &pk, &msgs);
+    let valid = sion::entry::verify_signature(signature_str.as_str(), pk_str.as_str(), &msgs);
     valid
 }
 
@@ -30,17 +26,6 @@ fn verify_proof(
         challenge_hash.as_str(),
         &[],
     );
-    valid
-}
-
-#[ic_cdk_macros::query]
-fn verify_proof_old(proof_str: String, proof_request_str: String, nonce_str: String) -> bool {
-    let proof = sion::proof::SignatureProof::from_str(&proof_str).unwrap();
-    let proof_request = sion::proof_request::ProofRequest::from_str(&proof_request_str).unwrap();
-    let nonce = sion::nonce::ProofNonce::from_str(&nonce_str).unwrap();
-
-    let (valid, _) = sion::verifier::verify_proof(&proof, &proof_request, &nonce, &[]);
-
     valid
 }
 

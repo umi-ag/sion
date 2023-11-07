@@ -15,7 +15,7 @@ pub fn deserialize<T: ToVariableLengthBytes>(
     r.ok().unwrap()
 }
 
-pub fn pk_from_str(pk_str: String) -> bbs::prelude::PublicKey {
+pub fn pk_from_str(pk_str: &str) -> bbs::prelude::PublicKey {
     let pk_bytes = hex::decode(pk_str).unwrap();
     let pk = PublicKey::from_bytes_compressed_form(pk_bytes).unwrap();
     pk
