@@ -1,7 +1,6 @@
-use bbs::{HashElem, ProofRequest, SignatureMessage, SignatureProof};
 use candid::types::number::Nat;
 use sion::bbs_utils;
-use std::cell::RefCell;
+use std::{cell::RefCell, str::FromStr};
 
 thread_local! {
     static COUNTER: RefCell<Nat> = RefCell::new(Nat::from(0));
@@ -9,24 +8,38 @@ thread_local! {
 
 #[ic_cdk_macros::query]
 fn verify_signature(signature_str: String, pk_str: String, messages: Vec<String>) -> bool {
+    let signature = sion::signature::Signature::from_str(signature_str.as_str()).unwrap();
     let pk = bbs_utils::pk_from_str(pk_str.to_string());
-    let messages: Vec<SignatureMessage> = messages
-        .iter()
-        .map(|m| SignatureMessage::hash(m.as_bytes()))
-        .collect();
+    let msgs: Vec<&str> = messages.iter().map(AsRef::as_ref).collect();
 
-    let valid = bbs_utils::verify_signature(signature_str.to_string(), &pk, &messages);
-
+    let valid = sion::verifier::verify_signature(&signature, &pk, &msgs);
     valid
 }
 
 #[ic_cdk_macros::query]
-fn verify_proof(proof_str: String, proof_request_str: String, nonce_str: String) -> bool {
-    let proof = bbs_utils::deserialize::<SignatureProof>(&proof_str);
-    let proof_request = bbs_utils::deserialize::<ProofRequest>(&proof_request_str);
-    let nonce = bbs_utils::deserialize_nonce(&nonce_str);
+fn verify_proof(
+    proof_str: String,
+    proof_request_str: String,
+    nonce_str: String,
+    challenge_hash: String,
+) -> bool {
+    let proof = sion::proof::SignatureProof::from_str(&proof_str).unwrap();
+    let proof_request = sion::proof_request::ProofRequest::from_str(&proof_request_str).unwrap();
+    let nonce = sion::nonce::ProofNonce::from_str(&nonce_str).unwrap();
 
-    let valid = bbs_utils::verify_proof(&proof, &proof_request, &nonce);
+    let (valid, verifier_challenge_hash) =
+        sion::verifier::verify_proof(&proof, &proof_request, &nonce, &[]);
+
+    valid && (challenge_hash == verifier_challenge_hash.to_string())
+}
+
+#[ic_cdk_macros::query]
+fn verify_proof_old(proof_str: String, proof_request_str: String, nonce_str: String) -> bool {
+    let proof = sion::proof::SignatureProof::from_str(&proof_str).unwrap();
+    let proof_request = sion::proof_request::ProofRequest::from_str(&proof_request_str).unwrap();
+    let nonce = sion::nonce::ProofNonce::from_str(&nonce_str).unwrap();
+
+    let (valid, _) = sion::verifier::verify_proof(&proof, &proof_request, &nonce, &[]);
 
     valid
 }
