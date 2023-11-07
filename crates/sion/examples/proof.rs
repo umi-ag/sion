@@ -124,9 +124,9 @@ fn main() {
     let proof_request2 = bbs_utils::deserialize::<ProofRequest>(&proof_request_str);
     dbg!(proof_request_str);
 
-    let nonce_str = bbs_utils::serialize_nonce(&nonce);
-    let nonce2 = bbs_utils::deserialize_nonce(&nonce_str);
-    dbg!(nonce_str);
+    // let nonce_str = bbs_utils::serialize_nonce(&nonce);
+    // let nonce2 = bbs_utils::deserialize_nonce(&nonce_str);
+    // dbg!(nonce_str);
 
-    verify_proof(&proof2, &proof_request2, &nonce2);
+    // verify_proof(&proof2, &proof_request2, &nonce2);
 }

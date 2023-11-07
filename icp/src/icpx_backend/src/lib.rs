@@ -1,6 +1,4 @@
-use bbs::{HashElem, ProofRequest, SignatureMessage, SignatureProof};
 use candid::types::number::Nat;
-use sion::bbs_utils;
 use std::cell::RefCell;
 
 thread_local! {
@@ -9,25 +7,25 @@ thread_local! {
 
 #[ic_cdk_macros::query]
 fn verify_signature(signature_str: String, pk_str: String, messages: Vec<String>) -> bool {
-    let pk = bbs_utils::pk_from_str(pk_str.to_string());
-    let messages: Vec<SignatureMessage> = messages
-        .iter()
-        .map(|m| SignatureMessage::hash(m.as_bytes()))
-        .collect();
-
-    let valid = bbs_utils::verify_signature(signature_str.to_string(), &pk, &messages);
-
+    let msgs: Vec<&str> = messages.iter().map(AsRef::as_ref).collect();
+    let valid = sion::entry::verify_signature(signature_str.as_str(), pk_str.as_str(), &msgs);
     valid
 }
 
 #[ic_cdk_macros::query]
-fn verify_proof(proof_str: String, proof_request_str: String, nonce_str: String) -> bool {
-    let proof = bbs_utils::deserialize::<SignatureProof>(&proof_str);
-    let proof_request = bbs_utils::deserialize::<ProofRequest>(&proof_request_str);
-    let nonce = bbs_utils::deserialize_nonce(&nonce_str);
-
-    let valid = bbs_utils::verify_proof(&proof, &proof_request, &nonce);
-
+fn verify_proof(
+    proof_str: String,
+    proof_request_str: String,
+    nonce_str: String,
+    challenge_hash: String,
+) -> bool {
+    let valid = sion::entry::verify_proof(
+        proof_str.as_str(),
+        proof_request_str.as_str(),
+        nonce_str.as_str(),
+        challenge_hash.as_str(),
+        &[],
+    );
     valid
 }
 
