@@ -1,74 +1,31 @@
-use bbs::prover::Prover;
-use bbs::signature::Signature;
-use bbs::verifier::Verifier;
-
-use bbs::prelude::HiddenMessage;
-use bbs::prelude::Issuer;
-use bbs::prelude::ProofMessage;
-use bbs::HashElem;
-use bbs::SignatureMessage;
-use bbs::{pm_hidden, pm_revealed, ToVariableLengthBytes};
-
 fn main() {
-    //issue credential
-    let (pk, sk) = Issuer::new_keys(5).unwrap();
+    // Issuer generates a signature
+    let issuer = sion::issuer::IssuerModule::new(5);
     let messages = vec![
-        SignatureMessage::hash(b"message_1"),
-        SignatureMessage::hash(b"message_2"),
-        SignatureMessage::hash(b"message_3"),
-        SignatureMessage::hash(b"message_4"),
-        SignatureMessage::hash(b"message_5"),
+        "message_1",
+        "message_2",
+        "message_3",
+        "message_4",
+        "message_5",
     ];
+    let signature = issuer.generate_signature(&messages);
 
-    let signature = Signature::new(messages.as_slice(), &sk, &pk).unwrap();
-
-    //verifier requests credential
-    let nonce = Verifier::generate_proof_nonce();
-    let proof_request = Verifier::new_proof_request(&[1, 3], &pk).unwrap();
-
-    // Sends `proof_request` and `nonce` to the prover
-    let proof_messages = vec![
-        pm_hidden!(b"message_1"),
-        pm_revealed!(b"message_2"),
-        pm_hidden!(b"message_3"),
-        pm_revealed!(b"message_4"),
-        pm_hidden!(b"message_5"),
-    ];
-
-    // prover creates pok for proof request
-    let pok = Prover::commit_signature_pok(&proof_request, proof_messages.as_slice(), &signature)
-        .unwrap();
-
+    // Verifier requests a proof
+    let disclosure_request = [1, 3];
+    let (proof_request, proof_nonce) =
+        sion::verifier::request_proof(&disclosure_request, issuer.pk());
     let claims = vec![
-        // "self-attested claim1".as_bytes(),
-        // "self-attested claim2".as_bytes(),
+        "self-attested claim1".as_bytes(),
+        "self-attested claim2".as_bytes(),
     ];
 
-    // complete other zkps as desired and compute `challenge_hash`
-    let challenge =
-        Prover::create_challenge_hash(&[pok.clone()], Some(claims.as_slice()), &nonce).unwrap();
+    // Prover generates a proof
+    let (proof, prover_challenge_hash) =
+        sion::prover::generate_pok(&signature, &proof_request, &proof_nonce, &messages, &claims);
 
-    let proof = Prover::generate_signature_pok(pok, &challenge).unwrap();
-
-    // Send `proof`, `claims`, and `challenge` to Verifier
-
-    // Verifier creates their own challenge bytes using proof, proof_request, claims, and nonce
-    let ver_challenge = Verifier::create_challenge_hash(
-        &[proof.clone()],
-        &[proof_request.clone()],
-        &nonce,
-        Some(claims.as_slice()),
-    )
-    .unwrap();
-
-    assert_eq!(challenge, ver_challenge);
-
-    // Verifier checks proof1
-    let res = proof.proof.verify(
-        &proof_request.verification_key,
-        &proof.revealed_messages,
-        &ver_challenge,
-    );
-
-    dbg!(&res);
+    // Verifier verifies the proof
+    let (res, verifier_challenge_hash) =
+        sion::verifier::verify_proof(&proof, &proof_request, &proof_nonce, &claims);
+    assert_eq!(prover_challenge_hash, verifier_challenge_hash);
+    dbg!(res);
 }
