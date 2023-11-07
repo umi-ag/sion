@@ -3,7 +3,7 @@ use std::str::FromStr;
 pub fn verify_signature(signature_str: &str, pk_str: &str, messages: &[&str]) -> bool {
     let signature = crate::signature::Signature::from_str(signature_str).unwrap();
     let pk = crate::bbs_utils::pk_from_str(pk_str);
-    let valid = crate::verifier::verify_signature(&signature, &pk, messages);
+    let valid = crate::verifier::verify_signature(&signature, &pk, &messages);
     valid
 }
 

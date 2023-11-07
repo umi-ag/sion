@@ -1,0 +1,6 @@
+[workspace]
+members = [
+  "crates/sion",
+  "crates/sion-js",
+]
+resolver = "2"
