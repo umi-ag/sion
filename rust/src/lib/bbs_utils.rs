@@ -24,21 +24,28 @@ pub fn verify_signature(
     valid
 }
 
-pub fn gen_signature(
+pub fn gen_signature_str(
     pk: &bbs::prelude::PublicKey,
     sk: &bbs::prelude::SecretKey,
     messages: &[&str],
 ) -> String {
+    let signature = gen_signature(pk, sk, messages);
+    let bytes = Signature::to_bytes_compressed_form(&signature);
+    let str = hex::encode(bytes);
+    str
+}
+
+pub fn gen_signature(
+    pk: &bbs::prelude::PublicKey,
+    sk: &bbs::prelude::SecretKey,
+    messages: &[&str],
+) -> Signature {
     let msgs = messages
         .iter()
         .map(|m| SignatureMessage::hash(m.as_bytes()))
         .collect::<Vec<SignatureMessage>>();
     let signature = Signature::new(msgs.as_slice(), &sk, &pk).unwrap();
-    println!("gen {}", &signature.to_string());
-    // Signature::from(&signature);
-    let bytes = Signature::to_bytes_compressed_form(&signature);
-    let str = hex::encode(bytes);
-    str
+    signature
 }
 
 pub fn verify(signature_str: String, pk_str: String, messages: &[&str]) -> bool {

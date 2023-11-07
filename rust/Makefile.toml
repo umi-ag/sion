@@ -2,3 +2,8 @@
 script = '''
 cargo run --example sd
 '''
+
+[tasks."sig"]
+script = '''
+cargo run --example sig
+'''
