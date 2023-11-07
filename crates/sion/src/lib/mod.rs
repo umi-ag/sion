@@ -1,4 +1,5 @@
 pub mod bbs_utils;
+pub mod entry;
 pub mod issuer;
 pub mod nonce;
 pub mod proof;

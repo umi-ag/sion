@@ -26,8 +26,8 @@ fn main() {
     let (proof_request, proof_nonce) =
         sion::verifier::request_proof(&disclosure_request, issuer.pk());
     let claims = vec![
-        "self-attested claim1".as_bytes(),
-        "self-attested claim2".as_bytes(),
+        // "self-attested claim1".as_bytes(),
+        // "self-attested claim2".as_bytes(),
     ];
 
     // Prover generates a proof
@@ -39,6 +39,12 @@ fn main() {
         sion::verifier::verify_proof(&proof, &proof_request, &proof_nonce, &claims);
     assert_eq!(prover_challenge_hash, verifier_challenge_hash);
     dbg!(res);
+
+    dbg!(&verifier_challenge_hash, &prover_challenge_hash);
+    dbg!(
+        &verifier_challenge_hash.to_string(),
+        &prover_challenge_hash.to_string()
+    );
 
     let tuple = VerifierTuple {
         proof: proof.to_string(),
