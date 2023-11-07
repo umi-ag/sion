@@ -9,12 +9,8 @@
       "dependencies": [
         "icpx_backend"
       ],
-      "frontend": {
-        "entrypoint": "src/icpx_frontend/src/index.html"
-      },
       "source": [
-        "src/icpx_frontend/assets",
-        "dist/icpx_frontend/"
+        "src/icpx_frontend/assets"
       ],
       "type": "assets"
     }
