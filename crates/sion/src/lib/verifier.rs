@@ -1,6 +1,7 @@
 use bbs::HashElem;
-use bbs::{prelude::PublicKey, verifier::Verifier, SignatureMessage};
+use bbs::{verifier::Verifier, SignatureMessage};
 
+use crate::keys::PublicKey;
 use crate::nonce::ProofNonce;
 use crate::proof::SignatureProof;
 use crate::proof_challenge::ProofChallenge;
@@ -16,17 +17,13 @@ pub fn request_proof(
     (proof_request, nonce)
 }
 
-pub fn verify_signature(
-    signature: &Signature,
-    pk: &bbs::prelude::PublicKey,
-    messages: &[&str],
-) -> bool {
+pub fn verify_signature(signature: &Signature, pk: &PublicKey, messages: &[&str]) -> bool {
     let msgs = messages
         .iter()
         .map(|m| SignatureMessage::hash(m.as_bytes()))
         .collect::<Vec<SignatureMessage>>();
 
-    let valid = signature.inner().verify(&msgs, pk).unwrap();
+    let valid = signature.inner().verify(&msgs, &pk.0).unwrap();
     assert!(valid);
 
     valid
