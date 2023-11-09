@@ -1,3 +1,5 @@
+use sion::proof_challenge;
+
 #[derive(Debug)]
 struct VerifierTuple {
     proof: String,

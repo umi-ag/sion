@@ -5,6 +5,29 @@ pub fn generate_keypair(message_count: usize) -> (String, String) {
     (keypair.pk().to_string(), keypair.sk().to_string())
 }
 
+pub fn request_proof(revealed_indices: &[usize], issuer_pk: &str) -> (String, String) {
+    let pk = crate::keys::PublicKey::from_str(issuer_pk).unwrap();
+    let (proof_request, nonce) = crate::verifier::request_proof(revealed_indices, &pk);
+    (proof_request.to_string(), nonce.to_string())
+}
+
+pub fn generate_pok(
+    signature_str: &str,
+    proof_request_str: &str,
+    nonce_str: &str,
+    messages: &[&str],
+    claims: &[&[u8]],
+) -> (String, String) {
+    let signature = crate::signature::Signature::from_str(signature_str).unwrap();
+    let proof_request = crate::proof_request::ProofRequest::from_str(proof_request_str).unwrap();
+    let nonce = crate::nonce::ProofNonce::from_str(nonce_str).unwrap();
+
+    let (proof, challenge) =
+        crate::prover::generate_pok(&signature, &proof_request, &nonce, messages, claims);
+
+    (proof.to_string(), challenge.to_string())
+}
+
 pub fn generate_signature(messages: &[&str], sk_str: &str, pk_str: &str) -> String {
     let sk = crate::keys::SecretKey::from_str(sk_str).unwrap();
     let pk = crate::keys::PublicKey::from_str(pk_str).unwrap();
