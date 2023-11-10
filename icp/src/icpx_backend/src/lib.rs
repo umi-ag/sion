@@ -6,6 +6,13 @@ thread_local! {
 }
 
 #[ic_cdk_macros::query]
+fn generate_signature(sk_str: String, pk_str: String, messages: Vec<String>) -> String {
+    let msgs: Vec<&str> = messages.iter().map(AsRef::as_ref).collect();
+    let signature = sion::entry::generate_signature(&msgs, sk_str.as_str(), &pk_str);
+    signature
+}
+
+#[ic_cdk_macros::query]
 fn verify_signature(signature_str: String, pk_str: String, messages: Vec<String>) -> bool {
     let msgs: Vec<&str> = messages.iter().map(AsRef::as_ref).collect();
     let valid = sion::entry::verify_signature(signature_str.as_str(), pk_str.as_str(), &msgs);

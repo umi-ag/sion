@@ -21,13 +21,3 @@ wasm-bindgen-test = "0.3.13"
 [profile.release]
 # Tell `rustc` to optimize for small code size.
 opt-level = "s"
-
-[target.'cfg(target_arch = "wasm32")']
-atomics = true
-bulk-memory = true
-
-[target.wasm32-unknown-unknown]
-rustflags = [
-  "-C",
-  "target-feature=+atomics,+bulk-memory",
-]

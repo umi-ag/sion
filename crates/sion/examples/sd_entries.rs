@@ -7,7 +7,7 @@ struct VerifierTuple {
 }
 
 fn main() {
-    let (pk, sk) = sion::entry::generate_keypair(5);
+    let (pk, sk) = sion::entry::generate_keypair(4);
     let messages = vec![
         "message_1",
         "message_2",

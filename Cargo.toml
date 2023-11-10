@@ -1,6 +1,7 @@
 [workspace]
 members = [
+  "crates/bbs",
   "crates/sion",
-  "crates/sion-js",
+  "crates/sion-js", # "astar-wasm",
 ]
 resolver = "2"
