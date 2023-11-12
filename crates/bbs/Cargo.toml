@@ -1,0 +1,47 @@
+[package]
+authors = ["The Hyperledger Ursa Contributors"]
+description = "The BBS+ signature scheme"
+documentation = "https://docs.rs/bbs"
+edition = "2018"
+license = "Apache-2.0"
+name = "bbs"
+readme = "README.md"
+repository = "https://github.com/hyperledger/ursa"
+version = "0.4.2"
+
+[badges]
+maintenance = {status = "actively-developed"}
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[features]
+default = []
+ink-as-dependency = []
+std = [
+  "ink/std",
+  "scale/std",
+  "scale-info/std",
+]
+wasm = ["serde-wasm-bindgen", "wasm-bindgen"]
+
+[dependencies]
+arrayref = "0.3"
+blake2 = "0.8"
+failure = "0.1"
+ff-zeroize = "0.6"
+hex = "0.4"
+hkdf = "0.8"
+ink = {version = "4.3.0", default-features = false}
+pairing-plus = "0.19"
+rand = "0.7"
+scale = {package = "parity-scale-codec", version = "3", default-features = false, features = ["derive"]}
+scale-info = {version = "2.9", default-features = false, features = ["derive"], optional = true}
+# rayon = "1.8.0"
+serde = {version = "1.0", features = ["serde_derive"]}
+serde-wasm-bindgen = {version = "0.1", optional = true}
+subtle = "2.2"
+wasm-bindgen = {version = "0.2", optional = true}
+zeroize = "1.1"
+
+[dev-dependencies]

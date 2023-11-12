@@ -9,7 +9,18 @@ name = "sion"
 path = "src/lib/mod.rs"
 
 [dependencies]
-bbs = "0.4.1"
-# bbs_plus = "0.16.0"
+bbs = {path = "../bbs", features = ["wasm"]}
 hex = "0.4.3"
+ink = {version = "4.3.0", default-features = false}
+scale = {package = "parity-scale-codec", version = "3", default-features = false, features = ["derive"]}
+scale-info = {version = "2.9", default-features = false, features = ["derive"], optional = true}
 # serde = {version = "1.0", default-features = false, features = ["alloc"]}
+
+[features]
+default = []
+ink-as-dependency = []
+std = [
+  "ink/std",
+  "scale/std",
+  "scale-info/std",
+]

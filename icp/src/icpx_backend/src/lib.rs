@@ -1,8 +1,16 @@
+// use bbs_plus::prelude::*;
 use candid::types::number::Nat;
 use std::cell::RefCell;
 
 thread_local! {
     static COUNTER: RefCell<Nat> = RefCell::new(Nat::from(0));
+}
+
+#[ic_cdk_macros::query]
+fn generate_signature(sk_str: String, pk_str: String, messages: Vec<String>) -> String {
+    let msgs: Vec<&str> = messages.iter().map(AsRef::as_ref).collect();
+    let signature = sion::entry::generate_signature(&msgs, sk_str.as_str(), &pk_str);
+    signature
 }
 
 #[ic_cdk_macros::query]

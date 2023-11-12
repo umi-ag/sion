@@ -1,0 +1,16 @@
+[0m[38;5;8m[[0m2023-11-12T15:35:47.274951000Z [0m[32mINFO [0m solana_test_validator[0m[38;5;8m][0m solana-validator 1.16.19 (src:a2847d09; feat:4033350765, client:SolanaLabs)
+[0m[38;5;8m[[0m2023-11-12T15:35:47.275036000Z [0m[32mINFO [0m solana_test_validator[0m[38;5;8m][0m Starting validator with: ArgsOs {
+        inner: [
+            "solana-test-validator",
+        ],
+    }
+[0m[38;5;8m[[0m2023-11-12T15:35:47.275281000Z [0m[33mWARN [0m solana_perf[0m[38;5;8m][0m CUDA is disabled
+[0m[38;5;8m[[0m2023-11-12T15:35:47.301499000Z [0m[32mINFO [0m solana_faucet::faucet[0m[38;5;8m][0m Faucet started. Listening on: 0.0.0.0:9900
+[0m[38;5;8m[[0m2023-11-12T15:35:47.301528000Z [0m[32mINFO [0m solana_faucet::faucet[0m[38;5;8m][0m Faucet account address: 8diEVbAw8cGUXymHTJ6PHJYvJNpm5Q7NAW1muePCkXkf
+[0m[38;5;8m[[0m2023-11-12T15:35:47.314091000Z [0m[32mINFO [0m solana_validator::admin_rpc_service[0m[38;5;8m][0m started admin rpc service!
+[0m[38;5;8m[[0m2023-11-12T15:35:47.330103000Z [0m[32mINFO [0m solana_ledger::blockstore[0m[38;5;8m][0m Maximum open file descriptors: 1000000
+[0m[38;5;8m[[0m2023-11-12T15:35:47.330294000Z [0m[32mINFO [0m solana_ledger::blockstore[0m[38;5;8m][0m Opening database at "test-ledger/rocksdb"
+[0m[38;5;8m[[0m2023-11-12T15:35:47.426645000Z [0m[32mINFO [0m solana_ledger::blockstore[0m[38;5;8m][0m "test-ledger/rocksdb" open took 96ms
+[0m[38;5;8m[[0m2023-11-12T15:35:47.454740000Z [0m[32mINFO [0m solana_metrics::metrics[0m[38;5;8m][0m metrics disabled: SOLANA_METRICS_CONFIG: environment variable not found
+[0m[38;5;8m[[0m2023-11-12T15:35:47.455133000Z [0m[32mINFO [0m solana_metrics::metrics[0m[38;5;8m][0m datapoint: shred_insert_is_full total_time_ms=1i slot=0i last_index=3i num_repaired=0i num_recovered=0i
+[0m[38;5;8m[[0m2023-11-12T15:35:47.574631000Z [0m[32mINFO [0m solana_runtime::hardened_unpack[0m[38;5;8m][0m Extracting "test-ledger/genesis.tar.bz2"...

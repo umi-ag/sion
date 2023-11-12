@@ -1,0 +1,27 @@
+[tasks.'install:cargo-contract']
+script = '''
+# Do not run: cargo install cargo-contract, the version is v3 and old
+# Run install v4
+cargo install --git https://github.com/paritytech/cargo-contract --branch master cargo-contract
+'''
+
+[tasks."open"]
+script = '''
+open "https://shibuya.subscan.io/extrinsic/0xf1c3805ca70e2e46f9b73f89b32dee0dc644162a993746347fa9f7e1f16a56b3"
+'''
+
+[tasks."build:sol"]
+script = '''
+bun run build
+'''
+
+[tasks."deploy:wasm"]
+script = '''
+open "https://contracts-ui.substrate.io/?rpc=wss://rpc.shibuya.astar.network"
+open target/ink/
+'''
+
+[tasks."release:wasm"]
+script = '''
+cargo contract build --release
+'''

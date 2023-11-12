@@ -1,0 +1,8 @@
+{
+  "name": "@coral-xyz/monorepo",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "tests"
+  ]
+}
