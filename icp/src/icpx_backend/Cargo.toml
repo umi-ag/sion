@@ -9,7 +9,9 @@ version = "0.1.0"
 crate-type = ["cdylib"]
 
 [dependencies]
+anoncreds = {git = "https://github.com/berendsliedrecht/anoncreds-rs", branch = "wasm", default-features = false, features = ["wasm"]} 
 bbs = "0.4.1" 
+bbs_plus = {version = "*", default-features = false} 
 candid = "0.8" 
 hex = "0.4.3" 
 ic-cdk = "0.7" 
