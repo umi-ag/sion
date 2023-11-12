@@ -2,5 +2,6 @@
 members = [
   "crates/sion",
   "crates/sion-js",
+  "crates/anoncreds-rs", # "crates/anchor",
 ]
 resolver = "2"

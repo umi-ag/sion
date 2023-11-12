@@ -1,0 +1,4 @@
+[tasks."deploy:production"]
+script = '''
+adf
+'''
