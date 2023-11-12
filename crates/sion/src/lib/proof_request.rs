@@ -1,15 +1,15 @@
-use bbs::prelude::PublicKey;
 use std::fmt;
 use std::str::FromStr;
 
 use crate::bbs_utils;
+use crate::keys::PublicKey;
 
 #[derive(Debug)]
 pub struct ProofRequest(bbs::ProofRequest);
 
 impl ProofRequest {
     pub fn new(revealed_indices: &[usize], pk: &PublicKey) -> Self {
-        let request = bbs::verifier::Verifier::new_proof_request(revealed_indices, pk).unwrap();
+        let request = bbs::verifier::Verifier::new_proof_request(revealed_indices, &pk.0).unwrap();
         Self(request)
     }
 

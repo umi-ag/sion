@@ -1,3 +1,5 @@
+use sion::proof_challenge;
+
 #[derive(Debug)]
 struct VerifierTuple {
     proof: String,
@@ -8,7 +10,7 @@ struct VerifierTuple {
 
 fn main() {
     // Issuer generates a signature
-    let issuer = sion::issuer::IssuerModule::new(5);
+    let issuer = sion::keys::KeyPair::new(5);
     let messages = vec![
         "message_1",
         "message_2",
@@ -16,7 +18,7 @@ fn main() {
         "message_4",
         "message_5",
     ];
-    let signature = issuer.generate_signature(&messages);
+    let signature = sion::issuer::generate_signature(&messages, issuer.sk(), issuer.pk());
 
     // Verifier requests a proof
     let disclosure_request = [1, 3];
