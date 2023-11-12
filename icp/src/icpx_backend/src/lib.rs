@@ -1,3 +1,4 @@
+// use bbs_plus::prelude::*;
 use candid::types::number::Nat;
 use std::cell::RefCell;
 

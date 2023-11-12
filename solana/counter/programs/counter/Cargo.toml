@@ -1,0 +1,35 @@
+[package]
+description = "Created with Anchor"
+edition = "2021"
+name = "counter"
+resolver = "2"
+version = "0.1.0"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "counter"
+
+[features]
+cpi = ["no-entrypoint"]
+default = []
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+
+[_dependencies]
+anchor-lang = "0.29.0"
+bbs_plus = {version = "*", features = ["std"], default-features = false}
+
+[dependencies]
+anchor-lang = {path = "../../../../crates/anchor/lang"}
+# anoncreds = {git = "https://github.com/berendsliedrecht/anoncreds-rs", branch = "wasm", default-features = false, features = ["wasm"]}
+# bbs_plus = {version = "*", default-features = false}
+# anoncreds = {git = "https://github.com/hyperledger/anoncreds-rs", no-default-features = true}
+# anoncreds = {git = "https://github.com/berendsliedrecht/anoncreds-rs", branch = "wasm", no-default-features = true, features = ["wasm"]}
+anoncreds = {path = "../../../../crates/anoncreds-wasm", default-features = false, features = ["wasm"]}
+
+# [dependencies]
+# anchor-lang = {path = "../../../../crates/anchor/lang"}
+# # anoncreds = {path = "../../../../crates/anoncreds-rs"}
+# anoncreds = {git = "https://github.com/hyperledger/anoncreds-rs", no-default-features = true}
+# bbs_plus = {version = "*", features = ["std"], default-features = false}
