@@ -1,0 +1,40 @@
+[env]
+ACCOUNT = "dev-1699903324054-39939793685574"
+
+[tasks."new-project"]
+script = '''
+bunx create-near-app@latest
+'''
+
+[tasks."setup"]
+script = """
+rustup target add wasm32-unknown-unknown
+"""
+
+[tasks."build:wasm"]
+script = '''
+cargo build --target wasm32-unknown-unknown
+'''
+
+[tasks."test:wasm"]
+script = '''
+cargo test
+cd sandbox-rs
+cargo run --example sandbox "../target/wasm32-unknown-unknown/release/hello_near.wasm"
+'''
+
+[tasks.deploy]
+script = '''
+cargo build --target wasm32-unknown-unknown --release
+bunx near-cli dev-deploy --wasmFile ./target/wasm32-unknown-unknown/release/hello_near.wasm
+'''
+
+[tasks."call:get_count"]
+script = '''
+bunx near-cli view ${ACCOUNT} get_count '{}'
+'''
+
+[tasks."call:increment"]
+script = '''
+bunx near-cli call ${ACCOUNT} increment '{"x": 3}' --accountId ${ACCOUNT}
+'''
