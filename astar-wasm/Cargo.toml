@@ -20,15 +20,10 @@ std = [
 
 [dependencies]
 bbs_plus = {version = "*", default-features = false}
+credx = {path = "../crates/credx", default-features = false, features = ["wasm"]}
 ink = {version = "4.3.0", default-features = false}
 scale = {package = "parity-scale-codec", version = "3", default-features = false, features = ["derive"]}
 scale-info = {version = "2.9", default-features = false, features = ["derive"], optional = true}
-# sion = {path = "../crates/sion"}
-
-[dependencies.anoncreds]
-default_features = false
-features = ["wasm", "serde_only"]
-path = "../crates/anoncreds-wasm"
 
 [dev-dependencies]
 ink_e2e = {version = "4.3"}

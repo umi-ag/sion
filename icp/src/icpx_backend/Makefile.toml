@@ -14,6 +14,11 @@ script = '''
 dfx stop
 '''
 
+[tasks."build:wasm"]
+script = '''
+dfx build
+'''
+
 [tasks.deploy]
 script = '''
 dfx deploy
@@ -26,6 +31,11 @@ dfx canister call icpx_backend set 1
 dfx canister call icpx_backend get
 dfx canister call icpx_backend increment
 dfx canister call icpx_backend get
+'''
+
+[tasks."call:vp"]
+script = '''
+dfx canister call icpx_backend get_vp
 '''
 
 [tasks."call:pg"]

@@ -15,13 +15,14 @@ script = '''
 bun run build
 '''
 
-[tasks."deploy:wasm"]
-script = '''
-open "https://contracts-ui.substrate.io/?rpc=wss://rpc.shibuya.astar.network"
-open target/ink/
-'''
-
 [tasks."build:wasm"]
 script = '''
+cargo contract build
+'''
+
+[tasks."deploy:wasm"]
+script = '''
 cargo contract build --release
+open "https://contracts-ui.substrate.io/?rpc=wss://rpc.shibuya.astar.network"
+open target/ink/
 '''
