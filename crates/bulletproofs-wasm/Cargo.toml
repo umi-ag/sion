@@ -31,7 +31,7 @@ wasm = ["getrandom"]
 yoloproofs = []
 
 [dependencies]
-bls12_381_plus = {version = "0.8", optional = true}
+bls12_381_plus = {path = "../bls12_381_plus", optional = true}
 blstrs_plus = {version = "0.8", optional = true}
 byteorder = {version = "1", default-features = false}
 digest = {version = "0.10", default-features = false}
