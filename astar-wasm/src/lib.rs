@@ -12,36 +12,36 @@ mod counter {
     }
 
     impl Counter {
-        #[ink(message)]
-        pub fn verify_signature(
-            &self,
-            signature_str: String,
-            pk_str: String,
-            messages: Vec<String>,
-        ) -> bool {
-            let msgs: Vec<&str> = messages.iter().map(AsRef::as_ref).collect();
-            let valid =
-                sion::entry::verify_signature(signature_str.as_str(), pk_str.as_str(), &msgs);
-            valid
-        }
+        // #[ink(message)]
+        // pub fn verify_signature(
+        //     &self,
+        //     signature_str: String,
+        //     pk_str: String,
+        //     messages: Vec<String>,
+        // ) -> bool {
+        //     let msgs: Vec<&str> = messages.iter().map(AsRef::as_ref).collect();
+        //     let valid =
+        //         sion::entry::verify_signature(signature_str.as_str(), pk_str.as_str(), &msgs);
+        //     valid
+        // }
 
-        #[ink(message)]
-        pub fn verify_proof(
-            &self,
-            proof_str: String,
-            proof_request_str: String,
-            nonce_str: String,
-            challenge_hash: String,
-        ) -> bool {
-            let valid = sion::entry::verify_proof(
-                proof_str.as_str(),
-                proof_request_str.as_str(),
-                nonce_str.as_str(),
-                challenge_hash.as_str(),
-                &[],
-            );
-            valid
-        }
+        // #[ink(message)]
+        // pub fn verify_proof(
+        //     &self,
+        //     proof_str: String,
+        //     proof_request_str: String,
+        //     nonce_str: String,
+        //     challenge_hash: String,
+        // ) -> bool {
+        //     let valid = sion::entry::verify_proof(
+        //         proof_str.as_str(),
+        //         proof_request_str.as_str(),
+        //         nonce_str.as_str(),
+        //         challenge_hash.as_str(),
+        //         &[],
+        //     );
+        //     valid
+        // }
 
         #[ink(constructor)]
         pub fn new(init_value: u32) -> Self {

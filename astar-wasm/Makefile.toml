@@ -21,7 +21,7 @@ open "https://contracts-ui.substrate.io/?rpc=wss://rpc.shibuya.astar.network"
 open target/ink/
 '''
 
-[tasks."release:wasm"]
+[tasks."build:wasm"]
 script = '''
 cargo contract build --release
 '''

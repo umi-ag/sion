@@ -19,12 +19,16 @@ std = [
 ]
 
 [dependencies]
-# anoncreds = {git = "https://github.com/berendsliedrecht/anoncreds-rs", branch = "wasm", default-features = false, features = ["wasm"]}
 bbs_plus = {version = "*", default-features = false}
 ink = {version = "4.3.0", default-features = false}
 scale = {package = "parity-scale-codec", version = "3", default-features = false, features = ["derive"]}
 scale-info = {version = "2.9", default-features = false, features = ["derive"], optional = true}
-sion = {path = "../crates/sion"}
+# sion = {path = "../crates/sion"}
+
+[dependencies.anoncreds]
+default_features = false
+features = ["wasm", "serde_only"]
+path = "../crates/anoncreds-wasm"
 
 [dev-dependencies]
 ink_e2e = {version = "4.3"}
