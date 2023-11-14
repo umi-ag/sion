@@ -33,6 +33,11 @@ script = '''
 dfx canister call icpx_backend pg
 '''
 
+[tasks."call:verify_vp"]
+script = '''
+dfx canister call icpx_backend verify_vp
+'''
+
 [tasks."call:verify_signature"]
 script = '''
 dfx canister call icpx_backend verify_signature '(

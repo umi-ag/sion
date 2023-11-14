@@ -1,40 +1,30 @@
-// use bbs_plus::prelude::*;
 use candid::types::number::Nat;
+
+use anoncreds::data_types::cred_def::CredentialDefinition;
+use anoncreds::data_types::cred_def::CredentialDefinitionId;
+use anoncreds::data_types::rev_reg_def::RevocationRegistryDefinitionId;
+use anoncreds::data_types::schema::Schema;
+use anoncreds::data_types::schema::SchemaId;
+use anoncreds::issuer;
+use anoncreds::prover;
+use anoncreds::tails::TailsFileWriter;
+use anoncreds::types::Presentation;
+use anoncreds::types::PresentationRequest;
+use anoncreds::types::{CredentialRevocationConfig, PresentCredentials};
+use anoncreds::verifier;
+use serde_json::json;
+
+use std::collections::{BTreeSet, HashMap};
+
+use serde::{Deserialize, Serialize};
+
+// use bbs_plus::prelude::*;
+
 use std::cell::RefCell;
+// use std::collections::{BTreeSet, HashMap};
 
 thread_local! {
     static COUNTER: RefCell<Nat> = RefCell::new(Nat::from(0));
-}
-
-#[ic_cdk_macros::query]
-fn generate_signature(sk_str: String, pk_str: String, messages: Vec<String>) -> String {
-    let msgs: Vec<&str> = messages.iter().map(AsRef::as_ref).collect();
-    let signature = sion::entry::generate_signature(&msgs, sk_str.as_str(), &pk_str);
-    signature
-}
-
-#[ic_cdk_macros::query]
-fn verify_signature(signature_str: String, pk_str: String, messages: Vec<String>) -> bool {
-    let msgs: Vec<&str> = messages.iter().map(AsRef::as_ref).collect();
-    let valid = sion::entry::verify_signature(signature_str.as_str(), pk_str.as_str(), &msgs);
-    valid
-}
-
-#[ic_cdk_macros::query]
-fn verify_proof(
-    proof_str: String,
-    proof_request_str: String,
-    nonce_str: String,
-    challenge_hash: String,
-) -> bool {
-    let valid = sion::entry::verify_proof(
-        proof_str.as_str(),
-        proof_request_str.as_str(),
-        nonce_str.as_str(),
-        challenge_hash.as_str(),
-        &[],
-    );
-    valid
 }
 
 /// Get the value of the counter.
@@ -79,4 +69,35 @@ mod tests {
             assert_eq!(get(), Nat::from(i));
         }
     }
+}
+
+///
+// dbg!(&serde_json::to_string(&presentation));
+// dbg!(&serde_json::to_string(&pres_request));
+// dbg!(&serde_json::to_string(&schemas));
+// dbg!(&serde_json::to_string(&cred_defs));
+#[derive(Serialize, Deserialize, Debug)]
+struct VPTuble {
+    presentation: Presentation,
+    pres_request: PresentationRequest,
+    schemas: HashMap<SchemaId, Schema>,
+    cred_defs: HashMap<CredentialDefinitionId, CredentialDefinition>,
+}
+
+#[ic_cdk_macros::query]
+fn verify_vp(s: String) {
+    let vp = serde_json::from_str::<VPTuble>(s.as_str()).unwrap();
+
+    let valid = verifier::verify_presentation(
+        &vp.presentation,
+        &vp.pres_request,
+        &vp.schemas,
+        &vp.cred_defs,
+        None,
+        None,
+        None,
+    )
+    .expect("Error verifying presentation");
+
+    assert!(valid);
 }
