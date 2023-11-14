@@ -1,0 +1,26 @@
+[package]
+edition = "2021"
+name = "sion_old"
+version = "0.1.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+name = "sion"
+path = "src/lib/mod.rs"
+
+[dependencies]
+bbs = {path = "../bbs", features = ["wasm"]}
+hex = "0.4.3"
+ink = {version = "4.3.0", default-features = false}
+scale = {package = "parity-scale-codec", version = "3", default-features = false, features = ["derive"]}
+scale-info = {version = "2.9", default-features = false, features = ["derive"], optional = true}
+# serde = {version = "1.0", default-features = false, features = ["alloc"]}
+
+[features]
+default = []
+ink-as-dependency = []
+std = [
+  "ink/std",
+  "scale/std",
+  "scale-info/std",
+]
