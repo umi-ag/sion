@@ -131,15 +131,19 @@ pub fn create_credential_definition(
         config
     );
 
+    dbg!("!! 11 0024");
+
     let credential_schema = build_credential_schema(&schema.attr_names.0)?;
     let non_credential_schema = build_non_credential_schema()?;
 
+    dbg!("!! 11 0025");
     let (credential_public_key, credential_private_key, correctness_proof) =
         Issuer::new_credential_def(
             &credential_schema,
             &non_credential_schema,
             config.support_revocation,
         )?;
+    dbg!("!! 11 0026");
 
     // should be better to deconstruct the key than cloning it here
     // as it's only being used here
@@ -153,13 +157,16 @@ pub fn create_credential_definition(
             revocation: credential_public_key.get_revocation_key().cloned(),
         },
     };
+    dbg!("!! 11 0027");
 
     let cred_def_private = CredentialDefinitionPrivate {
         value: credential_private_key,
     };
+    dbg!("!! 11 0028");
     let cred_key_proof = CredentialKeyCorrectnessProof {
         value: correctness_proof,
     };
+    dbg!("!! 11 0029");
     trace!(
         "create_credential_definition <<< cred_def: {:?}, cred_def: {:?}, key_correctness_proof: {:?}",
         cred_def,
