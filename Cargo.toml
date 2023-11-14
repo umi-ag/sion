@@ -1,8 +1,9 @@
 [workspace]
 members = [
-  "crates/bbs",
-  "crates/sion",
-  "crates/sion-js",
-  "crates/anoncreds-rs", # "crates/anchor",
+  "crates/bbs", # "crates/sion",  # "crates/sion-js",
+  # "crates/anoncreds-rs",
+  # "crates/anchor",
+  "crates/credx",
+  "crates/bulletproofs-wasm",
 ]
 resolver = "2"
