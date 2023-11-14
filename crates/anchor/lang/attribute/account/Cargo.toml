@@ -20,4 +20,4 @@ anchor-syn = { path = "../../syn", version = "0.29.0", features = ["hash"] }
 bs58 = "0.5"
 proc-macro2 = "1"
 quote = "1"
-syn = { version = "1", features = ["full"] }
+syn = { version = "2", features = ["full"] }
