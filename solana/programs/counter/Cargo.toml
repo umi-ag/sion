@@ -1,0 +1,23 @@
+[package]
+description = "Created with Anchor"
+edition = "2021"
+name = "counter"
+resolver = "2"
+version = "0.1.0"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "counter"
+
+[features]
+cpi = ["no-entrypoint"]
+default = []
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+
+[dependencies]
+# anchor-lang = "0.29.0"
+anchor-lang = {path = "../../../crates/anchor/lang"}
+bbs_plus = {version = "*", features = ["std"], default-features = false}
+credx = {path = "../../../crates/credx", default-features = false, features = ["wasm"]}

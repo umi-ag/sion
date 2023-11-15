@@ -57,4 +57,5 @@ thiserror = "1"
 
 # TODO: Remove. This crate has been added to fix a build error with the 1.16.0 release.
 getrandom = {version = "0.2", features = ["custom"]}
-curve25519-dalek = "4.1.1"
+
+# credx = {path = "../../../crates/credx", default-features = false, features = ["wasm"]}

@@ -1,3 +1,5 @@
+[workspace]
+
 [package]
 authors = [
   "Hyperledger AnonCreds Contributors <anoncreds@lists.hyperledger.org>",

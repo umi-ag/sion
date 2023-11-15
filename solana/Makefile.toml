@@ -16,3 +16,8 @@ cargo install --git https://github.com/project-serum/anchor anchor-cli --locked
 script = '''
 solana-test-validator
 '''
+
+[tasks."build:counter"]
+script = '''
+anchor build -p counter
+'''
