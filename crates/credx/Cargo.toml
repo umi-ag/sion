@@ -3,9 +3,15 @@ edition = "2021"
 name = "credx"
 version = "0.1.0"
 
+[lib]
+crate-type = ["rlib", "cdylib", "staticlib"]
+name = "credx"
+path = "src/lib.rs"
+
 [features]
 bench = ["bincode", "serde_cbor"]
 blst = ["blsful/default", "bulletproofs/default"]
+# default = ["wasm"]
 default = ["blst"]
 wasm = ["blsful/rust", "bulletproofs/std", "bulletproofs/rust", "bulletproofs/wasm"]
 
@@ -38,3 +44,6 @@ zeroize = "1"
 maplit = "1"
 serde_cbor = "0.11"
 sha2 = "0.10"
+
+[target.'cfg(all(target_family = "wasm", not(target_os = "wasi")))'.dev-dependencies]
+wasm-bindgen-test = "0.3.38"

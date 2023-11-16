@@ -26,7 +26,7 @@ rust = ["bls12_381_plus/alloc"]
 anyhow = "1.0"
 arrayref = "0.3"
 bls12_381_plus = {path = "../bls12_381_plus", optional = true}
-blstrs_plus = {version = "*", optional = true}
+blstrs_plus = {path = "../blstrs", optional = true}
 hex = "0.4"
 hkdf = {version = "0.12", default-features = false}
 merlin = "3"
@@ -40,7 +40,7 @@ sha3 = {version = "0.10", default-features = false}
 subtle = {version = "2.4", default-features = false}
 thiserror = "1.0"
 uint-zigzag = {version = "0.2", features = ["std"]}
-vsss-rs = {version = "*", default-features = false, features = ["std"]}
+vsss-rs = {path = "../vsss-rs", default-features = false, features = ["std"]}
 zeroize = {version = "1", features = ["zeroize_derive"]}
 
 [dev-dependencies]
