@@ -1,0 +1,51 @@
+[package]
+authors = ["Michael Lodder <redmike7@gmail.com>"]
+categories = [
+  "cryptography",
+  "authentication",
+  "no-std",
+  "algorithms",
+]
+description = """BLS signature implementation according to the IETF spec on the BLS12-381 curve."""
+documentation = "https://docs.rs/blsful"
+edition = "2021"
+homepage = "https://github.com/mikelodder7/blsful"
+keywords = ["crypto", "signature", "signing", "bls"]
+license = "MIT OR Apache-2.0"
+name = "blsful"
+readme = "README.md"
+repository = "https://github.com/mikelodder7/blsful"
+version = "2.4.1"
+
+[features]
+blst = ["blstrs_plus"]
+default = ["blst"]
+rust = ["bls12_381_plus/alloc"]
+
+[dependencies]
+anyhow = "1.0"
+arrayref = "0.3"
+bls12_381_plus = {workspace = true, optional = true}
+blstrs_plus = {workspace = true, optional = true}
+hex = "0.4"
+hkdf = {version = "0.12", default-features = false}
+merlin = "3"
+pairing = "0.23"
+rand = "0.8"
+rand_chacha = "0.3"
+rand_core = "0.6"
+serde = {version = "1.0", default-features = false, features = ["derive"]}
+sha2 = {version = "0.10", default-features = false}
+sha3 = {version = "0.10", default-features = false}
+subtle = {version = "2.5", default-features = false}
+thiserror = "1.0"
+uint-zigzag = {version = "0.2", features = ["std"]}
+# vsss-rs = {workspace = true, default-features = false, features = ["std"]}
+vsss-rs = {workspace = true, default-features = false}
+zeroize = {workspace = true, features = ["zeroize_derive"]}
+
+[dev-dependencies]
+rand_xorshift = "0.3"
+rstest = "0.18"
+serde_bare = "0.5"
+serde_json = "1.0"

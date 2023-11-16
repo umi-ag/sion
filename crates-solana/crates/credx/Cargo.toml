@@ -1,5 +1,3 @@
-[workspace]
-
 [package]
 edition = "2021"
 name = "credx"
@@ -19,10 +17,11 @@ wasm = ["blsful/rust", "bulletproofs/std", "bulletproofs/rust", "getrandom"]
 [dependencies]
 base64 = "0.21.5"
 bcs = {version = "0.1.6"}
-bincode = {versino = "1.3.3", optional = true}
-blsful = {version = "2.4.1", default-features = false, optional = true}
+bincode = {versin = "1.3.3", optional = true}
+blsful = {workspace = true}
 bs58 = "0.5.0"
-bulletproofs = {git = "https://github.com/cryptidtech/bulletproofs", default-features = false}
+bulletproofs = {workspace = true, default-features = false}
+curve25519-dalek = {workspace = true}
 getrandom = {version = "0.2.11", features = ["js", "wasm-bindgen"], optional = true}
 hex = "0.4"
 indexmap = "2"
@@ -40,7 +39,7 @@ sha2 = "0.10"
 sha3 = "0.10"
 subtle = "2.5.0"
 uint-zigzag = {version = "0.2", features = ["std"]}
-zeroize = "1.6"
+zeroize = {workspace = true}
 
 [dev-dependencies]
 maplit = "1"
