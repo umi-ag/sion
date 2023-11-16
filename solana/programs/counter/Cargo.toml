@@ -21,3 +21,5 @@ no-log-ix-name = []
 anchor-lang = {path = "../../../crates/anchor/lang"}
 bbs_plus = {version = "*", features = ["std"], default-features = false}
 credx = {path = "../../../crates/credx", default-features = false, features = ["wasm"]}
+# credx = {path = "../../../crates/credx"}
+zeroize = "1.6.0"
