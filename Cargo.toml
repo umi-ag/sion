@@ -6,5 +6,7 @@ members = [
   "crates/blsful",
   "crates/bls12_381_plus",
   "crates/elliptic-curve",
+  "crates/vsss-rs",
+  "crates/blstrs",
 ]
 resolver = "2"

@@ -1,12 +1,9 @@
-[env]
-CARGO_MAKE_CRATE_WORKSPACE_MEMBERS = [
-  "near",
-]
-CARGO_MAKE_WORKSPACE_EMULATION = true
-skip_core_tasks = true
-skip_crate_env_info = true
-skip_git_env_info = true
-skip_rust_env_info = true
+[tasks."credx-clean:build"]
+script = '''
+cd crates/credx-clean
+cargo test
+wasm-pack test --firefox --no-default-features --features wasm
+'''
 
 [tasks."near:echo"]
 env = {"CARGO_MAKE_WORKSPACE_INCLUDE_MEMBERS" = "near"}
