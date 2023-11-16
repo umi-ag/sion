@@ -1,0 +1,41 @@
+[env]
+CARGO_MAKE_CRATE_WORKSPACE_MEMBERS = [
+  "near",
+]
+CARGO_MAKE_WORKSPACE_EMULATION = true
+skip_core_tasks = true
+skip_crate_env_info = true
+skip_git_env_info = true
+skip_rust_env_info = true
+
+[tasks."near:echo"]
+env = {"CARGO_MAKE_WORKSPACE_INCLUDE_MEMBERS" = "near"}
+run_task = {name = "echo", fork = true}
+
+[tasks."test:credx"]
+script = '''
+wasm-pack test --firefox --no-default-features --features wasm
+'''
+[tasks."icp:build"]
+script = '''
+cd icp/src/icpx_backend
+dfx build
+'''
+
+[tasks."icp:call"]
+script = '''
+cd icp/src/icpx_backend
+cargo make call:echo_base58
+'''
+
+[tasks."near:build"]
+script = '''
+cd near
+cargo build --target wasm32-unknown-unknown
+'''
+
+[tasks."solana:build"]
+script = '''
+cd solana/programs/counter
+anchor build -p counter
+'''
