@@ -1,0 +1,35 @@
+
+[workspace]
+members = [
+  "crates/blstrs",
+  "crates/credx",
+  "crates/blsful",
+  "crates/blstrs",
+  "crates/bulletproofs",
+  "crates/bls12_381_plus", # "crates/curve25519-dalek",
+  "crates/vsss-rs",
+  "crates/elliptic-curve", # "crates/k256", # "crates/ed25519-dalek",
+]
+resolver = "2"
+
+[workspace.dependencies]
+bls12_381_plus = {path = "crates/bls12_381_plus"}
+blsful = {path = "crates/blsful"}
+blstrs_plus = {path = "crates/blstrs"}
+# curve25519-dalek = {version = "3.2.1", git = "https://github.com/solana-labs/curve25519-dalek.git", rev = "b500cdc2a920cd5bff9e2dd974d7b97349d61464"}
+curve25519-dalek = {version = "3.2.1"}
+elliptic-curve = {path = "crates/elliptic-curve"}
+# vsss-rs = {path = "crates/vsss-rs", default-features = false, features = ["std"]}
+# zeroize = "=1.3"
+# elliptic-curve = {path = "../elliptic-curve", features = ["hazmat"], default-features = false}
+bulletproofs = {path = "crates/bulletproofs"}
+# vsss-rs = "3"
+# ed25519-dalek = {path = "crates/ed25519-dalek"}
+# k256 = {path = "crates/k256"}
+# vsss-rs = {path = "crates/vsss-rs"}
+vsss-rs = "*"
+zeroize = {version = "1.6", default-features = false}
+
+# [workspace.dependencies.curve25519_dalek]
+# it = "https://github.com/solana-labs/curve25519-dalek.git"
+# rev = "b500cdc2a920cd5bff9e2dd974d7b97349d61464"

@@ -17,7 +17,12 @@ no-idl = []
 no-log-ix-name = []
 
 [dependencies]
-# anchor-lang = "0.29.0"
-anchor-lang = {path = "../../../crates/anchor/lang"}
-bbs_plus = {version = "*", features = ["std"], default-features = false}
-credx = {path = "../../../crates/credx", default-features = false, features = ["wasm"]}
+anchor-lang = "0.29.0"
+bulletproofs_amcl = {git = "https://github.com/hyperledger-archives/ursa.git", rev = "c29fdaa96bbe9ce3ea2beb4d5fbe98ed7c96f867", package = "bulletproofs_amcl"}
+# getrandom = {version = "0.2.9", features = ["custom"]}
+
+# anchor-lang = {path = "../../../crates/anchor/lang"}
+# bbs_plus = {version = "*", features = ["std"], default-features = false}
+# credx = {path = "../../../crates/credx", default-features = false, features = ["wasm"]}
+# credx = {path = "../../../crates/credx"}
+# zeroize = "1.6.0"

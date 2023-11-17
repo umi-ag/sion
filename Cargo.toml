@@ -1,10 +1,7 @@
 [workspace]
 members = [
-  "crates/bbs", # "crates/sion",  # "crates/sion-js",  # "crates/anoncreds-rs",  # "crates/anchor",
-  "crates/credx",
-  "crates/bulletproofs-wasm",
-  "crates/blsful",
-  "crates/bls12_381_plus",
-  "crates/elliptic-curve",
+  "crates/bulletproofs-amcl",
+  "crates/merlin",
+  "crates/bulletproofs-bls",
 ]
 resolver = "2"
