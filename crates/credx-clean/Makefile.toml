@@ -6,8 +6,9 @@ cargo build
 '''
 
 [tasks."build:wasm"]
+# cargo build --target wasm32-unknown-unknown --no-default-features --features wasm
 script = '''
-cargo build --target wasm32-unknown-unknown --no-default-features --features wasm
+wasm-pack build --no-default-features --features wasm
 '''
 
 [tasks."test:wasm"]
