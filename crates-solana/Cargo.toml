@@ -20,7 +20,7 @@ blstrs_plus = {path = "crates/blstrs"}
 curve25519-dalek = {version = "3.2.1"}
 elliptic-curve = {path = "crates/elliptic-curve"}
 # vsss-rs = {path = "crates/vsss-rs", default-features = false, features = ["std"]}
-zeroize = "=1.3"
+# zeroize = "=1.3"
 # elliptic-curve = {path = "../elliptic-curve", features = ["hazmat"], default-features = false}
 bulletproofs = {path = "crates/bulletproofs"}
 # vsss-rs = "3"
@@ -28,6 +28,7 @@ bulletproofs = {path = "crates/bulletproofs"}
 # k256 = {path = "crates/k256"}
 # vsss-rs = {path = "crates/vsss-rs"}
 vsss-rs = "*"
+zeroize = {version = "1.6", default-features = false}
 
 # [workspace.dependencies.curve25519_dalek]
 # it = "https://github.com/solana-labs/curve25519-dalek.git"

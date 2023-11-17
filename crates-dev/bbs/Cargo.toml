@@ -1,3 +1,4 @@
+[workspace]
 [package]
 authors = ["The Hyperledger Ursa Contributors"]
 description = "The BBS+ signature scheme"
@@ -17,26 +18,18 @@ crate-type = ["cdylib", "rlib"]
 
 [features]
 default = []
-ink-as-dependency = []
-std = [
-  "ink/std",
-  "scale/std",
-  "scale-info/std",
-]
 wasm = ["serde-wasm-bindgen", "wasm-bindgen"]
 
 [dependencies]
 arrayref = "0.3"
+bcs = "0.1.6"
 blake2 = "0.8"
 failure = "0.1"
 ff-zeroize = "0.6"
 hex = "0.4"
 hkdf = "0.8"
-ink = {version = "4.3.0", default-features = false}
 pairing-plus = "0.19"
 rand = "0.7"
-scale = {package = "parity-scale-codec", version = "3", default-features = false, features = ["derive"]}
-scale-info = {version = "2.9", default-features = false, features = ["derive"], optional = true}
 # rayon = "1.8.0"
 serde = {version = "1.0", features = ["serde_derive"]}
 serde-wasm-bindgen = {version = "0.1", optional = true}

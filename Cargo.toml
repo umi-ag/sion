@@ -1,7 +1,7 @@
 [workspace]
 members = [
-  "crates/credx",
   "crates/bulletproofs-amcl",
   "crates/merlin",
+  "crates/bulletproofs-bls",
 ]
 resolver = "2"
