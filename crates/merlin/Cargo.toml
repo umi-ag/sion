@@ -1,0 +1,40 @@
+[package]
+name = "merlin"
+# Before incrementing:
+# - update CHANGELOG
+# - update html_root_url
+# - update README if required by semver
+authors = ["Henry de Valence <hdevalence@hdevalence.ca>"]
+categories = ["cryptography"]
+description = "Composable proof transcripts for public-coin arguments of knowledge"
+documentation = "https://docs.rs/merlin"
+edition = "2018"
+exclude = [".travis.yml", ".gitignore"]
+homepage = "https://docs.rs/merlin"
+keywords = ["cryptography", "zero-knowledge", "fiat-shamir", "transcript"]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/zkcrypto/merlin"
+version = "3.0.0"
+
+[package.metadata.docs.rs]
+# We need nightly to build docs
+features = ["nightly"]
+
+[dependencies]
+byteorder = {version = "1.2.4", default-features = false}
+hex = {version = "0.3", default-features = false, optional = true}
+keccak = {version = "0.1.0", default-features = false}
+rand_core = {version = "0.6", default-features = false, optional = true}
+zeroize = {version = "1", default-features = false, features = ["zeroize_derive"]}
+
+[dev-dependencies]
+curve25519-dalek = {version = "4", package = "curve25519-dalek-ng"}
+rand_chacha = "0.3"
+strobe-rs = "0.5"
+
+[features]
+debug-transcript = ["hex"]
+default = ["std"]
+nightly = []
+std = ["rand_core/std", "byteorder/std"]

@@ -22,10 +22,12 @@ wasm_base = ["wasm-bindgen", "wasm-logger", "console_error_panic_hook", "serde-w
 base64 = "0.21.5"
 bcs = {version = "0.1.6"}
 bs58 = "0.5.0"
-bulletproofs = {git = "https://github.com/cryptidtech/bulletproofs", default-features = false}
+# bulletproofs = {git = "https://github.com/cryptidtech/bulletproofs", default-features = false}
+bulletproofs = {path = "../bulletproofs-bls", default-features = false}
 hex = "0.4"
 indexmap = "2"
-merlin = "3"
+# merlin = "3"
+merlin = {path = "../merlin"}
 rand = "0.8"
 rand_chacha = "0.3"
 rand_core = "0.6"

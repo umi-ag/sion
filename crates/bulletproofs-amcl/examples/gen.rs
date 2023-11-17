@@ -64,16 +64,24 @@ fn main() {
 
     let proof = prover.prove(&big_g, &big_h).unwrap();
 
-    dbg!(&comms_1);
-
     #[cfg(feature = "serdes")]
     {
-        let bytes = bcs::to_bytes(&comms_1).unwrap();
-        let _: R1CSProof = bcs::from_bytes(&comms_1).unwrap();
-        println!("[bcs] comms1 size = {}", bytes.len());
+        let bytes = serde_cbor::to_vec(&comms_1).unwrap();
+        let cm1: Vec<G1> = serde_cbor::from_slice(&bytes).unwrap();
+        println!("[cbor] comms1 size = {}", bytes.len());
 
         let base58 = bs58::encode(bytes).into_vec();
-        let mut file = File::create("dumps/comms1_bsc_base58.txt").expect("create file");
+        let mut file = File::create("dumps/comms1_cbor_base58.txt").expect("create file");
+        file.write_all(&base58).expect("write file");
+    }
+    #[cfg(feature = "serdes")]
+    {
+        let bytes = serde_cbor::to_vec(&proof).unwrap();
+        let _: R1CSProof = serde_cbor::from_slice(&bytes).unwrap();
+        println!("[cbor] proof size = {}", bytes.len());
+
+        let base58 = bs58::encode(bytes).into_vec();
+        let mut file = File::create("dumps/proof_cbor_base58.txt").expect("create file");
         file.write_all(&base58).expect("write file");
     }
     #[cfg(feature = "serdes")]

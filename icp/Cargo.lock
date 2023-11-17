@@ -1362,6 +1362,7 @@ dependencies = [
  "merlin 3.0.0",
  "rand_core 0.6.4",
  "serde",
+ "serde_cbor",
  "serde_json",
  "zeroize",
 ]

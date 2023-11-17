@@ -41,3 +41,4 @@ merlin = {path = "../../../crates/merlin", default-features = false}
 rand_core = {version = "0.6", default-features = false, features = ["alloc", "getrandom"]}
 # bulletproofs = {git = "https://github.com/cryptidtech/bulletproofs", default-features = false}
 amcl_wrapper = {version = "0.3.5", default-features = false, features = ["bls381"]}
+serde_cbor = "0.11.2"

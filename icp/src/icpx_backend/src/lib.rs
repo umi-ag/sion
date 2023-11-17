@@ -16,6 +16,7 @@ use keccak;
 use amcl_wrapper::group_elem_g1::{G1Vector, G1};
 use bulletproofs_amcl::utils::get_generators;
 use amcl_wrapper::group_elem::GroupElement;
+use bulletproofs_amcl::r1cs::gadgets::bound_check::{verify_bounded_num};
 
 
 // use rand_core;
@@ -79,9 +80,18 @@ fn echo_proof(base58: String) -> String {
 }
 
 #[ic_cdk_macros::query]
-fn verify(base58: String) -> bool {
-    let bytes = bs58::decode(base58).into_vec().unwrap();
-    let proof: R1CSProof = bcs::from_bytes(&bytes).unwrap();
+fn verify(proof_bcs_base58: String, commitment_cbor_base58: String) -> bool {
+    let proof = {
+        let bytes = bs58::decode(proof_bcs_base58).into_vec().unwrap();
+        let proof: R1CSProof = bcs::from_bytes(&bytes).unwrap();
+        proof
+    };
+
+    let comms_1 = {
+        let bytes = bs58::decode(commitment_cbor_base58).into_vec().unwrap();
+        let cm: Vec<G1> = serde_cbor::from_slice(&bytes).unwrap();
+        cm
+    };
 
     let big_g: G1Vector = get_generators("G", 256).into();
     let big_h: G1Vector = get_generators("H", 256).into();
@@ -96,7 +106,8 @@ fn verify(base58: String) -> bool {
     let mut verifier_transcript = Transcript::new(transcript_label);
     let mut verifier = Verifier::new(&mut verifier_transcript);
 
-    true
+    verify_bounded_num(min, max, max_bits_in_val, comms_1, &mut verifier).unwrap();
+    verifier.verify(&proof, &g, &h, &big_g, &big_h).is_ok()
 }
 
 
