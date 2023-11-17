@@ -9,14 +9,35 @@ version = "0.1.0"
 crate-type = ["cdylib"]
 
 [dependencies]
-bbs_plus = {version = "*", default-features = false}
-# bcs = "0.1.6"
-# bs58 = "0.5.0"
+# anoncreds = {path = "../../../crates/anoncreds-wasm", default-features = false, features = ["wasm"]}
+# bls12_381_plus = {version = "0.8.9", default-features = false}
+bs58 = "0.5.0"
 candid = "0.9"
-credx = {path = "../../../crates/credx", default-features = false, features = ["wasm"]}
-# hex = "0.4.3"
+# elliptic-curve = {version = "0.13", default-features = false, features = ["hazmat"]}
+elliptic-curve = {version = "0.13", default-features = false} 
+hex = "0.4.3" 
 ic-cdk = "0.11" 
 ic-cdk-macros = "0.8.1" 
 ic-cdk-timers = "0.5" # Feel free to remove this dependency if you don't need timers
 serde = {version = "1.0", features = ["derive"]} 
-serde_json = {version = "1.0.108", default-features = false, features = ["alloc"]}
+serde_json = {version = "1.0.108", default-features = false, features = ["alloc"]} 
+# z-mix = {version = "0.1", git = "https://github.com/hyperledger-labs/z-mix.git"}
+# bulletproofs_amcl = {git = "https://github.com/hyperledger-archives/ursa.git", rev = "c29fdaa96bbe9ce3ea2beb4d5fbe98ed7c96f867", package = "bulletproofs_amcl"}
+bulletproofs_amcl = {path = "../../../crates/bulletproofs-amcl"}
+bulletproofs_plus_plus = {version = "0.2.0", default-features = false}
+zeroize = {version = "1", default-features = false}
+
+#
+# bbs_plus = {version = "*", default-features = false}
+# bcs = "0.1.6"
+ark-marlin = {version = "0.3.0", default-features = false}
+bbs_plus = {version = "0.18.0", default-features = false}
+bcs = "0.1.6"
+credx = {path = "../../../crates/credx-clean", default-features = false, features = ["wasm"]}
+getrandom = {version = "0.2.11", features = ["custom"]}
+keccak = "0.1.4"
+# merlin = {version = "3.0.0", default-features = false}
+merlin = {path = "../../../crates/merlin", default-features = false}
+rand_core = {version = "0.6", default-features = false, features = ["alloc", "getrandom"]}
+# bulletproofs = {git = "https://github.com/cryptidtech/bulletproofs", default-features = false}
+amcl_wrapper = {version = "0.3.5", default-features = false, features = ["bls381"]}
