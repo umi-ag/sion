@@ -4,26 +4,19 @@ use ark_crypto_primitives::crh::sha256::constraints::{DigestVar, Sha256Gadget};
 use ark_ff::{PrimeField, ToConstraintField};
 use ark_r1cs_std::{prelude::EqGadget, uint8::UInt8};
 use ark_relations::r1cs::{ConstraintSynthesizer, ConstraintSystemRef, SynthesisError};
+use std::clone::Clone;
 
+#[derive(Clone)]
 pub struct Sha256Circuit {
     input: Vec<u8>,
     expected: Vec<u8>,
 }
 
 impl Sha256Circuit {
-    fn new(input: &[u8], expcted: &[u8]) -> Self {
+    pub fn new(input: &[u8], expcted: &[u8]) -> Self {
         Self {
             input: input.to_vec(),
             expected: expcted.to_vec(),
-        }
-    }
-}
-
-impl Clone for Sha256Circuit {
-    fn clone(&self) -> Self {
-        Sha256Circuit {
-            input: self.input.as_slice().to_vec(),
-            expected: self.expected.as_slice().to_vec(),
         }
     }
 }
@@ -53,17 +46,9 @@ impl<F: PrimeField> ConstraintSynthesizer<F> for Sha256Circuit {
 #[cfg(test)]
 mod test_sha256 {
     use ark_bn254::{Bn254, Fr};
-    use ark_crypto_primitives::{
-        crh::sha256::constraints::{DigestVar, Sha256Gadget},
-        prf::Blake2s,
-        snark::SNARK,
-    };
+    use ark_crypto_primitives::snark::SNARK;
     use ark_ff::{PrimeField, ToConstraintField};
     use ark_groth16::Groth16;
-    use ark_r1cs_std::{prelude::EqGadget, uint8::UInt8};
-    use ark_relations::r1cs::{
-        ConstraintSynthesizer, ConstraintSystem, ConstraintSystemRef, SynthesisError,
-    };
     use ark_serialize::CanonicalSerialize;
     use ark_std::rand::{self, rngs::StdRng};
     use fastcrypto::hash::Sha256;
