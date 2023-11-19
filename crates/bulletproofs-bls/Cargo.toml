@@ -1,0 +1,65 @@
+[package]
+name = "bulletproofs"
+# Before doing a release:
+# - update version field
+# - update html_root_url
+# - update CHANGELOG
+authors = [
+  "Cathie Yun <cathieyun@gmail.com>",
+  "Henry de Valence <hdevalence@hdevalence.ca>",
+  "Oleg Andreev <oleganza@gmail.com>",
+  "Michael Lodder <redmike7@gmail.com>",
+]
+categories = ["cryptography"]
+description = "A pure-Rust implementation of Bulletproofs"
+edition = "2021"
+keywords = ["cryptography", "crypto", "zero-knowledge", "bulletproofs"]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/zkcrypto/bulletproofs"
+version = "4.0.0"
+
+[dependencies]
+bls12_381_plus = {version = "0.8", optional = true}
+blstrs_plus = {version = "0.8", optional = true}
+byteorder = {version = "1", default-features = false}
+digest = {version = "0.10", default-features = false}
+group = "0.13"
+merlin = {path = "../merlin", default-features = false}
+rand = {version = "0.8", default-features = false, optional = true}
+rand_core = {version = "0.6", default-features = false, features = ["alloc"]}
+serde = {version = "1", default-features = false, features = ["alloc", "serde_derive"]}
+sha3 = {version = "0.10", default-features = false}
+subtle = {version = "2.4", default-features = false}
+thiserror = {version = "1", optional = true}
+zeroize = "1"
+
+[dev-dependencies]
+bincode = "1"
+criterion = "0.5"
+hex = "0.4"
+rand_chacha = "0.3"
+
+[features]
+blst = ["blstrs_plus"]
+default = ["blst", "std"]
+docs = ["nightly"]
+nightly = ["subtle/nightly"]
+rust = ["bls12_381_plus"]
+std = ["rand", "rand/std", "rand/std_rng", "thiserror"]
+yoloproofs = []
+
+[[test]]
+name = "range_proof"
+
+[[test]]
+name = "r1cs"
+required-features = ["yoloproofs"]
+
+[[bench]]
+harness = false
+name = "generators"
+
+[[bench]]
+harness = false
+name = "linear_proof"

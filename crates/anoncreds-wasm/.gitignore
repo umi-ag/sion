@@ -1,0 +1,9 @@
+.vscode
+target
+out
+Cargo.lock
+.DS_Store
+.tmp
+*.so
+*.tgz
+node_modules

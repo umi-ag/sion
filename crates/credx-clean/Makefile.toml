@@ -1,0 +1,17 @@
+
+
+[tasks."build:std"]
+script = '''
+cargo build
+'''
+
+[tasks."build:wasm"]
+# cargo build --target wasm32-unknown-unknown --no-default-features --features wasm
+script = '''
+wasm-pack build --no-default-features --features wasm
+'''
+
+[tasks."test:wasm"]
+script = '''
+wasm-pack test --firefox --no-default-features --features wasm
+'''

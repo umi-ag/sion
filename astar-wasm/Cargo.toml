@@ -1,0 +1,30 @@
+[workspace]
+
+[package]
+authors = ["fuyutarow"]
+edition = "2021"
+name = "counter"
+version = "0.1.0"
+
+[lib]
+path = "src/lib.rs"
+
+[features]
+default = ["std"]
+ink-as-dependency = []
+std = [
+  "ink/std",
+  "scale/std",
+  "scale-info/std",
+]
+
+[dependencies]
+# bbs_plus = {version = "*", default-features = false}
+# credx = {path = "../crates/credx", default-features = false, features = ["wasm"]}
+bulletproofs_amcl = {git = "https://github.com/hyperledger-archives/ursa.git", rev = "c29fdaa96bbe9ce3ea2beb4d5fbe98ed7c96f867", package = "bulletproofs_amcl"}
+ink = {version = "4.3.0", default-features = false}
+scale = {package = "parity-scale-codec", version = "3", default-features = false, features = ["derive"]}
+scale-info = {version = "2.9", default-features = false, features = ["derive"], optional = true}
+
+[dev-dependencies]
+ink_e2e = {version = "4.3"}

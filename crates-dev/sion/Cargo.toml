@@ -1,0 +1,9 @@
+[workspace]
+
+[package]
+edition = "2021"
+name = "sion"
+version = "0.1.0"
+
+[dependencies]
+anoncreds = {git = "https://github.com/berendsliedrecht/anoncreds-rs", branch = "wasm", default-features = false, features = ["wasm"]}

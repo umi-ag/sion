@@ -1,4 +1,5 @@
 [workspace]
 members = [
-    "src/icpx_backend",
+  "src/icpx_backend",
 ]
+resolver = "2"
