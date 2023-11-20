@@ -1,4 +1,5 @@
 // ui/src/app/types/index.ts
+import { File } from './gdrive';
 
 export type ZKProof = {
   proofPoints: {
@@ -58,8 +59,8 @@ export type SetupData = {
 };
 
 export type ZkLoginState = SetupData & {
-  beginZkLogin: (provider: OpenIdProvider) => void;
-  completeZkLogin: (account: Account) => void;
+  beginZkLogin: (provider: OpenIdProvider) => Promise<void>;
+  completeZkLogin: (account: Account) => Promise<void>;
   nonce: string;
   loginUrl: () => string;
   userAddr: string;
@@ -68,12 +69,15 @@ export type ZkLoginState = SetupData & {
   sub: string;
   salt: () => string;
   getJwt: () => void;
-  parseUrlHash: (hash: string) => void;
   zkProofs: any;
   account: () => Account;
   isProofsLoading: boolean;
   loginStatus: () => 'loggedOut' | 'loggedIn';
   accessToken: string;
+  parseUrlHash: (hash: string) => void;
+  files: File[];
+  listFiles: () => Promise<void>;
+  createFile: (name: string, content: string) => Promise<void>;
 };
 
 export type AccountData = {
@@ -96,3 +100,5 @@ export type ColorsType = {
   r2: number;
   r3: number;
 };
+
+export * from './gdrive';

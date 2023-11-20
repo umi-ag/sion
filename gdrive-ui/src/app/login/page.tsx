@@ -16,6 +16,13 @@ const urlHash = () => {
 const Page = () => {
   const zkLoginStore = useZkLoginSetup();
 
+  const login = async () => {
+    await zkLoginStore.beginZkLogin('Google');
+    const loginUrl = zkLoginStore.loginUrl();
+    console.log("loginUrl", loginUrl);
+    window.location.href = loginUrl;
+  }
+
   useEffect(() => {
     const hash = urlHash();
     if (hash) {
@@ -25,14 +32,14 @@ const Page = () => {
   }, [zkLoginStore]);
 
   return (
-    <div className='grid place-items-center h-full'>
+    <div className='grid place-items-center min-h-full'>
       <div className="pb-32">
-        <p className='text-center text-xl mb-4'>
+        <p className='text-center text-xl mb-8'>
           Welcome to Sion
         </p>
 
         <div className="grid place-items-center mb-4">
-          <LoginButton onClick={() => zkLoginStore.beginZkLogin('Google')} />
+          <LoginButton onClick={login} />
         </div>
 
         {/* <pre suppressHydrationWarning>{JSON.stringify(zkLoginStore, null, 2)}</pre> */}

@@ -14,6 +14,7 @@ import { toBigIntBE } from "bigint-buffer";
 import { decodeJwt } from "jose";
 
 const MAX_EPOCH = 1; // keep ephemeral keys active for this many Sui epochs from now (1 epoch ~= 24h)
+const API_KEY = 'AIzaSyDII8ecl6Kzef3ccXh9XYt-kHIWWcFtbqk';
 
 export const useZkLoginSetup = create<ZkLoginState>(
   persist(
@@ -37,7 +38,6 @@ export const useZkLoginSetup = create<ZkLoginState>(
       zkProofs: null,
       salt: () => "",
       isProofsLoading: false,
-      accessToken: "",
       beginZkLogin: async (provider) => {
         // const { epoch } = await suiClient.getLatestSuiSystemState();
         // const maxEpoch = Number(epoch) + MAX_EPOCH; // the ephemeral key will be valid for MAX_EPOCH from now
@@ -61,10 +61,6 @@ export const useZkLoginSetup = create<ZkLoginState>(
           randomness
         );
         set({ randomness, nonce });
-
-        const loginUrl = get().loginUrl();
-        console.log("loginUrl", loginUrl);
-        window.location.href = loginUrl;
       },
       completeZkLogin: async (account) => {
         set({
@@ -98,10 +94,7 @@ export const useZkLoginSetup = create<ZkLoginState>(
       getJwt: () => {
         const urlFragment = window.location.hash.substring(1);
         const urlParams = new URLSearchParams(urlFragment);
-        // console.log("urlParams", [...urlParams.entries()]);
         const jwt = urlParams.get("id_token");
-        const accessToken = urlParams.get("access_token") ?? '';
-        set({ accessToken });
 
         // remove URL fragment
         window.history.replaceState(null, "", window.location.pathname);
@@ -123,6 +116,26 @@ export const useZkLoginSetup = create<ZkLoginState>(
               : jwtPayload.aud[0],
         });
       },
+      account: () => ({
+        provider: get().provider,
+        userAddr: get().userAddr,
+        zkProofs: get().zkProofs,
+        ephemeralPublicKey: get().ephemeralPublicKey,
+        ephemeralPrivateKey: get().ephemeralPrivateKey,
+        userSalt: get().salt(),
+        jwt: get().jwt,
+        sub: get().sub,
+        aud: get().aud,
+        maxEpoch: get().maxEpoch,
+        randomeness: get().randomness,
+      }),
+      loginStatus() {
+        if (!get().jwt) {
+          return "loggedOut";
+        }
+        return "loggedIn";
+      },
+      accessToken: "",
       parseUrlHash: (hash) => {
         const urlParams = new URLSearchParams(hash);
         const jwt = urlParams.get("id_token");
@@ -149,25 +162,28 @@ export const useZkLoginSetup = create<ZkLoginState>(
           set({ accessToken });
         }
       },
-      account: () => ({
-        provider: get().provider,
-        userAddr: get().userAddr,
-        zkProofs: get().zkProofs,
-        ephemeralPublicKey: get().ephemeralPublicKey,
-        ephemeralPrivateKey: get().ephemeralPrivateKey,
-        userSalt: get().salt(),
-        jwt: get().jwt,
-        sub: get().sub,
-        aud: get().aud,
-        maxEpoch: get().maxEpoch,
-        randomeness: get().randomness,
-      }),
-      loginStatus() {
-        if (!get().jwt) {
-          return "loggedOut";
+      files: [],
+      listFiles: async () => {
+        const url = `https://www.googleapis.com/drive/v3/files?key=${API_KEY}`;
+        const accessToken = get().accessToken;
+
+        const r = await fetch(url, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        if (!r.ok) {
+          console.error(await r.json());
+          return;
         }
-        return "loggedIn";
+
+        const json = await r.json();
+        // console.log(json);
+
+        set({ files: json.files });
       },
+      createFile: async () => { }
     }),
     {
       name: "zkLoginSetup",
@@ -181,12 +197,12 @@ const getLoginUrl = (props: { provider: OpenIdProvider; nonce: string }) => {
     nonce: props.nonce,
     redirect_uri: REDIRECT_URI,
     response_type: "id_token token",
-    // scope: "openid email https://www.googleapis.com/auth/drive.file",
-    // scope: "https://www.googleapis.com/auth/drive.file",
-    scope: "openid email profile https://www.googleapis.com/auth/drive",
-    // scope: "openid email profile",
-    // scope: "openid email",
-    // scope: "drive.file",
+    scope: [
+      "openid",
+      "email",
+      "profile",
+      "https://www.googleapis.com/auth/drive",
+    ].join(" "),
   };
 
   const loginUrl = match(props.provider)
