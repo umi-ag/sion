@@ -57,7 +57,7 @@ export type SetupData = {
   ephemeralPrivateKey: string;
 };
 
-export type zkLoginState = SetupData & {
+export type ZkLoginState = SetupData & {
   beginZkLogin: (provider: OpenIdProvider) => void;
   completeZkLogin: (account: Account) => void;
   nonce: string;
@@ -68,9 +68,12 @@ export type zkLoginState = SetupData & {
   sub: string;
   salt: () => string;
   getJwt: () => void;
+  parseUrlHash: (hash: string) => void;
   zkProofs: any;
   account: () => Account;
   isProofsLoading: boolean;
+  loginStatus: () => 'loggedOut' | 'loggedIn';
+  accessToken: string;
 };
 
 export type AccountData = {

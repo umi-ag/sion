@@ -16,7 +16,7 @@ export const LoginButton: React.FC<{ onClick?: () => void; }> = (props) => {
       >
         <div className="flex items-center">
           <div
-            className="max-w-[50px]"
+            className="w-[50px] h-[50px]"
             ref={googleAnimationContainer}
           ></div>
           <div className="mr-5 text-lg">Login with Google</div>

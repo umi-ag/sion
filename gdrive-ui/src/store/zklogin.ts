@@ -1,5 +1,4 @@
-import { suiClient } from "src/config/sui";
-import { OpenIdProvider, zkLoginState } from "src/types";
+import { OpenIdProvider, ZkLoginState } from "src/types";
 import { create, StateCreator } from "zustand";
 import { persist } from "zustand/middleware";
 import config from "src/config/config.json";
@@ -16,7 +15,7 @@ import { decodeJwt } from "jose";
 
 const MAX_EPOCH = 1; // keep ephemeral keys active for this many Sui epochs from now (1 epoch ~= 24h)
 
-export const useZkLoginSetup = create<zkLoginState>(
+export const useZkLoginSetup = create<ZkLoginState>(
   persist(
     (set, get) => ({
       provider: "Google",
@@ -38,9 +37,11 @@ export const useZkLoginSetup = create<zkLoginState>(
       zkProofs: null,
       salt: () => "",
       isProofsLoading: false,
+      accessToken: "",
       beginZkLogin: async (provider) => {
-        const { epoch } = await suiClient.getLatestSuiSystemState();
-        const maxEpoch = Number(epoch) + MAX_EPOCH; // the ephemeral key will be valid for MAX_EPOCH from now
+        // const { epoch } = await suiClient.getLatestSuiSystemState();
+        // const maxEpoch = Number(epoch) + MAX_EPOCH; // the ephemeral key will be valid for MAX_EPOCH from now
+        const maxEpoch = 1000;
         const ephemeralKeyPair = new Ed25519Keypair();
         const randomness = generateRandomness();
 
@@ -60,6 +61,10 @@ export const useZkLoginSetup = create<zkLoginState>(
           randomness
         );
         set({ randomness, nonce });
+
+        const loginUrl = get().loginUrl();
+        console.log("loginUrl", loginUrl);
+        window.location.href = loginUrl;
       },
       completeZkLogin: async (account) => {
         set({
@@ -93,12 +98,15 @@ export const useZkLoginSetup = create<zkLoginState>(
       getJwt: () => {
         const urlFragment = window.location.hash.substring(1);
         const urlParams = new URLSearchParams(urlFragment);
+        // console.log("urlParams", [...urlParams.entries()]);
         const jwt = urlParams.get("id_token");
+        const accessToken = urlParams.get("access_token") ?? '';
+        set({ accessToken });
 
-        if (!jwt) {
-          return;
-        }
-        window.history.replaceState(null, "", window.location.pathname); // remove URL fragment
+        // remove URL fragment
+        window.history.replaceState(null, "", window.location.pathname);
+
+        if (!jwt) return;
 
         const jwtPayload = decodeJwt(jwt);
         if (!jwtPayload.sub || !jwtPayload.aud) {
@@ -115,6 +123,32 @@ export const useZkLoginSetup = create<zkLoginState>(
               : jwtPayload.aud[0],
         });
       },
+      parseUrlHash: (hash) => {
+        const urlParams = new URLSearchParams(hash);
+        const jwt = urlParams.get("id_token");
+        const accessToken = urlParams.get("access_token");
+
+        if (jwt) {
+          const jwtPayload = decodeJwt(jwt);
+          if (!jwtPayload.sub || !jwtPayload.aud) {
+            console.warn("[completeZkLogin] missing jwt.sub or jwt.aud");
+            return;
+          }
+
+          set({
+            jwt,
+            sub: jwtPayload.sub,
+            aud:
+              typeof jwtPayload.aud === "string"
+                ? jwtPayload.aud
+                : jwtPayload.aud[0],
+          });
+        }
+
+        if (accessToken) {
+          set({ accessToken });
+        }
+      },
       account: () => ({
         provider: get().provider,
         userAddr: get().userAddr,
@@ -128,39 +162,31 @@ export const useZkLoginSetup = create<zkLoginState>(
         maxEpoch: get().maxEpoch,
         randomeness: get().randomness,
       }),
+      loginStatus() {
+        if (!get().jwt) {
+          return "loggedOut";
+        }
+        return "loggedIn";
+      },
     }),
     {
       name: "zkLoginSetup",
-      getStorage: () => localStorage,
-      partialize: (state: zkLoginState) => ({
-        // provider: state.provider,
-        // userAddr: state.userAddr,
-        // zkProofs: state.zkProofs,
-        // ephemeralPublicKey: state.ephemeralPublicKey,
-        // ephemeralPrivateKey: state.ephemeralPrivateKey,
-        // userSalt: state.salt(),
-        // jwt: state.jwt,
-        // sub: state.sub,
-        // aud: state.aud,
-        // maxEpoch: state.maxEpoch,
-        // randomeness: state.randomness,
-      }),
     }
-  ) as StateCreator<zkLoginState, [], []>
+  ) as StateCreator<ZkLoginState, [], []>
 );
 
 const getLoginUrl = (props: { provider: OpenIdProvider; nonce: string }) => {
-  const REDIRECT_URI = window.location.origin + "/demo";
+  const REDIRECT_URI = window.location.origin + "/login";
   const urlParamsBase = {
     nonce: props.nonce,
-    state: new URLSearchParams({
-      // redirect_uri: REDIRECT_URI,
-      redirect_uri: `${REDIRECT_URI}`,
-    }).toString(),
-    //   redirect_uri: window.location.origin + "/login",
-    redirect_uri: "https://zklogin-dev-redirect.vercel.app/api/auth",
-    response_type: "id_token",
-    scope: "openid",
+    redirect_uri: REDIRECT_URI,
+    response_type: "id_token token",
+    // scope: "openid email https://www.googleapis.com/auth/drive.file",
+    // scope: "https://www.googleapis.com/auth/drive.file",
+    scope: "openid email profile https://www.googleapis.com/auth/drive",
+    // scope: "openid email profile",
+    // scope: "openid email",
+    // scope: "drive.file",
   };
 
   const loginUrl = match(props.provider)
@@ -170,6 +196,7 @@ const getLoginUrl = (props: { provider: OpenIdProvider; nonce: string }) => {
         client_id: config.CLIENT_ID_GOOGLE,
       });
       return `https://accounts.google.com/o/oauth2/v2/auth?${urlParams}`;
+      // return `https://www.googleapis.com/auth/drive.file?${urlParams}`;
     })
     .with("Twitch", () => {
       const urlParams = new URLSearchParams({
