@@ -1,0 +1,10 @@
+[tasks."switch:testnet"]
+script = '''
+sui client switch --env testnet
+'''
+
+[tasks."deploy:sion"]
+script = '''
+cd contracts/sion
+sui client publish --gas-budget 123456789 --skip-dependency-verification
+'''

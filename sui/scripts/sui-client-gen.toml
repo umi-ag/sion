@@ -1,0 +1,8 @@
+[config]
+# will be set to mainnet by default if omitted
+# rpc = "https://fullnode.mainnet.sui.io:443"
+rpc = "https://fullnode.testnet.sui.io:443"
+
+[packages]
+Sion = {id = '0xb905cffb978c84e2fd6c490f00a4c4659d0ee9eb25f77ae90c9f10caff9d3115'}
+Sui = {git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "mainnet-v1.13.0"}

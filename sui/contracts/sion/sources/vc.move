@@ -11,64 +11,76 @@ module sion::vc {
 
     struct VC has key, store {
         id: UID,
-        authenticator: address,
-        authenticatee: address,
+        authenticator: address, // issuer
+        subject: address, // credential subject
         created_at: u64,
-        claims: Table<String, vector<u8>>,
+        claims_key_to_digest: Table<String, vector<u8>>,
+        claims_digest_to_key: Table<vector<u8>, String>,
     }
 
     public fun authenticator(self: &VC): address {
         self.authenticator
     }
 
-    public fun authenticatee(self: &VC): address {
-        self.authenticatee
+    public fun subject(self: &VC): address {
+        self.subject
     }
 
     public(friend) fun new(
         authenticator: address,
-        authenticatee: address,
+        subject: address,
         clock: &Clock,
         ctx: &mut TxContext
     ): VC {
         VC {
             id: object::new(ctx),
-            authenticatee,
+            subject,
             authenticator,
             created_at: clock::timestamp_ms(clock),
-            claims: table::new(ctx),
+            claims_key_to_digest: table::new(ctx),
+            claims_digest_to_key: table::new(ctx),
         }
     }
 
-    public fun add_claim(self: &mut VC, key: String, digest: vector<u8>) {
-        table::add(&mut self.claims, key, digest);
+    public fun inseart_claim(self: &mut VC, key: String, digest: vector<u8>) {
+        inseart_claim_key_to_digest(self, key, digest);
+        inseart_claim_digest_to_key(self, key, digest);
     }
 
-    public fun borrow_claim(self: &VC, key: String): &vector<u8> {
-        table::borrow(&self.claims, key)
+    fun inseart_claim_key_to_digest(self: &mut VC, key: String, digest: vector<u8>) {
+        if (contains_claim_key(self, key)) {
+            *table::borrow_mut(&mut self.claims_key_to_digest, key) = digest;
+        } else {
+            table::add(&mut self.claims_key_to_digest, key, digest);
+        }
     }
 
-    public fun borrow_mut_claim(self: &mut VC, key: String): &mut vector<u8> {
-        table::borrow_mut(&mut self.claims, key)
+    fun inseart_claim_digest_to_key(self: &mut VC, key: String, digest: vector<u8>) {
+        if (contains_claim_digest(self, digest)) {
+            *table::borrow_mut(&mut self.claims_digest_to_key, digest) = key;
+        } else {
+            table::add(&mut self.claims_digest_to_key, digest, key);
+        }
     }
 
-    public fun update_claim(self: &mut VC, key: String, digest: vector<u8>) {
-        *borrow_mut_claim(self, key) = digest;
+    public fun remove_claim(self: &mut VC, key: String) {
+        let digest = table::remove(&mut self.claims_key_to_digest, key);
+        table::remove(&mut self.claims_digest_to_key, digest);
     }
 
-    public fun remove_claim(self: &mut VC, key: String): vector<u8> {
-        table::remove(&mut self.claims, key)
+    public fun contains_claim_key(self: &mut VC, key: String): bool {
+        table::contains(&self.claims_key_to_digest, key)
     }
 
-    public fun contains_claim(self: &mut VC, key: String): bool {
-        table::contains(&self.claims, key)
+    public fun contains_claim_digest(self: &mut VC, digest: vector<u8>): bool {
+        table::contains(&self.claims_digest_to_key, digest)
     }
 
     public fun length_claims(self: &VC): u64 {
-        table::length(&self.claims)
+        table::length(&self.claims_key_to_digest)
     }
 
     public fun is_empty_claims(self: &VC): bool {
-        table::is_empty(&self.claims)
+        table::is_empty(&self.claims_key_to_digest) && table::is_empty(&self.claims_digest_to_key)
     }
 }

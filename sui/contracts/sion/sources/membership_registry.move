@@ -1,10 +1,8 @@
 module sion::membership_registry {
     use sui::clock::{Self, Clock};
-    use sui::object::{Self, UID};
-    use std::string::{String};
+    use sui::object::{Self, ID, UID};
     use sui::transfer;
     use sui::tx_context::{Self, TxContext};
-    use sui::dynamic_field as df;
     use sui::table::{Self, Table};
 
     use sion::vc::{Self, VC};
@@ -12,7 +10,7 @@ module sion::membership_registry {
     struct MembershipRegistry has key, store{
         id: UID,
         authenticator: address,
-        members: Table<address, VC>,
+        members: Table<address, ID>,
     }
 
     fun new(authenticator: address, ctx: &mut TxContext): MembershipRegistry {
@@ -37,6 +35,7 @@ module sion::membership_registry {
     ) {
         let authenticator = tx_context::sender(ctx);
         let vc = vc::new(authenticator, member, clock, ctx);
-        table::add(&mut self.members, member, vc);
+        table::add(&mut self.members, member, object::id(&vc));
+        transfer::public_transfer(vc, authenticator);
     }
 }

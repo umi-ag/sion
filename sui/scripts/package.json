@@ -1,6 +1,18 @@
 {
-  "dependencies": { "crypto-js": "^4.2.0" },
+  "scripts": {
+    "gen:sui": "sui-client-gen -m sui-client-gen.toml -o src/libs/moveCall"
+  },
+  "dependencies": {
+    "@mysten/sui.js": "^0.46.1",
+    "cbor-x": "^1.5.6",
+    "cross-fetch": "^4.0.0",
+    "crypto-js": "^4.2.0",
+    "lodash-es": "^4.17.21"
+  },
   "devDependencies": {
-    "@types/node": "^20.9.2"
+    "@types/crypto-js": "^4.2.1",
+    "@types/jest": "^29.5.8",
+    "@types/node": "^20.9.2",
+    "jest": "^29.7.0"
   }
 }
