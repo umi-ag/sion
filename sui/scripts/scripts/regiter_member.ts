@@ -66,7 +66,7 @@ const membershipRegistryObject = await (async () => {
 console.log({ membershipRegistryObject });
 
 const memberAddress =
-  "0x640aff861034c71ba7a71488d64152772caa4101842502fed3132deebb550077";
+  "0x6be242e02f4d72622e46b2600688bc6f9c3650d0988e02c886e14b597cc23733";
 
 const vc = await (async () => {
   const txb = new TransactionBlock();

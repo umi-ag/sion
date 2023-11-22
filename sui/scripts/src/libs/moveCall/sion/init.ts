@@ -6,6 +6,7 @@ import {StructClassLoader} from "../_framework/loader";
 
 export function registerClasses(loader: StructClassLoader) { loader.register(issuerOld.VC);
 loader.register(vc.VC);
+loader.register(vc.ContainsClaimEvent);
 loader.register(membershipRegistry.MembershipRegistry);
 loader.register(vcOld.VC);
  }

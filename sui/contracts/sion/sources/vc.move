@@ -2,10 +2,9 @@ module sion::vc {
     use sui::clock::{Self, Clock};
     use sui::object::{Self, UID};
     use std::string::{String};
-    use sui::transfer;
-    use sui::tx_context::{Self, TxContext};
-    use sui::dynamic_field as df;
+    use sui::tx_context::{TxContext};
     use sui::table::{Self, Table};
+    use sui::event;
 
     friend sion::membership_registry;
 
@@ -16,6 +15,14 @@ module sion::vc {
         created_at: u64,
         claims_key_to_digest: Table<String, vector<u8>>,
         claims_digest_to_key: Table<vector<u8>, String>,
+    }
+
+    struct ContainsClaimEvent has copy, drop {
+        authenticator: address,
+        subject: address,
+        claim_key: String,
+        claim_digest:  vector<u8>,
+        isVerified: bool,
     }
 
     public fun authenticator(self: &VC): address {
@@ -48,7 +55,8 @@ module sion::vc {
     }
 
     fun inseart_claim_key_to_digest(self: &mut VC, key: String, digest: vector<u8>) {
-        if (contains_claim_key(self, key)) {
+        let exists = table::contains(&self.claims_key_to_digest, key);
+        if (exists) {
             *table::borrow_mut(&mut self.claims_key_to_digest, key) = digest;
         } else {
             table::add(&mut self.claims_key_to_digest, key, digest);
@@ -56,7 +64,8 @@ module sion::vc {
     }
 
     fun inseart_claim_digest_to_key(self: &mut VC, key: String, digest: vector<u8>) {
-        if (contains_claim_digest(self, digest)) {
+        let exists = table::contains(&self.claims_digest_to_key, digest);
+        if (exists) {
             *table::borrow_mut(&mut self.claims_digest_to_key, digest) = key;
         } else {
             table::add(&mut self.claims_digest_to_key, digest, key);
@@ -68,12 +77,38 @@ module sion::vc {
         table::remove(&mut self.claims_digest_to_key, digest);
     }
 
-    public fun contains_claim_key(self: &mut VC, key: String): bool {
-        table::contains(&self.claims_key_to_digest, key)
+    public fun borrow_claim_digest_by_key(self: &VC, key: String): &vector<u8> {
+        table::borrow(&self.claims_key_to_digest, key)
     }
 
-    public fun contains_claim_digest(self: &mut VC, digest: vector<u8>): bool {
-        table::contains(&self.claims_digest_to_key, digest)
+    public fun borrow_claim_key_by_digest(self: &VC, digest: vector<u8>): &String {
+        table::borrow(&self.claims_digest_to_key, digest)
+    }
+
+    public fun contains_claim_key(self: &VC, key: String): bool {
+        let exists = table::contains(&self.claims_key_to_digest, key);
+        let digest = *borrow_claim_digest_by_key(self, key);
+        event::emit(ContainsClaimEvent {
+            authenticator: self.authenticator,
+            subject: self.subject,
+            claim_key: key,
+            claim_digest: digest,
+            isVerified: exists
+        });
+        exists
+    }
+
+    public fun contains_claim_digest(self: &VC, digest: vector<u8>): bool {
+        let exists = table::contains(&self.claims_digest_to_key, digest);
+        let key = *borrow_claim_key_by_digest(self, digest);
+        event::emit(ContainsClaimEvent {
+            authenticator: self.authenticator,
+            subject: self.subject,
+            claim_key: key,
+            claim_digest: digest,
+            isVerified: exists
+        });
+        exists
     }
 
     public fun length_claims(self: &VC): u64 {

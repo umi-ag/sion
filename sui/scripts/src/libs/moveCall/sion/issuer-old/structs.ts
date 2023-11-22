@@ -7,7 +7,7 @@ import {SuiClient, SuiParsedData} from "@mysten/sui.js/client";
 
 /* ============================== VC =============================== */
 
-bcs.registerStructType( "0xb905cffb978c84e2fd6c490f00a4c4659d0ee9eb25f77ae90c9f10caff9d3115::issuer_old::VC", {
+bcs.registerStructType( "0x773580dec6d115c6cceb88b727e6cc14db88294e8f7294a6caf1cbc2c1f76c7c::issuer_old::VC", {
 id: `0x2::object::UID`,
 vin: `0x1::string::String`,
 odometer_reading: `u64`,
@@ -16,11 +16,11 @@ created_at: `u64`,
 created_by: `address`,
 } )
 
-export function isVC(type: Type): boolean { return type === "0xb905cffb978c84e2fd6c490f00a4c4659d0ee9eb25f77ae90c9f10caff9d3115::issuer_old::VC"; }
+export function isVC(type: Type): boolean { return type === "0x773580dec6d115c6cceb88b727e6cc14db88294e8f7294a6caf1cbc2c1f76c7c::issuer_old::VC"; }
 
 export interface VCFields { id: string; vin: string; odometerReading: bigint; fuelUsage: bigint; createdAt: bigint; createdBy: string }
 
-export class VC { static readonly $typeName = "0xb905cffb978c84e2fd6c490f00a4c4659d0ee9eb25f77ae90c9f10caff9d3115::issuer_old::VC"; static readonly $numTypeParams = 0;
+export class VC { static readonly $typeName = "0x773580dec6d115c6cceb88b727e6cc14db88294e8f7294a6caf1cbc2c1f76c7c::issuer_old::VC"; static readonly $numTypeParams = 0;
 
  ; readonly id: string; readonly vin: string; readonly odometerReading: bigint; readonly fuelUsage: bigint; readonly createdAt: bigint; readonly createdBy: string
 

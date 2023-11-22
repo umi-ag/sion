@@ -26,6 +26,14 @@ export interface RemoveClaimArgs { vc: ObjectArg; string: string | TransactionAr
 
 export function removeClaim( txb: TransactionBlock, args: RemoveClaimArgs ) { return txb.moveCall({ target: `${PUBLISHED_AT}::vc::remove_claim`, arguments: [ obj(txb, args.vc), pure(txb, args.string, `0x1::string::String`) ], }) }
 
+export interface BorrowClaimDigestByKeyArgs { vc: ObjectArg; string: string | TransactionArgument }
+
+export function borrowClaimDigestByKey( txb: TransactionBlock, args: BorrowClaimDigestByKeyArgs ) { return txb.moveCall({ target: `${PUBLISHED_AT}::vc::borrow_claim_digest_by_key`, arguments: [ obj(txb, args.vc), pure(txb, args.string, `0x1::string::String`) ], }) }
+
+export interface BorrowClaimKeyByDigestArgs { vc: ObjectArg; vecU8: Array<number | TransactionArgument> | TransactionArgument }
+
+export function borrowClaimKeyByDigest( txb: TransactionBlock, args: BorrowClaimKeyByDigestArgs ) { return txb.moveCall({ target: `${PUBLISHED_AT}::vc::borrow_claim_key_by_digest`, arguments: [ obj(txb, args.vc), pure(txb, args.vecU8, `vector<u8>`) ], }) }
+
 export interface ContainsClaimKeyArgs { vc: ObjectArg; string: string | TransactionArgument }
 
 export function containsClaimKey( txb: TransactionBlock, args: ContainsClaimKeyArgs ) { return txb.moveCall({ target: `${PUBLISHED_AT}::vc::contains_claim_key`, arguments: [ obj(txb, args.vc), pure(txb, args.string, `0x1::string::String`) ], }) }

@@ -6,17 +6,17 @@ import {SuiClient, SuiParsedData} from "@mysten/sui.js/client";
 
 /* ============================== VC =============================== */
 
-bcs.registerStructType( "0xb905cffb978c84e2fd6c490f00a4c4659d0ee9eb25f77ae90c9f10caff9d3115::vc_old::VC", {
+bcs.registerStructType( "0x773580dec6d115c6cceb88b727e6cc14db88294e8f7294a6caf1cbc2c1f76c7c::vc_old::VC", {
 id: `0x2::object::UID`,
 created_at: `u64`,
 created_by: `address`,
 } )
 
-export function isVC(type: Type): boolean { return type === "0xb905cffb978c84e2fd6c490f00a4c4659d0ee9eb25f77ae90c9f10caff9d3115::vc_old::VC"; }
+export function isVC(type: Type): boolean { return type === "0x773580dec6d115c6cceb88b727e6cc14db88294e8f7294a6caf1cbc2c1f76c7c::vc_old::VC"; }
 
 export interface VCFields { id: string; createdAt: bigint; createdBy: string }
 
-export class VC { static readonly $typeName = "0xb905cffb978c84e2fd6c490f00a4c4659d0ee9eb25f77ae90c9f10caff9d3115::vc_old::VC"; static readonly $numTypeParams = 0;
+export class VC { static readonly $typeName = "0x773580dec6d115c6cceb88b727e6cc14db88294e8f7294a6caf1cbc2c1f76c7c::vc_old::VC"; static readonly $numTypeParams = 0;
 
  ; readonly id: string; readonly createdAt: bigint; readonly createdBy: string
 
