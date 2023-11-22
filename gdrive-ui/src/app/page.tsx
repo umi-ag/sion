@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { redirect } from "next/navigation";
+import { redirect } from 'next/navigation';
 import { useZkLoginSetup } from 'src/store/zklogin';
 
 const Page = () => {
   const zkLoginStore = useZkLoginSetup();
 
   if (!zkLoginStore.jwt) {
-    redirect("/login");
+    redirect('/login');
   } else {
-    redirect("/gdrive");
+    redirect('/gdrive');
   }
 };
 

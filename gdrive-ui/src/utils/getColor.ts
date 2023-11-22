@@ -1,4 +1,4 @@
-import { ColorsType } from "src/types";
+import { ColorsType } from 'src/types';
 
 const splitObjectId = (objectId: string) => {
   const str = objectId.slice(2);

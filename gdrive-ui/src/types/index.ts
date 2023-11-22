@@ -35,20 +35,18 @@ export interface SponsoredTransaction {
   expireAtTime: number;
   expireAfterEpoch: number;
 }
-export type SponsoredTransactionStatus = "IN_FLIGHT" | "COMPLETE" | "INVALID";
+export type SponsoredTransactionStatus = 'IN_FLIGHT' | 'COMPLETE' | 'INVALID';
 
 export interface SponsorRpc {
   gas_sponsorTransactionBlock(
     txBytes: string,
     sender: string,
-    gasBudget: number
+    gasBudget: number,
   ): SponsoredTransaction;
-  gas_getSponsoredTransactionBlockStatus(
-    txDigest: string
-  ): SponsoredTransactionStatus;
+  gas_getSponsoredTransactionBlockStatus(txDigest: string): SponsoredTransactionStatus;
 }
 
-export type OpenIdProvider = "Google" | "Twitch" | "Facebook";
+export type OpenIdProvider = 'Google' | 'Twitch' | 'Facebook';
 
 export type SetupData = {
   provider: OpenIdProvider;
