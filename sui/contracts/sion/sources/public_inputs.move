@@ -1,4 +1,4 @@
-module sion::bits {
+module sion::public_inputs {
     use std::vector;
 
     use sui::clock::{Self, Clock};
@@ -10,9 +10,65 @@ module sion::bits {
     use sui::groth16;
     use sui::bcs;
 
-
     #[test_only]
     use std::debug;
+
+    struct PublicInputsArgs has copy, drop {
+        expected_digest: vector<u8>,
+        min: u64,
+        max: u64,
+    }
+
+    public fun build_public_inputs_bytes(expected_digest: vector<u8>, min: u64, max: u64): vector<u8> {
+        let args = new(expected_digest, min, max);
+        to_bytes(&args)
+    }
+
+    public fun new(expected_digest: vector<u8>, min: u64, max: u64): PublicInputsArgs {
+        PublicInputsArgs {
+            expected_digest,
+            min,
+            max,
+        }
+    }
+
+    public fun to_bytes(self: &PublicInputsArgs): vector<u8> {
+        let digest = self.expected_digest;
+        let last = vector::pop_back(&mut digest);
+        let input_min = self.min;
+        let input_max = self.max;
+
+        let buffer = vector::empty<u8>();
+        {
+            let buf = vector::empty<u8>();
+            vector::append(&mut buf, digest);
+            vector::push_back(&mut buf, 0);
+
+            vector::append(&mut buffer, buf);
+        };
+        {
+            let buf = vector::empty<u8>();
+            // For padding
+            let bytes = to_le_bytes(&(last as u256));
+            vector::append(&mut buf, bytes);
+
+            vector::append(&mut buffer, buf);
+        };
+        {
+            let buf = vector::empty<u8>();
+            vector::append(&mut buf, to_le_bytes(&(input_min as u256)));
+
+            vector::append(&mut buffer, buf);
+        };
+        {
+            let buf = vector::empty<u8>();
+            vector::append(&mut buf, to_le_bytes(&(input_max as u256)));
+
+            vector::append(&mut buffer, buf);
+        };
+
+        buffer
+    }
 
 
     fun to_le_bytes<T>(x: &T): vector<u8> {

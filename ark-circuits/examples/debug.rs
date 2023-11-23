@@ -5,7 +5,7 @@ use ark_circuits::serde_utils::{self, Groth16VerifierTuple};
 use ark_crypto_primitives::crh::sha256::constraints::{DigestVar, Sha256Gadget};
 use ark_ff::ToConstraintField;
 use ark_ff::{Field, PrimeField};
-use ark_groth16::Groth16;
+use ark_groth16::{Groth16, Proof};
 use ark_r1cs_std::eq::EqGadget;
 use ark_r1cs_std::uint64::UInt64;
 use ark_r1cs_std::uint8::UInt8;
@@ -15,12 +15,15 @@ use ark_r1cs_std::{
     prelude::{AllocVar, AllocationMode},
 };
 use ark_relations::r1cs::{ConstraintSynthesizer, ConstraintSystemRef, SynthesisError};
+use ark_serialize::CanonicalDeserialize;
 use ark_serialize::CanonicalSerialize;
 use ark_snark::SNARK;
 use ark_std::cmp::Ordering;
 use fastcrypto::encoding::Base58;
+use fastcrypto::error::FastCryptoError;
 use fastcrypto::hash::HashFunction;
 use fastcrypto::hash::Sha256;
+use fastcrypto_zkp::bn254::api::verify_groth16_in_bytes;
 use rand::thread_rng;
 use std::fs::File;
 use std::io::Write;
@@ -236,6 +239,25 @@ fn main() {
         let mut file = File::create(path).expect("");
         file.write_all(serialized_data.as_bytes()).expect("");
     }
+
+    let vk = fastcrypto_zkp::bn254::VerifyingKey::from(pk.vk);
+    // let pvk = fastcrypto_zkp::bn254::api::prepare_pvk_bytes(&tuple.vk)?;
+    let pvk = fastcrypto_zkp::bn254::verifier::process_vk_special(&vk);
+    dbg!(&pvk);
+    let proof = Proof::<Curve>::deserialize_compressed(tuple.proof.as_slice())
+        .map_err(|_| FastCryptoError::InvalidInput)
+        .unwrap();
+    dbg!(&proof);
+
+    // for chunk in proof_public_inputs_as_bytes.chunks(32) {
+    //     public_inputs.push(
+    //         Bn254Fr::deserialize_compressed(chunk).map_err(|_| FastCryptoError::InvalidInput)?,
+    //     );
+    // }
+
+    let result =
+        fastcrypto_zkp::bn254::api::verify_groth16(&pvk, &tuple.public_inputs, &tuple.proof);
+    dbg!(&result);
 }
 
 // 0400000000000000 (u8)

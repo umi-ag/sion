@@ -37,6 +37,26 @@ pub fn to_bytes<T: CanonicalSerialize>(data: &T) -> Vec<u8> {
 }
 
 #[serde_as]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct PublicInputs<Fr> {
+    pub public_inputs: Vec<Fr>,
+}
+
+impl PublicInputs<Fr> {
+    pub fn new(public_inputs: Vec<Fr>) -> Self {
+        Self { public_inputs }
+    }
+
+    pub fn to_bytes(&self) -> Vec<u8> {
+        let mut buffer = vec![];
+        for data in &self.public_inputs {
+            data.serialize_compressed(&mut buffer).unwrap();
+        }
+        buffer
+    }
+}
+
+#[serde_as]
 #[derive(Serialize, Deserialize)]
 pub struct Groth16VerifierTuple {
     #[serde_as(as = "Hex")]
