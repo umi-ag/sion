@@ -1,5 +1,5 @@
 import { decodeJwt } from 'jose';
-import { atom, useAtom } from 'jotai';
+import { atom } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
 
 export type OauthState = {
@@ -16,7 +16,7 @@ export type OauthState = {
   accessToken: string;
 };
 
-export const oauthStateAtom = atomWithStorage<OauthState>('oauth-state', {
+export const defaultOauthState = (): OauthState => ({
   urlHash: '',
   jwt: '',
   aud: '',
@@ -28,6 +28,8 @@ export const oauthStateAtom = atomWithStorage<OauthState>('oauth-state', {
   picture: '',
   accessToken: '',
 });
+
+export const oauthStateAtom = atomWithStorage<OauthState>('oauth-state', defaultOauthState());
 
 export const oauthAtom = atom(
   (get) => {
@@ -44,35 +46,36 @@ export const oauthAtom = atom(
   },
 );
 
-export const initOauthState = () => {
-  const [_, setOauthAtom] = useAtom(oauthAtom);
-  setOauthAtom({
-    urlHash: '',
-    jwt: '',
-    aud: '',
-    sub: '',
-    iat: 0,
-    exp: 0,
-    name: '',
-    email: '',
-    picture: '',
-    accessToken: '',
-  });
-};
+// export const initOauthState = () => {
+//   const [_, setOauthAtom] = useAtom(oauthAtom);
+//   setOauthAtom({
+//     urlHash: '',
+//     jwt: '',
+//     aud: '',
+//     sub: '',
+//     iat: 0,
+//     exp: 0,
+//     name: '',
+//     email: '',
+//     picture: '',
+//     accessToken: '',
+//   });
+// };
 
-export const completeOauth = (urlHash: string) => {
+export const parseUrlHash = (urlHash: string) => {
   const urlParams = new URLSearchParams(urlHash);
   const jwt = urlParams.get('id_token');
   const accessToken = urlParams.get('access_token') ?? '';
 
-  if (!jwt) return;
+  if (!jwt) {
+    throw new Error('missing jwt');
+  }
 
-  const [_, setOauthAtom] = useAtom(oauthAtom);
+  // const [_, setOauthAtom] = useAtom(oauthAtom);
 
   const payload = decodeJwt(jwt);
   if (!payload.sub || !payload.aud) {
-    console.warn('[completeOauth] missing jwt.sub or jwt.aud');
-    return;
+    throw new Error('missing jwt.sub or jwt.aud');
   }
   const aud = typeof payload.aud === 'string' ? payload.aud : payload.aud[0];
   const sub = payload.sub;
@@ -82,7 +85,19 @@ export const completeOauth = (urlHash: string) => {
   const email = (payload.email as string) ?? '';
   const picture = (payload.picture as string) ?? '';
 
-  setOauthAtom({
+  // setOauthAtom({
+  //   urlHash,
+  //   jwt,
+  //   sub,
+  //   aud,
+  //   iat,
+  //   exp,
+  //   name,
+  //   email,
+  //   picture,
+  //   accessToken,
+  // });
+  return {
     urlHash,
     jwt,
     sub,
@@ -93,5 +108,5 @@ export const completeOauth = (urlHash: string) => {
     email,
     picture,
     accessToken,
-  });
+  };
 };

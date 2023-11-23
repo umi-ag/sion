@@ -1,18 +1,19 @@
 'use client';
 
+import { useAtom } from 'jotai';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { useEffect } from 'react';
-import { useZkLoginSetup } from 'src/store/zklogin';
+import { oauthAtom } from 'src/store';
 
 const Page = () => {
-  const zkLoginStore = useZkLoginSetup();
+  const [oauth] = useAtom(oauthAtom);
 
   useEffect(() => {
-    if (!zkLoginStore.jwt || !zkLoginStore.accessToken) {
+    if (oauth.loginStatus === 'loggedOut') {
       redirect('/login');
     }
-  }, [zkLoginStore]);
+  }, [oauth]);
 
   return (
     <div>
@@ -24,14 +25,14 @@ const Page = () => {
       </p>
 
       <div>
-        <button className="border border-black px-4 py-1 rounded" onClick={zkLoginStore.listFiles}>
+        <button className="border border-black px-4 py-1 rounded" onClick={() => {}}>
           List
         </button>
       </div>
       <ul>
-        {zkLoginStore.files.map(file => (
+        {/* {zkLoginStore.files.map((file) => (
           <li key={file.id}>{file.name}</li>
-        ))}
+        ))} */}
       </ul>
     </div>
   );

@@ -1,7 +1,7 @@
 'use client';
 
 import { redirect } from 'next/navigation';
-import { useZkLoginSetup } from 'src/store/zklogin';
+import { useZkLoginSetup } from 'src/store/__zklogin';
 
 const Page = () => {
   const zkLoginStore = useZkLoginSetup();

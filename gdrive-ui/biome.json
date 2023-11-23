@@ -19,6 +19,9 @@
       },
       "a11y": {
         "useButtonType": "off"
+      },
+      "suspicious": {
+        "noConsoleLog": "off"
       }
     }
   },

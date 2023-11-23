@@ -1,35 +1,45 @@
 'use client';
 
-import { useZkLoginSetup } from 'src/store/zklogin';
-import { LoginButton } from './LoginButton';
-import { useEffect } from 'react';
+import { useAtom } from 'jotai';
 import { redirect } from 'next/navigation';
-
-const urlHash = () => {
-  const urlFragment = window.location.hash.substring(1);
-  // remove URL fragment
-  window.history.replaceState(null, '', window.location.pathname);
-
-  return urlFragment;
-};
+import { useEffect } from 'react';
+import {
+  defaultOauthState,
+  defaultZkLoginState,
+  oauthAtom,
+  parseUrlHash,
+  zkLoginAtom,
+} from 'src/store';
+import { getUrlHash } from 'src/utils/url';
+import { LoginButton } from './LoginButton';
 
 const Page = () => {
-  const zkLoginStore = useZkLoginSetup();
+  // const zkLoginStore = useZkLoginSetup();
+  const [zkLogin, setZkLoginState] = useAtom(zkLoginAtom);
+  const [_oauth, setOauthState] = useAtom(oauthAtom);
+
+  const initLoginState = () => {
+    setZkLoginState(defaultZkLoginState());
+    setOauthState(defaultOauthState());
+  };
 
   const login = async () => {
-    await zkLoginStore.beginZkLogin('Google');
-    const loginUrl = zkLoginStore.loginUrl();
-    console.log('loginUrl', loginUrl);
-    window.location.href = loginUrl;
+    // await zkLoginStore.beginZkLogin('Google');
+    // const loginUrl = zkLoginStore.loginUrl();
+    // window.location.href = loginUrl;
+    initLoginState();
+    console.log('loginUrl', zkLogin.loginUrl);
+    window.location.href = zkLogin.loginUrl;
   };
 
   useEffect(() => {
-    const hash = urlHash();
+    const hash = getUrlHash();
     if (hash) {
-      zkLoginStore.parseUrlHash(hash);
+      const tokens = parseUrlHash(hash);
+      setOauthState(tokens);
       redirect('/gdrive');
     }
-  }, [zkLoginStore]);
+  }, [setOauthState]);
 
   return (
     <div className="grid place-items-center min-h-full">

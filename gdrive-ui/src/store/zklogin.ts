@@ -17,17 +17,51 @@ export type ZkLoginState = {
   zkProofs: ZKProof | null; // fetch from prover server
 };
 
-export const zkLoginStateAtom = atomWithStorage<ZkLoginState>('zklogin-state', {
-  provider: 'Google',
-  maxEpoch: 0,
-  jwtRandomness: '',
-  ephemeralSecretKeyStr: '',
-  ephemeralPublicKeyStr: '',
-  salt: '',
-  nonce: '',
-  zkLoginAddress: '',
-  zkProofs: null,
-});
+export type ZkLoginInit = {
+  provider?: OpenIdProvider;
+  maxEpoch?: number;
+  salt?: string;
+};
+export const defaultZkLoginState = ({
+  provider = 'Google',
+  maxEpoch = 1,
+  salt = '',
+}: ZkLoginInit = {}) => {
+  const jwtRandomness = generateRandomness();
+  const ephemeralKeyPair = new Ed25519Keypair();
+  const pk = ephemeralKeyPair.getPublicKey();
+  const ephemeralPublicKeyStr = pk.toSuiAddress();
+  const ephemeralSecretKeyStr = ephemeralKeyPair.export().privateKey;
+  const nonce = generateNonce(pk as never, maxEpoch, jwtRandomness);
+
+  // const [_, setZkLoginAtom] = useAtom(zkLoginAtom);
+
+  // setZkLoginAtom({
+  //   provider,
+  //   maxEpoch,
+  //   jwtRandomness,
+  //   ephemeralSecretKeyStr,
+  //   ephemeralPublicKeyStr,
+  //   nonce,
+  //   salt,
+  //   zkLoginAddress: '',
+  //   zkProofs: null,
+  // });
+
+  return {
+    provider,
+    maxEpoch,
+    jwtRandomness,
+    ephemeralSecretKeyStr,
+    ephemeralPublicKeyStr,
+    nonce,
+    salt,
+    zkLoginAddress: '',
+    zkProofs: null,
+  };
+};
+
+export const zkLoginStateAtom = atomWithStorage<ZkLoginState>('zklogin-state', defaultZkLoginState());
 
 export const zkLoginAtom = atom(
   (get) => {
@@ -45,35 +79,3 @@ export const zkLoginAtom = atom(
     set(zkLoginStateAtom, update);
   },
 );
-
-export type ZkLoginInit = {
-  provider?: OpenIdProvider;
-  maxEpoch?: number;
-  salt?: string;
-};
-export const initZkLoginState = ({
-  provider = 'Google',
-  maxEpoch = 1,
-  salt = '',
-}: ZkLoginInit = {}) => {
-  const jwtRandomness = generateRandomness();
-  const ephemeralKeyPair = new Ed25519Keypair();
-  const pk = ephemeralKeyPair.getPublicKey();
-  const ephemeralPublicKeyStr = pk.toSuiAddress();
-  const ephemeralSecretKeyStr = ephemeralKeyPair.export().privateKey;
-  const nonce = generateNonce(pk as never, maxEpoch, jwtRandomness);
-
-  const [_, setZkLoginAtom] = useAtom(zkLoginAtom);
-
-  setZkLoginAtom({
-    provider,
-    maxEpoch,
-    jwtRandomness,
-    ephemeralSecretKeyStr,
-    ephemeralPublicKeyStr,
-    nonce,
-    salt,
-    zkLoginAddress: '',
-    zkProofs: null,
-  });
-};
