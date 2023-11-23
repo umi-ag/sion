@@ -40,10 +40,10 @@ export interface SponsorRpc {
   gas_sponsorTransactionBlock(
     txBytes: string,
     sender: string,
-    gasBudget: number
+    gasBudget: number,
   ): SponsoredTransaction;
   gas_getSponsoredTransactionBlockStatus(
-    txDigest: string
+    txDigest: string,
   ): SponsoredTransactionStatus;
 }
 
@@ -71,6 +71,8 @@ export type zkLoginState = SetupData & {
   zkProofs: any;
   account: () => Account;
   isProofsLoading: boolean;
+  addressSeed: () => BigInt;
+  zkloginAddress: () => string;
 };
 
 export type AccountData = {
