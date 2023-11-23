@@ -1,13 +1,9 @@
 module sion::verifier {
-    use std::vector;
-
-    use sui::clock::{Self, Clock};
     use sui::event;
     use sui::groth16;
 
     #[test_only] use std::debug;
 
-    use sion::vc::{Self, VC};
 
     struct Groth16VerificationEvent has copy, drop {
         vk: vector<u8>,

@@ -1,17 +1,9 @@
 module sion::public_inputs {
     use std::vector;
 
-    use sui::clock::{Self, Clock};
-    use sui::object::{Self, UID};
-    use std::string::{String};
-    use sui::transfer;
-    use sui::tx_context::{Self, TxContext};
-    use sui::dynamic_field as df;
-    use sui::groth16;
     use sui::bcs;
 
-    #[test_only]
-    use std::debug;
+    #[test_only] use std::debug;
 
     struct PublicInputsArgs has copy, drop {
         expected_digest: vector<u8>,

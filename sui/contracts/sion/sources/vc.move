@@ -59,12 +59,12 @@ module sion::vc {
         }
     }
 
-    public fun inseart_claim(self: &mut VC, key: String, digest: vector<u8>) {
-        inseart_claim_key_to_digest(self, key, digest);
-        inseart_claim_digest_to_key(self, key, digest);
+    public fun insert_claim(self: &mut VC, key: String, digest: vector<u8>) {
+        insert_claim_key_to_digest(self, key, digest);
+        insert_claim_digest_to_key(self, key, digest);
     }
 
-    fun inseart_claim_key_to_digest(self: &mut VC, key: String, digest: vector<u8>) {
+    fun insert_claim_key_to_digest(self: &mut VC, key: String, digest: vector<u8>) {
         let exists = table::contains(&self.claims_key_to_digest, key);
         if (exists) {
             *table::borrow_mut(&mut self.claims_key_to_digest, key) = digest;
@@ -73,7 +73,7 @@ module sion::vc {
         }
     }
 
-    fun inseart_claim_digest_to_key(self: &mut VC, key: String, digest: vector<u8>) {
+    fun insert_claim_digest_to_key(self: &mut VC, key: String, digest: vector<u8>) {
         let exists = table::contains(&self.claims_digest_to_key, digest);
         if (exists) {
             *table::borrow_mut(&mut self.claims_digest_to_key, digest) = key;
