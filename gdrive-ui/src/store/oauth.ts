@@ -28,20 +28,20 @@ export const defaultOauthState = (): OauthState => ({
   accessToken: '',
 });
 
-export const oauthStateAtom = atomWithStorage<OauthState>('oauth-state', defaultOauthState());
+export const persistedOauthAtom = atomWithStorage<OauthState>('oauth-state', defaultOauthState());
 
 export const oauthAtom = atom(
   (get) => {
-    const { jwt } = get(oauthStateAtom);
+    const { jwt } = get(persistedOauthAtom);
     const loginStatus = jwt ? 'loggedIn' : 'loggedOut';
 
     return {
-      ...get(oauthStateAtom),
+      ...get(persistedOauthAtom),
       loginStatus,
     };
   },
   (_, set, update: OauthState) => {
-    set(oauthStateAtom, update);
+    set(persistedOauthAtom, update);
   },
 );
 

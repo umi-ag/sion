@@ -47,30 +47,31 @@ export const defaultZkLoginState = ({
   };
 };
 
-export const zkLoginStateAtom = atomWithStorage<ZkLoginState>(
+export const persistedZkLoginAtom = atomWithStorage<ZkLoginState>(
   'zklogin-state',
   defaultZkLoginState(),
 );
 
 export const zkLoginAtom = atom(
   (get) => {
-    const { ephemeralSecretKeyStr, provider, nonce } = get(zkLoginStateAtom);
+    const { ephemeralSecretKeyStr, provider, nonce } = get(persistedZkLoginAtom);
     const ephemeralKeyPair = Ed25519Keypair.deriveKeypairFromSeed(ephemeralSecretKeyStr);
     const loginUrl = getLoginUrl({ nonce, provider });
 
     return {
-      ...get(zkLoginStateAtom),
+      ...get(persistedZkLoginAtom),
       ephemeralKeyPair,
       loginUrl,
     };
   },
   (_, set, update: ZkLoginState) => {
-    set(zkLoginStateAtom, update);
+    set(persistedZkLoginAtom, update);
   },
 );
 
 export const useZkLogin = () => {
   const [zkLogin, setZkLogin] = useAtom(zkLoginAtom);
+
   const initZkLoginState = () => {
     setZkLogin(defaultZkLoginState());
   };
