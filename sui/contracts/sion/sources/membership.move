@@ -1,4 +1,4 @@
-module sion::vc {
+module sion::membership {
     use sui::clock::{Self, Clock};
     use sui::object::{Self, UID};
     use std::string::{String};
@@ -8,7 +8,7 @@ module sion::vc {
 
     friend sion::membership_registry;
 
-    struct VC has key, store {
+    struct Membership has key, store {
         id: UID,
         authenticator: address, // issuer
         subject: address, // credential subject
@@ -35,11 +35,11 @@ module sion::vc {
         is_verified: bool,
     }
 
-    public fun authenticator(self: &VC): address {
+    public fun authenticator(self: &Membership): address {
         self.authenticator
     }
 
-    public fun subject(self: &VC): address {
+    public fun subject(self: &Membership): address {
         self.subject
     }
 
@@ -48,8 +48,8 @@ module sion::vc {
         subject: address,
         clock: &Clock,
         ctx: &mut TxContext
-    ): VC {
-        VC {
+    ): Membership {
+        Membership {
             id: object::new(ctx),
             subject,
             authenticator,
@@ -59,12 +59,12 @@ module sion::vc {
         }
     }
 
-    public fun insert_claim(self: &mut VC, key: String, digest: vector<u8>) {
+    public fun insert_claim(self: &mut Membership, key: String, digest: vector<u8>) {
         insert_claim_key_to_digest(self, key, digest);
         insert_claim_digest_to_key(self, key, digest);
     }
 
-    fun insert_claim_key_to_digest(self: &mut VC, key: String, digest: vector<u8>) {
+    fun insert_claim_key_to_digest(self: &mut Membership, key: String, digest: vector<u8>) {
         let exists = table::contains(&self.claims_key_to_digest, key);
         if (exists) {
             *table::borrow_mut(&mut self.claims_key_to_digest, key) = digest;
@@ -73,7 +73,7 @@ module sion::vc {
         }
     }
 
-    fun insert_claim_digest_to_key(self: &mut VC, key: String, digest: vector<u8>) {
+    fun insert_claim_digest_to_key(self: &mut Membership, key: String, digest: vector<u8>) {
         let exists = table::contains(&self.claims_digest_to_key, digest);
         if (exists) {
             *table::borrow_mut(&mut self.claims_digest_to_key, digest) = key;
@@ -82,20 +82,20 @@ module sion::vc {
         }
     }
 
-    public fun remove_claim(self: &mut VC, key: String) {
+    public fun remove_claim(self: &mut Membership, key: String) {
         let digest = table::remove(&mut self.claims_key_to_digest, key);
         table::remove(&mut self.claims_digest_to_key, digest);
     }
 
-    public fun borrow_claim_digest_by_key(self: &VC, key: String): &vector<u8> {
+    public fun borrow_claim_digest_by_key(self: &Membership, key: String): &vector<u8> {
         table::borrow(&self.claims_key_to_digest, key)
     }
 
-    public fun borrow_claim_key_by_digest(self: &VC, digest: vector<u8>): &String {
+    public fun borrow_claim_key_by_digest(self: &Membership, digest: vector<u8>): &String {
         table::borrow(&self.claims_digest_to_key, digest)
     }
 
-    public fun contains_claim_key(self: &VC, key: String): bool {
+    public fun contains_claim_key(self: &Membership, key: String): bool {
         let exists = table::contains(&self.claims_key_to_digest, key);
         let digest = *borrow_claim_digest_by_key(self, key);
 
@@ -109,7 +109,7 @@ module sion::vc {
         exists
     }
 
-    public fun contains_claim_digest(self: &VC, digest: vector<u8>): bool {
+    public fun contains_claim_digest(self: &Membership, digest: vector<u8>): bool {
         let exists = table::contains(&self.claims_digest_to_key, digest);
         let key = *borrow_claim_key_by_digest(self, digest);
 
@@ -123,16 +123,16 @@ module sion::vc {
         exists
     }
 
-    public fun length_claims(self: &VC): u64 {
+    public fun length_claims(self: &Membership): u64 {
         table::length(&self.claims_key_to_digest)
     }
 
-    public fun is_empty_claims(self: &VC): bool {
+    public fun is_empty_claims(self: &Membership): bool {
         table::is_empty(&self.claims_key_to_digest) && table::is_empty(&self.claims_digest_to_key)
     }
 
     public fun bound_check(
-        self: &VC,
+        self: &Membership,
         key: String,
         gte_bound: u64,
         lt_bound: u64,

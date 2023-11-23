@@ -8,7 +8,7 @@ module sion::membership_registry {
     use sui::transfer;
     use sui::tx_context::{Self, TxContext};
 
-    use sion::vc;
+    use sion::membership;
 
     #[test_only] use std::debug;
 
@@ -82,7 +82,7 @@ module sion::membership_registry {
         ctx: &mut TxContext,
     ): ID {
         let authenticator = tx_context::sender(ctx);
-        let vc = vc::new(authenticator, member, clock, ctx);
+        let vc = membership::new(authenticator, member, clock, ctx);
         let vc_id = object::id(&vc);
         table::add(&mut self.members, member, vc_id);
         transfer::public_transfer(vc, authenticator);
