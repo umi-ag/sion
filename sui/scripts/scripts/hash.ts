@@ -17,3 +17,11 @@ Object.entries(data).forEach(([key, value]) => {
 
   console.log(key, bytes)
 })
+
+Object.entries(data).forEach(([key, value]) => {
+  const digest = sha256(value);
+  const hex = digest.toString(CryptoJS.enc.Hex)
+  const bytes = Buffer.from(hex , 'hex');
+
+  console.log(key, bytes)
+})

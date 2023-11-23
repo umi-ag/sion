@@ -45,3 +45,7 @@ export function containsClaimDigest( txb: TransactionBlock, args: ContainsClaimD
 export function lengthClaims( txb: TransactionBlock, vc: ObjectArg ) { return txb.moveCall({ target: `${PUBLISHED_AT}::vc::length_claims`, arguments: [ obj(txb, vc) ], }) }
 
 export function isEmptyClaims( txb: TransactionBlock, vc: ObjectArg ) { return txb.moveCall({ target: `${PUBLISHED_AT}::vc::is_empty_claims`, arguments: [ obj(txb, vc) ], }) }
+
+export interface BoundCheckArgs { vc: ObjectArg; string: string | TransactionArgument; u641: bigint | TransactionArgument; u642: bigint | TransactionArgument; vecU81: Array<number | TransactionArgument> | TransactionArgument; vecU82: Array<number | TransactionArgument> | TransactionArgument }
+
+export function boundCheck( txb: TransactionBlock, args: BoundCheckArgs ) { return txb.moveCall({ target: `${PUBLISHED_AT}::vc::bound_check`, arguments: [ obj(txb, args.vc), pure(txb, args.string, `0x1::string::String`), pure(txb, args.u641, `u64`), pure(txb, args.u642, `u64`), pure(txb, args.vecU81, `vector<u8>`), pure(txb, args.vecU82, `vector<u8>`) ], }) }

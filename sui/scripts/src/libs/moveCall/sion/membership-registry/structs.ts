@@ -7,17 +7,17 @@ import {SuiClient, SuiParsedData} from "@mysten/sui.js/client";
 
 /* ============================== MembershipRegistry =============================== */
 
-bcs.registerStructType( "0x773580dec6d115c6cceb88b727e6cc14db88294e8f7294a6caf1cbc2c1f76c7c::membership_registry::MembershipRegistry", {
+bcs.registerStructType( "0x30bb7d0231b0fd195b14761cdc292912634b632914c367c7a85f4b7a98330725::membership_registry::MembershipRegistry", {
 id: `0x2::object::UID`,
 authenticator: `address`,
 members: `0x2::table::Table<address, 0x2::object::ID>`,
 } )
 
-export function isMembershipRegistry(type: Type): boolean { return type === "0x773580dec6d115c6cceb88b727e6cc14db88294e8f7294a6caf1cbc2c1f76c7c::membership_registry::MembershipRegistry"; }
+export function isMembershipRegistry(type: Type): boolean { return type === "0x30bb7d0231b0fd195b14761cdc292912634b632914c367c7a85f4b7a98330725::membership_registry::MembershipRegistry"; }
 
 export interface MembershipRegistryFields { id: string; authenticator: string; members: Table }
 
-export class MembershipRegistry { static readonly $typeName = "0x773580dec6d115c6cceb88b727e6cc14db88294e8f7294a6caf1cbc2c1f76c7c::membership_registry::MembershipRegistry"; static readonly $numTypeParams = 0;
+export class MembershipRegistry { static readonly $typeName = "0x30bb7d0231b0fd195b14761cdc292912634b632914c367c7a85f4b7a98330725::membership_registry::MembershipRegistry"; static readonly $numTypeParams = 0;
 
  ; readonly id: string; readonly authenticator: string; readonly members: Table
 

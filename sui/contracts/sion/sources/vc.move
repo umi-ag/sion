@@ -22,7 +22,17 @@ module sion::vc {
         subject: address,
         claim_key: String,
         claim_digest:  vector<u8>,
-        isVerified: bool,
+        is_verified: bool,
+    }
+
+    struct BoundCheckEvent has copy, drop {
+        authenticator: address,
+        subject: address,
+        claim_key: String,
+        claim_digest:  vector<u8>,
+        gte_bound: u64,
+        lt_bound: u64,
+        is_verified: bool,
     }
 
     public fun authenticator(self: &VC): address {
@@ -94,7 +104,7 @@ module sion::vc {
             subject: self.subject,
             claim_key: key,
             claim_digest: digest,
-            isVerified: exists
+            is_verified: exists
         });
         exists
     }
@@ -108,7 +118,7 @@ module sion::vc {
             subject: self.subject,
             claim_key: key,
             claim_digest: digest,
-            isVerified: exists
+            is_verified: exists
         });
         exists
     }
@@ -119,5 +129,34 @@ module sion::vc {
 
     public fun is_empty_claims(self: &VC): bool {
         table::is_empty(&self.claims_key_to_digest) && table::is_empty(&self.claims_digest_to_key)
+    }
+
+    public fun bound_check(
+        self: &VC,
+        key: String,
+        gte_bound: u64,
+        lt_bound: u64,
+        proof: vector<u8>,
+        vk: vector<u8>,
+    ): bool {
+        let digest = *borrow_claim_digest_by_key(self, key);
+        let is_verified = sion::verifier::verify_hash_preimage_and_range_proof(
+            digest,
+            gte_bound,
+            lt_bound,
+            proof,
+            vk,
+        );
+        event::emit(BoundCheckEvent {
+            authenticator: self.authenticator,
+            subject: self.subject,
+            claim_key: key,
+            claim_digest: digest,
+            gte_bound,
+            lt_bound,
+            is_verified,
+        });
+
+        is_verified
     }
 }

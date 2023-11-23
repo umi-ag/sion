@@ -4,5 +4,5 @@
 rpc = "https://fullnode.testnet.sui.io:443"
 
 [packages]
-Sion = {id = '0x773580dec6d115c6cceb88b727e6cc14db88294e8f7294a6caf1cbc2c1f76c7c'}
+Sion = {id = '0x30bb7d0231b0fd195b14761cdc292912634b632914c367c7a85f4b7a98330725'}
 Sui = {git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "mainnet-v1.13.0"}
