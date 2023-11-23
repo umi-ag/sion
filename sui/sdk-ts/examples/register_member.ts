@@ -12,6 +12,7 @@ import { isMembershipPointer } from '../src/moveCall/sion/membership-pointer/str
 import { create, insertMember } from '../src/moveCall/sion/membership-registry/functions';
 import { isMembershipRegistry } from '../src/moveCall/sion/membership-registry/structs';
 import { isMembership } from '../src/moveCall/sion/membership/structs';
+import { sionMoveCall } from '../src/libs/sionTransaction';
 
 globalThis.fetch = fetch;
 
@@ -35,7 +36,7 @@ console.log({ address });
 
 const membershipRegistryObject = await (async () => {
   const txb = new TransactionBlock();
-  create(txb);
+  sionMoveCall.createMembershipRegister(txb);
   const result: SuiTransactionBlockResponse = await client.signAndExecuteTransactionBlock({
     transactionBlock: txb,
     signer: keypair(),
@@ -59,10 +60,9 @@ console.log({ membershipRegistryObject });
 
 await (async () => {
   const txb = new TransactionBlock();
-  insertMember(txb, {
-    membershipRegistry: membershipRegistryObject.objectId,
-    address: MEMBER_ADDRESS,
-    clock: SUI_CLOCK_OBJECT_ID,
+  sionMoveCall.insertMember(txb, {
+    membershipRegistryId: membershipRegistryObject.objectId,
+    memberAddress: MEMBER_ADDRESS,
   });
   const result: SuiTransactionBlockResponse = await client.signAndExecuteTransactionBlock({
     transactionBlock: txb,

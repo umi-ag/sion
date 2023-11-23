@@ -1,10 +1,7 @@
 import { SuiClient } from '@mysten/sui.js/dist/cjs/client';
 import { MembershipPointer } from '../moveCall/sion/membership-pointer/structs';
 
-export const getOwnedMembershipPointerObjectId = async (
-  client: SuiClient,
-  args: { address: string },
-) => {
+const getOwnedMembershipPointerObjectId = async (client: SuiClient, args: { address: string }) => {
   const data = await client.getOwnedObjects({
     owner: args.address,
     filter: {
@@ -26,7 +23,7 @@ export const getOwnedMembershipPointerObjectId = async (
   return objectId;
 };
 
-export const getOwnedMembershipObjectId = async (client: SuiClient, args: { address: string }) => {
+const getOwnedMembershipObjectId = async (client: SuiClient, args: { address: string }) => {
   const membershipPointerId = await getOwnedMembershipPointerObjectId(client, args);
   if (!membershipPointerId) return null;
 
@@ -41,4 +38,9 @@ export const getOwnedMembershipObjectId = async (client: SuiClient, args: { addr
   console.log(JSON.stringify(data, null, 2));
   const membershipId = data.data?.content?.fields?.membership_id ?? null;
   return membershipId;
+};
+
+export const sionClient = {
+  getOwnedMembershipPointerObjectId,
+  getOwnedMembershipObjectId,
 };

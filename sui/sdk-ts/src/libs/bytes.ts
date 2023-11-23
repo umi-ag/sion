@@ -1,13 +1,14 @@
-import crypto from 'crypto';
+import CryptoJS from 'crypto-js';
 
-export const u64ToLEBytes = (number: number): Buffer => {
+export const u64ToLEBytes = (number: bigint): Buffer => {
   const buffer = Buffer.alloc(8);
-  buffer.writeBigUInt64LE(BigInt(number));
+  buffer.writeBigUInt64LE(number);
   return buffer;
 };
 
-export const u64ToSha256Digest = (number: number): string => {
+export const u64ToSha256Digest = (number: bigint): string => {
   const bytes = u64ToLEBytes(number);
-  const digest = crypto.createHash('sha256').update(bytes).digest('hex');
+  const wordArray = CryptoJS.enc.Hex.parse(bytes.toString('hex'));
+  const digest = CryptoJS.SHA256(wordArray).toString(CryptoJS.enc.Hex);
   return digest;
 };
