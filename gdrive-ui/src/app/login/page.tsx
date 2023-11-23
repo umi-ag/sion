@@ -34,7 +34,7 @@ const Page = () => {
     const hash = getUrlHash();
     if (hash) {
       completeLogin(hash);
-      redirect('/gdrive');
+      redirect('/certificates');
     }
   }, []);
 

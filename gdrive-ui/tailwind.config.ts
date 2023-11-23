@@ -8,6 +8,9 @@ const config: Config = {
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   plugins: [daisyui],
+  daisyui: {
+    themes: ['light', 'dark', 'cupcake'],
+  },
   theme: {
     extend: {
       fontFamily: {
