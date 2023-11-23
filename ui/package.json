@@ -1,6 +1,6 @@
 {
-  "name": "frostend",
-  "version": "0.202309.2",
+  "name": "sion-ui",
+  "version": "0.202311.2",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -8,7 +8,8 @@
     "start": "next start",
     "next": "next",
     "wrangler": "wrangler",
-    "gen:sui": "sui-client-gen -m sui-client-gen.toml -o src/libs/moveCall",
+    "gen:sui": "bun sui-client-gen && bun lint",
+    "sui-client-gen": "sui-client-gen -m sui-client-gen.toml -o src/libs/moveCall",
     "lint": "eslint ./src --fix -c .eslintrc.js --ext js,ts,jsx,tsx --ignore-pattern='!.*'"
   },
   "dependencies": {
@@ -22,6 +23,7 @@
     "autoprefixer": "10.4.15",
     "bigint-buffer": "^1.1.5",
     "bufferutil": "^4.0.8",
+    "cbor-x": "^1.5.6",
     "crypto-js": "^4.1.1",
     "dayjs": "^1.11.10",
     "decimal.js": "^10.4.3",
@@ -57,6 +59,7 @@
     "@types/react-dom": "18.2.7",
     "@typescript-eslint/eslint-plugin": "^6.4.0",
     "@typescript-eslint/parser": "^6.4.0",
+    "bun": "^1.0.13",
     "eslint": "^8.47.0",
     "eslint-config-next": "13.4.18",
     "eslint-plugin-jsx-a11y": "^6.7.1",

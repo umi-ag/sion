@@ -21,6 +21,7 @@ export const VCTextArea = () => {
     console.log(zkLoginSetup.userAddr);
     const txb = new TransactionBlock();
     const result = await moveCallSponsored(txb, account);
+
     if (result.effects?.status.status === "success") {
       setDigest(result.digest);
       console.log("done!");
@@ -43,7 +44,22 @@ export const VCTextArea = () => {
             ? "bg-slate-800"
             : "bg-blue-600 hover:bg-blue-500"
           }`}
-        onClick={onClick}
+        onClick={() => {
+          const objectEncryption = new ObjectEncryption(
+            zkLoginSetup.zkloginAddress(),
+            zkLoginSetup.addressSeed().toString()
+          );
+          const encryptedData = objectEncryption.encrypt(data);
+          console.log(encryptedData)
+          {
+          const objectEncryption = new ObjectEncryption(
+              zkLoginSetup.zkloginAddress(),
+              zkLoginSetup.addressSeed().toString()
+            );
+            const data = objectEncryption.decrypt(encryptedData);
+            console.log(data)
+          }
+        }}
       >
         {isLoading || zkLoginSetup.isProofsLoading ? "Loading..." : "Issue"}
       </button>

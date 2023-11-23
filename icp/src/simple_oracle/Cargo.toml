@@ -1,0 +1,18 @@
+[package]
+edition = "2021"
+name = "simple_oracle"
+version = "0.1.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+candid = "0.8"
+hex = "0.4"
+ic-cdk = "0.7"
+ic-cdk-timers = "0.1" # Feel free to remove this dependency if you don't need timers
+ic-crypto-internal-bls12-381-type = {git = "https://github.com/dfinity/ic"}
+ic-crypto-internal-bls12-381-vetkd = {git = "https://github.com/dfinity/ic"}
+serde = "1"

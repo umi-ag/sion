@@ -6,7 +6,7 @@ module sion::issuer_old {
     use sui::tx_context::{Self, TxContext};
 
 
-    struct VC has key, store {
+    struct Membership has key, store {
         id: UID,
         vin: String,
         odometer_reading: u64,
@@ -15,8 +15,8 @@ module sion::issuer_old {
         created_by: address,
     }
 
-    fun new(vin: String, odometer_reading: u64, fuel_usage: u64, clock: &Clock, ctx: &mut TxContext): VC {
-        VC {
+    fun new(vin: String, odometer_reading: u64, fuel_usage: u64, clock: &Clock, ctx: &mut TxContext): Membership {
+        Membership {
             id: object::new(ctx),
             vin, odometer_reading, fuel_usage,
             created_by: tx_context::sender(ctx),
@@ -29,7 +29,7 @@ module sion::issuer_old {
         transfer::public_transfer(vc, tx_context::sender(ctx));
     }
 
-    public fun update(self: &mut VC, odometer_reading: u64, fuel_usage: u64) {
+    public fun update(self: &mut Membership, odometer_reading: u64, fuel_usage: u64) {
         self.odometer_reading = odometer_reading;
         self.fuel_usage = fuel_usage;
     }
