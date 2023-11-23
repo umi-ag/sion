@@ -1,15 +1,17 @@
 import {
-  getFullnodeUrl,
   SuiClient,
   SuiObjectData,
   SuiTransactionBlockResponse,
+  getFullnodeUrl,
 } from '@mysten/sui.js/client';
 import { Ed25519Keypair } from '@mysten/sui.js/keypairs/ed25519';
 import { TransactionBlock } from '@mysten/sui.js/transactions';
-import fetch from 'cross-fetch';
-import { create, insertMember } from '../src/moveCall/sion/membership-registry/functions';
 import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui.js/utils';
+import fetch from 'cross-fetch';
+import { isMembershipPointer } from '../src/moveCall/sion/membership-pointer/structs';
+import { create, insertMember } from '../src/moveCall/sion/membership-registry/functions';
 import { isMembershipRegistry } from '../src/moveCall/sion/membership-registry/structs';
+import { isMembership } from '../src/moveCall/sion/membership/structs';
 
 globalThis.fetch = fetch;
 
