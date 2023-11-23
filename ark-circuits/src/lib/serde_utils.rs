@@ -1,12 +1,15 @@
 pub use ark_bn254::{Bn254 as Curve, Fr};
-use ark_serialize::CanonicalSerialize;
+use ark_groth16::Groth16;
+use ark_serialize::{CanonicalSerialize, Write};
 use num_bigint::BigInt;
 use num_traits::Num;
+use rand::thread_rng;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use serde_with::{hex::Hex, serde_as};
 use std::collections::HashMap;
-use std::fs;
+use std::fs::{self, File};
+use std::path::Path;
 
 pub fn load_public_inputs_from_file(file_path: &str) -> HashMap<String, Vec<BigInt>> {
     let data = fs::read_to_string(file_path).expect("Unable to read file");
@@ -37,7 +40,7 @@ pub fn to_bytes<T: CanonicalSerialize>(data: &T) -> Vec<u8> {
 #[derive(Serialize, Deserialize)]
 pub struct Groth16VerifierTuple {
     #[serde_as(as = "Hex")]
-    pub pkv: Vec<u8>,
+    pub vk: Vec<u8>,
     #[serde_as(as = "Hex")]
     pub public_inputs: Vec<u8>,
     #[serde_as(as = "Hex")]
@@ -45,11 +48,23 @@ pub struct Groth16VerifierTuple {
 }
 
 impl Groth16VerifierTuple {
-    pub fn new(pkv: &[u8], public_inputs: &[u8], proof: &[u8]) -> Self {
+    pub fn new(vk: &[u8], public_inputs: &[u8], proof: &[u8]) -> Self {
         Self {
-            pkv: pkv.to_vec(),
+            vk: vk.to_vec(),
             public_inputs: public_inputs.to_vec(),
             proof: proof.to_vec(),
         }
+    }
+
+    pub fn print_info(&self) {
+        println!("vk size: {}", self.vk.len());
+        println!("proof size: {}", self.proof.len());
+    }
+
+    pub fn dump_json(&self, file_path: &str) {
+        let serialized_data = serde_json::to_string(&self).expect("");
+        let path = Path::new(file_path);
+        let mut file = File::create(path).expect("");
+        file.write_all(serialized_data.as_bytes()).expect("");
     }
 }
