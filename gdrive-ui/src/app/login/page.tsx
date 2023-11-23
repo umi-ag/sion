@@ -1,51 +1,60 @@
 'use client';
 
-import { useZkLoginSetup } from 'src/store/zklogin';
-import { LoginButton } from './LoginButton';
-import { useEffect } from 'react';
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
-
-const urlHash = () => {
-  const urlFragment = window.location.hash.substring(1);
-  // remove URL fragment
-  window.history.replaceState(null, "", window.location.pathname);
-
-  return urlFragment;
-}
+import { useEffect } from 'react';
+import { useOauth, useZkLogin } from 'src/store';
+import { getUrlHash, parseUrlHash } from 'src/utils/url';
+import { lalezar } from '../fonts';
+import { LoginButton } from './LoginButton';
 
 const Page = () => {
-  const zkLoginStore = useZkLoginSetup();
+  const { zkLogin, initZkLoginState, setZkLoginAddress } = useZkLogin();
+  const { initOauthState, setOauth } = useOauth();
 
-  const login = async () => {
-    await zkLoginStore.beginZkLogin('Google');
-    const loginUrl = zkLoginStore.loginUrl();
-    console.log("loginUrl", loginUrl);
-    window.location.href = loginUrl;
-  }
+  const initLoginState = () => {
+    initZkLoginState();
+    initOauthState();
+  };
 
+  const startLogin = async () => {
+    initLoginState();
+    console.log('zkLogin', zkLogin.loginUrl, zkLogin);
+    window.location.href = zkLogin.loginUrl;
+  };
+
+  const completeLogin = (hash: string) => {
+    const newOauthState = parseUrlHash(hash);
+    setOauth(newOauthState);
+    setZkLoginAddress(newOauthState.jwt);
+  };
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    const hash = urlHash();
+    const hash = getUrlHash();
     if (hash) {
-      zkLoginStore.parseUrlHash(hash);
+      completeLogin(hash);
       redirect('/gdrive');
     }
-  }, [zkLoginStore]);
+  }, []);
 
   return (
-    <div className='grid place-items-center min-h-full'>
+    <div className="grid place-items-center h-screen">
       <div className="pb-32">
-        <p className='text-center text-xl mb-8'>
-          Welcome to Sion
-        </p>
+        <p className={`text-center text-8xl mb-8 ${lalezar.className}`}>SION</p>
 
         <div className="grid place-items-center mb-4">
-          <LoginButton onClick={login} />
+          <LoginButton onClick={startLogin} />
         </div>
 
-        {/* <pre suppressHydrationWarning>{JSON.stringify(zkLoginStore, null, 2)}</pre> */}
+        <p>
+          <Link href="/gdrive" className="text-blue-400 underline">
+            gdrive
+          </Link>
+        </p>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default Page;

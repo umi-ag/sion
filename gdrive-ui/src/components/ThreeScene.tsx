@@ -1,37 +1,37 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
+import { useEffect } from 'react';
 // @ts-ignore
-import * as THREE from "three";
+import * as THREE from 'three';
 // @ts-ignore
-import { FontLoader } from "three/examples/jsm/loaders/FontLoader.js";
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 // @ts-ignore
-import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry.js";
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 
-const frontImg = "/coin/front.png";
-const backImg = "/coin/back.png";
-const whiteImg = "/coin/white.png";
-const mainImg = "/coin/main.png";
-const fontjson = "/coin/IPAexMincho_Regular.json";
-const starFrontImg = "/star/starfront.png";
+const frontImg = '/coin/front.png';
+const backImg = '/coin/back.png';
+const whiteImg = '/coin/white.png';
+const mainImg = '/coin/main.png';
+const fontjson = '/coin/IPAexMincho_Regular.json';
+const starFrontImg = '/star/starfront.png';
 
 // @ts-ignore
 const ThreeScene = ({ props }) => {
   useEffect(() => {
     const scene = new THREE.Scene();
     const loader = new THREE.TextureLoader();
-    scene.background = loader.load("/login/background-modified.png");
+    scene.background = loader.load('/login/background-modified.png');
     const camera = new THREE.PerspectiveCamera(
       75,
       window.innerWidth / window.innerHeight,
       0.1,
-      1000
+      1000,
     );
     camera.position.z = 1.5;
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     // @ts-ignore
-    document.getElementById("three-container").appendChild(renderer.domElement);
+    document.getElementById('three-container').appendChild(renderer.domElement);
 
     const coinGroup = new THREE.Group();
 
