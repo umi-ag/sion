@@ -1,7 +1,7 @@
 'use client';
 
-import './globals.scss';
 import { Toaster } from 'react-hot-toast';
+import './globals.scss';
 
 export default function RootLayout({
   children,

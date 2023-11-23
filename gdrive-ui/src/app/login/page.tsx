@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 import { useEffect } from 'react';
 import { useOauth, useZkLogin } from 'src/store';
 import { getUrlHash, parseUrlHash } from 'src/utils/url';
+import { lalezar } from '../fonts';
 import { LoginButton } from './LoginButton';
 
 const Page = () => {
@@ -18,6 +19,7 @@ const Page = () => {
 
   const startLogin = async () => {
     initLoginState();
+    console.log('zkLogin', zkLogin.loginUrl, zkLogin);
     window.location.href = zkLogin.loginUrl;
   };
 
@@ -37,20 +39,20 @@ const Page = () => {
   }, []);
 
   return (
-    <div className="grid place-items-center min-h-full">
+    <div className="grid place-items-center h-screen">
       <div className="pb-32">
-        <p className="text-center text-xl mb-8">Welcome to Sion</p>
+        <p className={`text-center text-8xl mb-8 ${lalezar.className}`}>SION</p>
 
         <div className="grid place-items-center mb-4">
           <LoginButton onClick={startLogin} />
         </div>
-      </div>
 
-      <p>
-        <Link href="/gdrive" className="text-blue-400 underline">
-          gdrive
-        </Link>
-      </p>
+        <p>
+          <Link href="/gdrive" className="text-blue-400 underline">
+            gdrive
+          </Link>
+        </p>
+      </div>
     </div>
   );
 };
