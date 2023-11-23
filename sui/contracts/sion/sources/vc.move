@@ -88,6 +88,7 @@ module sion::vc {
     public fun contains_claim_key(self: &VC, key: String): bool {
         let exists = table::contains(&self.claims_key_to_digest, key);
         let digest = *borrow_claim_digest_by_key(self, key);
+
         event::emit(ContainsClaimEvent {
             authenticator: self.authenticator,
             subject: self.subject,
@@ -101,6 +102,7 @@ module sion::vc {
     public fun contains_claim_digest(self: &VC, digest: vector<u8>): bool {
         let exists = table::contains(&self.claims_digest_to_key, digest);
         let key = *borrow_claim_key_by_digest(self, digest);
+
         event::emit(ContainsClaimEvent {
             authenticator: self.authenticator,
             subject: self.subject,
