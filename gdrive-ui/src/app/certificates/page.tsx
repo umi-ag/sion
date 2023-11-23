@@ -1,13 +1,5 @@
 import React from 'react';
-
-const Certificate: React.FC<{ title: string; value: number }> = (props) => {
-  return (
-    <div className="bg-base-100 rounded-md p-4 mb-6">
-      <h2 className="font-semibold mb-4">{props.title}</h2>
-      <span className="text-3xl font-bold">{props.value}</span>
-    </div>
-  );
-};
+import { Certificate } from './Certificate';
 
 const Page = () => {
   const certificates = [
