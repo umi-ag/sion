@@ -1,45 +1,32 @@
 'use client';
 
-import { useAtom } from 'jotai';
 import { redirect } from 'next/navigation';
 import { useEffect } from 'react';
-import {
-  defaultOauthState,
-  defaultZkLoginState,
-  oauthAtom,
-  parseUrlHash,
-  zkLoginAtom,
-} from 'src/store';
+import { useOauth, useZkLogin } from 'src/store';
 import { getUrlHash } from 'src/utils/url';
 import { LoginButton } from './LoginButton';
 
 const Page = () => {
-  // const zkLoginStore = useZkLoginSetup();
-  const [zkLogin, setZkLoginState] = useAtom(zkLoginAtom);
-  const [_oauth, setOauthState] = useAtom(oauthAtom);
+  const { zkLogin, initZkLoginState } = useZkLogin();
+  const { initOauthState, completeOauth } = useOauth();
 
   const initLoginState = () => {
-    setZkLoginState(defaultZkLoginState());
-    setOauthState(defaultOauthState());
+    initZkLoginState();
+    initOauthState();
   };
 
   const login = async () => {
-    // await zkLoginStore.beginZkLogin('Google');
-    // const loginUrl = zkLoginStore.loginUrl();
-    // window.location.href = loginUrl;
     initLoginState();
-    console.log('loginUrl', zkLogin.loginUrl);
     window.location.href = zkLogin.loginUrl;
   };
 
   useEffect(() => {
     const hash = getUrlHash();
     if (hash) {
-      const tokens = parseUrlHash(hash);
-      setOauthState(tokens);
+      completeOauth(hash);
       redirect('/gdrive');
     }
-  }, [setOauthState]);
+  }, [completeOauth]);
 
   return (
     <div className="grid place-items-center min-h-full">

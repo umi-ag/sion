@@ -12,7 +12,7 @@
       },
       "nursery": {
         "noUselessLoneBlockStatements": "off",
-        "noUnusedImports": "warn"
+        "noUnusedImports": "off"
       },
       "complexity": {
         "useSimplifiedLogicExpression": "off"

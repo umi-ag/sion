@@ -34,20 +34,6 @@ export const defaultZkLoginState = ({
   const ephemeralSecretKeyStr = ephemeralKeyPair.export().privateKey;
   const nonce = generateNonce(pk as never, maxEpoch, jwtRandomness);
 
-  // const [_, setZkLoginAtom] = useAtom(zkLoginAtom);
-
-  // setZkLoginAtom({
-  //   provider,
-  //   maxEpoch,
-  //   jwtRandomness,
-  //   ephemeralSecretKeyStr,
-  //   ephemeralPublicKeyStr,
-  //   nonce,
-  //   salt,
-  //   zkLoginAddress: '',
-  //   zkProofs: null,
-  // });
-
   return {
     provider,
     maxEpoch,
@@ -61,7 +47,10 @@ export const defaultZkLoginState = ({
   };
 };
 
-export const zkLoginStateAtom = atomWithStorage<ZkLoginState>('zklogin-state', defaultZkLoginState());
+export const zkLoginStateAtom = atomWithStorage<ZkLoginState>(
+  'zklogin-state',
+  defaultZkLoginState(),
+);
 
 export const zkLoginAtom = atom(
   (get) => {
@@ -79,3 +68,16 @@ export const zkLoginAtom = atom(
     set(zkLoginStateAtom, update);
   },
 );
+
+export const useZkLogin = () => {
+  const [zkLogin, setZkLogin] = useAtom(zkLoginAtom);
+  const initZkLoginState = () => {
+    setZkLogin(defaultZkLoginState());
+  };
+
+  return {
+    zkLogin,
+    setZkLogin,
+    initZkLoginState,
+  };
+};
