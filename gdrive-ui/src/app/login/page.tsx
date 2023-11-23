@@ -22,9 +22,9 @@ const Page = () => {
   };
 
   const completeLogin = (hash: string) => {
-    const update = parseUrlHash(hash);
-    setOauth(update);
-    setZkLoginAddress(update.jwt);
+    const newOauthState = parseUrlHash(hash);
+    setOauth(newOauthState);
+    setZkLoginAddress(newOauthState.jwt);
   };
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>

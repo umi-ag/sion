@@ -99,4 +99,12 @@ export type ColorsType = {
   r3: number;
 };
 
+export type ZkProofParams = {
+  maxEpoch: number;
+  jwtRandomness: string;
+  extendedEphemeralPublicKey: string;
+  jwt: string;
+  salt: string;
+};
+
 export * from './gdrive';

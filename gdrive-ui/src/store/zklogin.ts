@@ -1,10 +1,17 @@
 import { Ed25519Keypair } from '@mysten/sui.js/keypairs/ed25519';
-import { generateNonce, generateRandomness, jwtToAddress } from '@mysten/zklogin';
+import {
+  generateNonce,
+  generateRandomness,
+  getExtendedEphemeralPublicKey,
+  jwtToAddress,
+} from '@mysten/zklogin';
 import { atom, useAtom } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
-import { OpenIdProvider, ZKProof } from 'src/types';
+import { OpenIdProvider, ZKProof, ZkProofParams } from 'src/types';
 import { getLoginUrl } from 'src/utils/getLoginUrl';
 import { loadStorage } from 'src/utils/storage';
+import { fetchZkProof } from 'src/utils/zkLogin';
+import useSWR from 'swr';
 
 export type ZkLoginState = {
   provider: OpenIdProvider;
@@ -15,7 +22,7 @@ export type ZkLoginState = {
   salt: string;
   nonce: string; // maxEpoch + randomness + ephemeralPublicKey
   zkLoginAddress: string; // jwt + salt
-  zkProofs: ZKProof | null; // fetch from prover server
+  zkProof: ZKProof | null; // fetch from prover server
 };
 
 export type ZkLoginInit = {
@@ -44,7 +51,7 @@ export const defaultZkLoginState = ({
     nonce,
     salt,
     zkLoginAddress: '',
-    zkProofs: null,
+    zkProof: null,
   };
 };
 
@@ -57,11 +64,15 @@ export const zkLoginAtom = atom(
   (get) => {
     const { ephemeralSecretKeyStr, provider, nonce } = get(persistedZkLoginAtom);
     const ephemeralKeyPair = Ed25519Keypair.deriveKeypairFromSeed(ephemeralSecretKeyStr);
+    const extendedEphemeralPublicKey = getExtendedEphemeralPublicKey(
+      ephemeralKeyPair.getPublicKey() as never,
+    );
     const loginUrl = getLoginUrl({ nonce, provider });
 
     return {
       ...get(persistedZkLoginAtom),
       ephemeralKeyPair,
+      extendedEphemeralPublicKey,
       loginUrl,
     };
   },
@@ -69,6 +80,18 @@ export const zkLoginAtom = atom(
     set(persistedZkLoginAtom, update);
   },
 );
+
+// export const useZkProof = (params: ZkProofParams) => {
+//   console.log('useZk', params);
+//   const shouldFetch = !!params.jwt;
+//   const key = shouldFetch ? ['zkproof', ...Object.values(params)] : null;
+//   const { data, ...rest } = useSWR(key, () => fetchZkProof(params));
+
+//   return {
+//     zkProof: data ?? null,
+//     ...rest,
+//   };
+// };
 
 export const useZkLogin = () => {
   const [zkLogin, setZkLogin] = useAtom(zkLoginAtom);
