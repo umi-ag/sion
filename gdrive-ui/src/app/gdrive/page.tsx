@@ -1,13 +1,13 @@
 'use client';
 
-import { useAtom } from 'jotai';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { useEffect } from 'react';
-import { oauthAtom } from 'src/store';
+import { useGdrive, useOauth } from 'src/store';
 
 const Page = () => {
-  const [oauth] = useAtom(oauthAtom);
+  const { oauth } = useOauth();
+  const { listFilesQuery } = useGdrive();
 
   useEffect(() => {
     if (oauth.loginStatus === 'loggedOut') {
@@ -29,10 +29,11 @@ const Page = () => {
           List
         </button>
       </div>
+      {listFilesQuery.isLoading && <p>Loading...</p>}
       <ul>
-        {/* {zkLoginStore.files.map((file) => (
+        {listFilesQuery.files.map((file) => (
           <li key={file.id}>{file.name}</li>
-        ))} */}
+        ))}
       </ul>
     </div>
   );

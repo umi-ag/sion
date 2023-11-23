@@ -3,30 +3,37 @@
 import { redirect } from 'next/navigation';
 import { useEffect } from 'react';
 import { useOauth, useZkLogin } from 'src/store';
-import { getUrlHash } from 'src/utils/url';
+import { getUrlHash, parseUrlHash } from 'src/utils/url';
 import { LoginButton } from './LoginButton';
 
 const Page = () => {
-  const { zkLogin, initZkLoginState } = useZkLogin();
-  const { initOauthState, completeOauth } = useOauth();
+  const { zkLogin, initZkLoginState, setZkLoginAddress } = useZkLogin();
+  const { initOauthState, setOauth } = useOauth();
 
   const initLoginState = () => {
     initZkLoginState();
     initOauthState();
   };
 
-  const login = async () => {
+  const startLogin = async () => {
     initLoginState();
     window.location.href = zkLogin.loginUrl;
   };
 
+  const completeLogin = (hash: string) => {
+    const update = parseUrlHash(hash);
+    setOauth(update);
+    setZkLoginAddress(update.jwt);
+  };
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const hash = getUrlHash();
     if (hash) {
-      completeOauth(hash);
+      completeLogin(hash);
       redirect('/gdrive');
     }
-  }, [completeOauth]);
+  }, []);
 
   return (
     <div className="grid place-items-center min-h-full">
@@ -34,7 +41,7 @@ const Page = () => {
         <p className="text-center text-xl mb-8">Welcome to Sion</p>
 
         <div className="grid place-items-center mb-4">
-          <LoginButton onClick={login} />
+          <LoginButton onClick={startLogin} />
         </div>
 
         {/* <pre suppressHydrationWarning>{JSON.stringify(zkLoginStore, null, 2)}</pre> */}

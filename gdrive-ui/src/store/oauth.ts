@@ -52,15 +52,9 @@ export const useOauth = () => {
     setOauth(defaultOauthState());
   };
 
-  const completeOauth = (urlHash: string) => {
-    const update = parseUrlHash(urlHash);
-    setOauth(update);
-  };
-
   return {
     oauth,
     setOauth,
     initOauthState,
-    completeOauth,
   };
 };

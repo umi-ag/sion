@@ -1,5 +1,5 @@
 import { Ed25519Keypair } from '@mysten/sui.js/keypairs/ed25519';
-import { generateNonce, generateRandomness } from '@mysten/zklogin';
+import { generateNonce, generateRandomness, jwtToAddress } from '@mysten/zklogin';
 import { atom, useAtom } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
 import { OpenIdProvider, ZKProof } from 'src/types';
@@ -76,9 +76,17 @@ export const useZkLogin = () => {
     setZkLogin(defaultZkLoginState());
   };
 
+  const setZkLoginAddress = (jwt: string) => {
+    setZkLogin({
+      ...zkLogin,
+      zkLoginAddress: jwtToAddress(jwt, zkLogin.salt),
+    });
+  };
+
   return {
     zkLogin,
     setZkLogin,
     initZkLoginState,
+    setZkLoginAddress,
   };
 };
