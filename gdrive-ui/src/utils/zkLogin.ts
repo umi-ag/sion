@@ -1,4 +1,4 @@
-import { ZkProofParams } from 'src/types';
+import { ZKProof, ZkProofParams } from 'src/types';
 
 const PROVER_URL = 'https://zklogin-prover-fe.fly.dev/v1';
 
@@ -16,8 +16,7 @@ export const fetchZkProof = async ({
     jwt,
     salt,
   });
-  const url = `${PROVER_URL}/get_zk_proof`;
-  const r = await fetch(url, {
+  const r = await fetch(PROVER_URL, {
     method: 'POST',
     body: JSON.stringify({
       maxEpoch,
@@ -34,5 +33,5 @@ export const fetchZkProof = async ({
   }
 
   const json = await r.json();
-  return json;
+  return json as ZKProof;
 };

@@ -11,7 +11,8 @@ import { OpenIdProvider, ZKProof, ZkProofParams } from 'src/types';
 import { getLoginUrl } from 'src/utils/getLoginUrl';
 import { loadStorage } from 'src/utils/storage';
 import { fetchZkProof } from 'src/utils/zkLogin';
-import useSWR from 'swr';
+import useSWR, { SWRConfig, SWRConfiguration } from 'swr';
+import { useOauth } from '.';
 
 export type ZkLoginState = {
   provider: OpenIdProvider;
@@ -81,11 +82,11 @@ export const zkLoginAtom = atom(
   },
 );
 
-// export const useZkProof = (params: ZkProofParams) => {
+// export const useZkProof = (params: ZkProofParams, config?: SWRConfiguration) => {
 //   console.log('useZk', params);
 //   const shouldFetch = !!params.jwt;
 //   const key = shouldFetch ? ['zkproof', ...Object.values(params)] : null;
-//   const { data, ...rest } = useSWR(key, () => fetchZkProof(params));
+//   const { data, ...rest } = useSWR(key, () => fetchZkProof(params), config);
 
 //   return {
 //     zkProof: data ?? null,
