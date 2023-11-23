@@ -1,6 +1,6 @@
 import { atom, useAtom } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
-import { parseUrlHash } from 'src/utils/url';
+import { loadStorage } from 'src/utils/storage';
 
 export type OauthState = {
   urlHash: string;
@@ -28,7 +28,10 @@ export const defaultOauthState = (): OauthState => ({
   accessToken: '',
 });
 
-export const persistedOauthAtom = atomWithStorage<OauthState>('oauth-state', defaultOauthState());
+export const persistedOauthAtom = atomWithStorage<OauthState>(
+  'oauth-state',
+  loadStorage('oauth-state') ?? defaultOauthState(),
+);
 
 export const oauthAtom = atom(
   (get) => {

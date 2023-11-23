@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { useEffect } from 'react';
 import { useOauth, useZkLogin } from 'src/store';
@@ -43,9 +44,13 @@ const Page = () => {
         <div className="grid place-items-center mb-4">
           <LoginButton onClick={startLogin} />
         </div>
-
-        {/* <pre suppressHydrationWarning>{JSON.stringify(zkLoginStore, null, 2)}</pre> */}
       </div>
+
+      <p>
+        <Link href="/gdrive" className="text-blue-400 underline">
+          gdrive
+        </Link>
+      </p>
     </div>
   );
 };

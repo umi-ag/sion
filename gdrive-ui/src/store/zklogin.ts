@@ -4,6 +4,7 @@ import { atom, useAtom } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
 import { OpenIdProvider, ZKProof } from 'src/types';
 import { getLoginUrl } from 'src/utils/getLoginUrl';
+import { loadStorage } from 'src/utils/storage';
 
 export type ZkLoginState = {
   provider: OpenIdProvider;
@@ -49,7 +50,7 @@ export const defaultZkLoginState = ({
 
 export const persistedZkLoginAtom = atomWithStorage<ZkLoginState>(
   'zklogin-state',
-  defaultZkLoginState(),
+  loadStorage('zklogin-state') ?? defaultZkLoginState(),
 );
 
 export const zkLoginAtom = atom(
