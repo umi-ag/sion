@@ -11,7 +11,8 @@
         "useNamingConvention": "off"
       },
       "nursery": {
-        "noUselessLoneBlockStatements": "off"
+        "noUselessLoneBlockStatements": "off",
+        "noUnusedImports": "warn"
       },
       "complexity": {
         "useSimplifiedLogicExpression": "off"
