@@ -25,6 +25,7 @@
     "bufferutil": "^4.0.8",
     "clsx": "^2.0.0",
     "crypto-js": "^4.1.1",
+    "daisyui": "^4.4.4",
     "dayjs": "^1.11.10",
     "decimal.js": "^10.4.3",
     "destr": "^2.0.2",
