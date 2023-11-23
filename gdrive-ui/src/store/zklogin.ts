@@ -16,10 +16,6 @@ export type ZkLoginState = {
   zkLoginAddress: string; // jwt + salt
   zkProofs: ZKProof | null; // fetch from prover server
 };
-export type DerivedZkLoginState = {
-  ephemeralKeypair: Ed25519Keypair;
-  loginUrl: string; // nonce + provider
-};
 
 export const zkLoginStateAtom = atomWithStorage<ZkLoginState>('zklogin-state', {
   provider: 'Google',
@@ -45,8 +41,8 @@ export const zkLoginAtom = atom(
       loginUrl,
     };
   },
-  (_, set, update) => {
-    set(zkLoginStateAtom, update as ZkLoginState);
+  (_, set, update: ZkLoginState) => {
+    set(zkLoginStateAtom, update);
   },
 );
 
@@ -63,7 +59,7 @@ export const initZkLoginState = ({
   const jwtRandomness = generateRandomness();
   const ephemeralKeyPair = new Ed25519Keypair();
   const pk = ephemeralKeyPair.getPublicKey();
-  const ephemeralPublicKeyStr = pk.toSuiBytes();
+  const ephemeralPublicKeyStr = pk.toSuiAddress();
   const ephemeralSecretKeyStr = ephemeralKeyPair.export().privateKey;
   const nonce = generateNonce(pk as never, maxEpoch, jwtRandomness);
 
