@@ -9,6 +9,7 @@ module sion::membership_registry {
     use sui::tx_context::{Self, TxContext};
 
     use sion::membership;
+    use sion::membership_pointer;
 
     #[test_only] use std::debug;
 
@@ -22,7 +23,7 @@ module sion::membership_registry {
     struct ContainsMemberEvent has copy, drop {
         authenticator: address,
         member: address,
-        vc_id: Option<ID>,
+        membership_id: Option<ID>,
     }
 
     fun new(authenticator: address, ctx: &mut TxContext): MembershipRegistry {
@@ -39,10 +40,10 @@ module sion::membership_registry {
         transfer::public_transfer(registry, authenticator);
     }
 
-    public fun get_vc_id(self: &MembershipRegistry, member: address): Option<ID> {
-        let vc_id: Option<ID> = if (contains_member(self, member)) {
-            let vc_id: ID = *table::borrow(&self.members, member);
-            option::some(vc_id)
+    public fun get_membership_id(self: &MembershipRegistry, member: address): Option<ID> {
+        let membership_id: Option<ID> = if (contains_member(self, member)) {
+            let membership_id: ID = *table::borrow(&self.members, member);
+            option::some(membership_id)
         } else {
             option::none()
         };
@@ -50,9 +51,9 @@ module sion::membership_registry {
         event::emit(ContainsMemberEvent {
             authenticator: self.authenticator,
             member,
-            vc_id,
+            membership_id,
         });
-        vc_id
+        membership_id
     }
 
     public fun insert_member(
@@ -61,17 +62,17 @@ module sion::membership_registry {
         clock: &Clock,
         ctx: &mut TxContext,
     ) {
-        let vc_id = get_vc_id(self, member);
+        let membership_id = get_membership_id(self, member);
 
-        if (option::is_none(&vc_id)) {
+        if (option::is_none(&membership_id)) {
             let id = insert_member_inner(self, member, clock, ctx);
-            option::fill(&mut vc_id, id)
+            option::fill(&mut membership_id, id)
         };
 
         event::emit(ContainsMemberEvent {
             authenticator: self.authenticator,
             member,
-            vc_id,
+            membership_id,
         });
     }
 
@@ -82,11 +83,15 @@ module sion::membership_registry {
         ctx: &mut TxContext,
     ): ID {
         let authenticator = tx_context::sender(ctx);
-        let vc = membership::new(authenticator, member, clock, ctx);
-        let vc_id = object::id(&vc);
-        table::add(&mut self.members, member, vc_id);
-        transfer::public_transfer(vc, authenticator);
-        vc_id
+
+        let membership = membership::new(authenticator, member, clock, ctx);
+        let membership_id = object::id(&membership);
+        let membership_pointer = membership_pointer::new(membership_id, authenticator, member, ctx);
+
+        table::add(&mut self.members, member, membership_id);
+        transfer::public_transfer(membership, authenticator);
+        transfer::public_transfer(membership_pointer, member);
+        membership_id
     }
 
     public fun contains_member(self: &MembershipRegistry, member: address): bool {
