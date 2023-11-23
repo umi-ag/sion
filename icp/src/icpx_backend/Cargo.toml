@@ -41,4 +41,10 @@ merlin = {path = "../../../crates/merlin", default-features = false}
 rand_core = {version = "0.6", default-features = false, features = ["alloc", "getrandom"]}
 # bulletproofs = {git = "https://github.com/cryptidtech/bulletproofs", default-features = false}
 amcl_wrapper = {version = "0.3.5", default-features = false, features = ["bls381"]}
+ark-bls12-381 = "0.4.0"
+ark-serialize = "0.4.2"
 serde_cbor = "0.11.2"
+# ark-std = { version = "0.4.0", default-features = false }
+# ark-ff = {version = "0.4.2", default-features = false}
+ark-ff = {path = "../../../crates-ark/algebra/ff", default-features = false, features = ["no_random"]}
+ark-std = {path = "../../../crates-ark/ark-std", default-features = false, features = ["no_random"]}

@@ -1,7 +1,6 @@
 use candid::types::number::Nat;
 use std::cell::RefCell;
 
-
 // use bulletproofs::BulletproofGens;
 // use bbs_plus::proof::PoKOfSignatureG1Proof;
 // use anoncreds::verifier;
@@ -12,12 +11,14 @@ use std::cell::RefCell;
 use zeroize::Zeroize;
 // use rand_core;
 // use getrandom;
-use keccak;
-use amcl_wrapper::group_elem_g1::{G1Vector, G1};
-use bulletproofs_amcl::utils::get_generators;
 use amcl_wrapper::group_elem::GroupElement;
-use bulletproofs_amcl::r1cs::gadgets::bound_check::{verify_bounded_num};
+use amcl_wrapper::group_elem_g1::{G1Vector, G1};
+use bulletproofs_amcl::r1cs::gadgets::bound_check::verify_bounded_num;
+use bulletproofs_amcl::utils::get_generators;
+use keccak;
 
+use ark_ff::BigInt;
+use ark_std::One;
 
 // use rand_core;
 // use credx;
@@ -26,7 +27,6 @@ use merlin;
 use merlin::Transcript;
 
 use bulletproofs_amcl::r1cs::{R1CSProof, Verifier};
-
 
 // use getrandom::getrandom;
 
@@ -109,7 +109,6 @@ fn verify(proof_bcs_base58: String, commitment_cbor_base58: String) -> bool {
     verify_bounded_num(min, max, max_bits_in_val, comms_1, &mut verifier).unwrap();
     verifier.verify(&proof, &g, &h, &big_g, &big_h).is_ok()
 }
-
 
 // #[ic_cdk_macros::query]
 // fn vp() -> String {
