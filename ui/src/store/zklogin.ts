@@ -8,12 +8,7 @@ import {
 import { atom, useAtom } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
 import { OpenIdProvider, ZKProof, ZkProofParams } from 'src/types';
-import { getLoginUrl } from 'src/utils/getLoginUrl';
-import { loadStorage } from 'src/utils/storage';
-import { fetchZkProof } from 'src/utils/zkLogin';
-import useSWR, { SWRConfig, SWRConfiguration } from 'swr';
-import { useOauth } from '.';
-
+import { useGetLoginUrl } from 'src/utils/getLoginUrl';
 export type ZkLoginState = {
   provider: OpenIdProvider;
   maxEpoch: number;
@@ -58,7 +53,7 @@ export const defaultZkLoginState = ({
 
 export const persistedZkLoginAtom = atomWithStorage<ZkLoginState>(
   'zklogin-state',
-  loadStorage('zklogin-state') ?? defaultZkLoginState(),
+  defaultZkLoginState(),
 );
 
 export const zkLoginAtom = atom(
@@ -68,7 +63,7 @@ export const zkLoginAtom = atom(
     const extendedEphemeralPublicKey = getExtendedEphemeralPublicKey(
       ephemeralKeyPair.getPublicKey() as never,
     );
-    const loginUrl = getLoginUrl({ nonce, provider });
+    const loginUrl = useGetLoginUrl({ nonce, provider });
 
     return {
       ...get(persistedZkLoginAtom),

@@ -1,3 +1,3 @@
-export * from './zkLogin';
+export * from './zklogin';
 export * from './oauth';
 export * from './gdrive';

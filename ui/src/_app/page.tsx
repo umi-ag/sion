@@ -1,10 +1,7 @@
 'use client';
 
 import { redirect } from 'next/navigation';
-import { useOauth } from 'src/store/oauth';
-
-import 'src/store/gdrive'
-import 'src/store/zklogin'
+import { useOauth } from 'src/store';
 
 const Page = () => {
   const { oauth } = useOauth();

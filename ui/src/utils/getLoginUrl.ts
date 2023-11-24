@@ -2,9 +2,8 @@ import config from 'src/config/config.json';
 import { OpenIdProvider } from 'src/types';
 import { match } from 'ts-pattern';
 
-export const REDIRECT_URI = `${window.location.origin}/login`;
-
-export const getLoginUrl = (props: { provider: OpenIdProvider; nonce: string }) => {
+export const useGetLoginUrl = (props: { provider: OpenIdProvider; nonce: string }) => {
+  const REDIRECT_URI = `${window.location.origin}/login`;
   const urlParamsBase = {
     nonce: props.nonce,
     redirect_uri: REDIRECT_URI,
