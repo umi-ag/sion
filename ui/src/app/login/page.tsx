@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { useEffect } from 'react';
 import { lalezar } from 'src/app/fonts';
@@ -56,11 +55,11 @@ const Page = () => {
           <LoginButton onClick={startLogin} />
         </div>
 
-        <p>
+        {/* <p>
           <Link href="/gdrive" className="text-blue-400 underline">
             gdrive
           </Link>
-        </p>
+        </p> */}
       </div>
     </div>
   );
