@@ -4,23 +4,28 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { useEffect } from 'react';
 import { useOauth, useZkLogin } from 'src/store';
+import { getLoginUrl } from 'src/utils/getLoginUrl';
 import { getUrlHash, parseUrlHash } from 'src/utils/url';
 import { lalezar } from '../fonts';
 import { LoginButton } from './LoginButton';
 
 const Page = () => {
-  const { zkLogin, initZkLoginState, setZkLoginAddress } = useZkLogin();
+  const { initZkLoginState, setZkLoginAddress } = useZkLogin();
   const { initOauthState, setOauth } = useOauth();
 
   const initLoginState = () => {
-    initZkLoginState();
-    initOauthState();
+    const zkLogin = initZkLoginState();
+    const oauth = initOauthState();
+    return { zkLogin, oauth };
   };
 
   const startLogin = async () => {
-    initLoginState();
-    console.log('zkLogin', zkLogin.loginUrl, zkLogin);
-    window.location.href = zkLogin.loginUrl;
+    const states = initLoginState();
+    const loginUrl = getLoginUrl({
+      nonce: states.zkLogin.nonce,
+      provider: states.zkLogin.provider,
+    });
+    window.location.href = loginUrl;
   };
 
   const completeLogin = (hash: string) => {

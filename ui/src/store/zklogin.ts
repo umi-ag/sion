@@ -8,7 +8,6 @@ import {
 import { atom, useAtom } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
 import { OpenIdProvider, ZKProof, ZkProofParams } from 'src/types';
-import { getLoginUrl } from 'src/utils/getLoginUrl';
 import { loadStorage } from 'src/utils/storage';
 import { deserializeKeypair, fetchZkProof, serializeKeypair } from 'src/utils/zkLogin';
 import useSWR, { SWRConfiguration } from 'swr';
@@ -34,7 +33,7 @@ export type ZkLoginInit = {
 };
 export const defaultZkLoginState = ({
   provider = 'Google',
-  maxEpoch = 1,
+  maxEpoch = 1000,
   salt = '',
 }: ZkLoginInit = {}) => {
   const jwtRandomness = generateRandomness();
@@ -44,6 +43,7 @@ export const defaultZkLoginState = ({
   const ephemeralPublicKeyStr = pk.toSuiAddress();
   const ephemeralSecretKeyStr = ephemeralKeyPair.export().privateKey;
   const nonce = generateNonce(pk as never, maxEpoch, jwtRandomness);
+  console.log('nonce org', nonce, { maxEpoch, jwtRandomness, ephemeralPublicKeyStr, salt });
 
   return {
     provider,
@@ -66,18 +66,16 @@ export const persistedZkLoginAtom = atomWithStorage<ZkLoginState>(
 
 export const zkLoginAtom = atom(
   (get) => {
-    const { ephemeralKeypairStr, provider, nonce } = get(persistedZkLoginAtom);
+    const { ephemeralKeypairStr } = get(persistedZkLoginAtom);
     const ephemeralKeyPair = deserializeKeypair(ephemeralKeypairStr);
     const extendedEphemeralPublicKey = getExtendedEphemeralPublicKey(
       ephemeralKeyPair.getPublicKey() as never,
     );
-    const loginUrl = getLoginUrl({ nonce, provider });
 
     return {
       ...get(persistedZkLoginAtom),
       ephemeralKeyPair,
       extendedEphemeralPublicKey,
-      loginUrl,
     };
   },
   (_, set, update: ZkLoginState) => {
@@ -102,7 +100,9 @@ export const useZkLogin = () => {
   const [jwt] = useAtom(jwtAtom);
 
   const initZkLoginState = () => {
-    setZkLogin(defaultZkLoginState());
+    const state = defaultZkLoginState();
+    setZkLogin(state);
+    return state;
   };
 
   const setZkLoginAddress = (jwt: string) => {
@@ -112,13 +112,24 @@ export const useZkLogin = () => {
     });
   };
 
-  const zkProofQuery = useZkProof({
-    maxEpoch: zkLogin.maxEpoch,
-    jwtRandomness: zkLogin.jwtRandomness,
-    extendedEphemeralPublicKey: zkLogin.ephemeralPublicKeyStr,
-    salt: zkLogin.salt,
-    jwt,
-  });
+  const zkProofQuery = useZkProof(
+    {
+      maxEpoch: zkLogin.maxEpoch,
+      jwtRandomness: zkLogin.jwtRandomness,
+      extendedEphemeralPublicKey: zkLogin.extendedEphemeralPublicKey,
+      salt: zkLogin.salt,
+      jwt,
+    },
+    {
+      revalidateOnFocus: false,
+      onSuccess: (zkProof) => {
+        setZkLogin({
+          ...zkLogin,
+          zkProof,
+        });
+      },
+    },
+  );
 
   return {
     zkLogin,
