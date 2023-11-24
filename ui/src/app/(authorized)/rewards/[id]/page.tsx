@@ -1,4 +1,7 @@
+'use client';
+
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 const DataListItem = ({
   label,
@@ -50,6 +53,7 @@ const DataCard = ({
 };
 
 const Page = ({ params }: { params: { id: string } }) => {
+  const router = useRouter();
   const id = params.id;
 
   const dataList = {
@@ -118,7 +122,14 @@ const Page = ({ params }: { params: { id: string } }) => {
       <DataCard {...dataList.ownership} />
 
       <div className="grid place-items-center w-full">
-        <button className="btn btn-active btn-accent">申請する</button>
+        <button
+          className="btn btn-active btn-accent"
+          onClick={() => {
+            router.push(`/rewards/${id}/review`);
+          }}
+        >
+          申請する
+        </button>
       </div>
     </>
   );
