@@ -5,5 +5,10 @@
     "sui/sdk-ts",
     "ui"
   ],
-  "scripts": {}
+  "scripts": {
+    "build": "turbo run build"
+  },
+  "devDependencies": {
+    "turbo": "^1.10.16"
+  }
 }
