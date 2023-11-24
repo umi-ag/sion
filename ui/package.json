@@ -1,9 +1,10 @@
 {
-  "name": "frostend",
-  "version": "0.202309.2",
+  "name": "sion-ui",
+  "version": "0.202311.2",
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "add:sion": "cp -r ./src/libs/sion ./src/libs/$1",
     "build": "next build",
     "flare": "wrangler pages dev -- next dev",
     "start": "next start",
@@ -44,6 +45,7 @@
     "react-icons": "^4.12.0",
     "react-number-format": "^5.3.1",
     "sass": "^1.69.5",
+    "sdk-ts": "*",
     "shinami": "^0.5.0",
     "swr": "^2.2.2",
     "tailwindcss": "3.3.3",

@@ -1,1 +1,14 @@
-{ "dependencies": { "swr": "^2.2.4" } }
+{
+  "name": "sion-workspace",
+  "private": true,
+  "workspaces": [
+    "sui/sdk-ts",
+    "ui"
+  ],
+  "scripts": {
+    "build": "turbo run build"
+  },
+  "devDependencies": {
+    "turbo": "^1.10.16"
+  }
+}

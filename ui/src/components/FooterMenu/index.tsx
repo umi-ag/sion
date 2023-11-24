@@ -9,7 +9,7 @@ import { MenuItem } from './MenuItem';
 
 export const FooterMenu: React.FC = () => {
   const items = [
-    { icon: <PiCertificate />, label: '証明書', href: '/certificates' },
+    { icon: <PiCertificate />, label: '証明書', href: '/creds' },
     // { icon: <IoCarSportOutline />, label: '走行データ', href: '/personal-data' },
     { icon: <MdOutlinePrivacyTip />, label: '情報開示', href: '/personal-data' },
     { icon: <SlPresent />, label: '特典', href: '/rewards' },
