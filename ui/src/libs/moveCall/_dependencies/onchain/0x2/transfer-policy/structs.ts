@@ -1,10 +1,9 @@
-import { bcsOnchain as bcs } from '../../../../_framework/bcs';
-import { FieldsWithTypes, Type, parseTypeName } from '../../../../_framework/util';
+import { Encoding, bcsOnchain as bcs } from '../../../../_framework/bcs';
+import { FieldsWithTypes, Type, compressSuiType, parseTypeName } from '../../../../_framework/util';
 import { TypeName } from '../../0x1/type-name/structs';
 import { Balance } from '../balance/structs';
 import { ID, UID } from '../object/structs';
 import { VecSet } from '../vec-set/structs';
-import { Encoding } from '@mysten/bcs';
 import { SuiClient, SuiParsedData } from '@mysten/sui.js/client';
 
 /* ============================== TransferRequest =============================== */
@@ -17,6 +16,7 @@ bcs.registerStructType('0x2::transfer_policy::TransferRequest<T0>', {
 });
 
 export function isTransferRequest(type: Type): boolean {
+  type = compressSuiType(type);
   return type.startsWith('0x2::transfer_policy::TransferRequest<');
 }
 
@@ -87,6 +87,7 @@ bcs.registerStructType('0x2::transfer_policy::TransferPolicy<T0>', {
 });
 
 export function isTransferPolicy(type: Type): boolean {
+  type = compressSuiType(type);
   return type.startsWith('0x2::transfer_policy::TransferPolicy<');
 }
 
@@ -172,6 +173,7 @@ bcs.registerStructType('0x2::transfer_policy::TransferPolicyCap<T0>', {
 });
 
 export function isTransferPolicyCap(type: Type): boolean {
+  type = compressSuiType(type);
   return type.startsWith('0x2::transfer_policy::TransferPolicyCap<');
 }
 
@@ -254,6 +256,7 @@ bcs.registerStructType('0x2::transfer_policy::TransferPolicyCreated<T0>', {
 });
 
 export function isTransferPolicyCreated(type: Type): boolean {
+  type = compressSuiType(type);
   return type.startsWith('0x2::transfer_policy::TransferPolicyCreated<');
 }
 
@@ -307,6 +310,7 @@ bcs.registerStructType('0x2::transfer_policy::RuleKey<T0>', {
 });
 
 export function isRuleKey(type: Type): boolean {
+  type = compressSuiType(type);
   return type.startsWith('0x2::transfer_policy::RuleKey<');
 }
 

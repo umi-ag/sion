@@ -1,7 +1,6 @@
-import { bcsSource as bcs } from '../../_framework/bcs';
-import { FieldsWithTypes, Type } from '../../_framework/util';
+import { Encoding, bcsSource as bcs } from '../../_framework/bcs';
+import { FieldsWithTypes, Type, compressSuiType } from '../../_framework/util';
 import { ID, UID } from '../object/structs';
-import { Encoding } from '@mysten/bcs';
 import { SuiClient, SuiParsedData } from '@mysten/sui.js/client';
 
 /* ============================== VersionChangeCap =============================== */
@@ -12,6 +11,7 @@ bcs.registerStructType('0x2::versioned::VersionChangeCap', {
 });
 
 export function isVersionChangeCap(type: Type): boolean {
+  type = compressSuiType(type);
   return type === '0x2::versioned::VersionChangeCap';
 }
 
@@ -62,6 +62,7 @@ bcs.registerStructType('0x2::versioned::Versioned', {
 });
 
 export function isVersioned(type: Type): boolean {
+  type = compressSuiType(type);
   return type === '0x2::versioned::Versioned';
 }
 

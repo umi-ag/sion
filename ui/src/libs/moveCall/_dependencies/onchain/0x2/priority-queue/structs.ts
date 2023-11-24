@@ -1,8 +1,7 @@
-import { bcsOnchain as bcs } from '../../../../_framework/bcs';
+import { Encoding, bcsOnchain as bcs } from '../../../../_framework/bcs';
 import { initLoaderIfNeeded } from '../../../../_framework/init-onchain';
 import { structClassLoaderOnchain } from '../../../../_framework/loader';
-import { FieldsWithTypes, Type, parseTypeName } from '../../../../_framework/util';
-import { Encoding } from '@mysten/bcs';
+import { FieldsWithTypes, Type, compressSuiType, parseTypeName } from '../../../../_framework/util';
 
 /* ============================== PriorityQueue =============================== */
 
@@ -11,6 +10,7 @@ bcs.registerStructType('0x2::priority_queue::PriorityQueue<T0>', {
 });
 
 export function isPriorityQueue(type: Type): boolean {
+  type = compressSuiType(type);
   return type.startsWith('0x2::priority_queue::PriorityQueue<');
 }
 
@@ -75,6 +75,7 @@ bcs.registerStructType('0x2::priority_queue::Entry<T0>', {
 });
 
 export function isEntry(type: Type): boolean {
+  type = compressSuiType(type);
   return type.startsWith('0x2::priority_queue::Entry<');
 }
 

@@ -1,8 +1,7 @@
-import { bcsSource as bcs } from '../../_framework/bcs';
+import { Encoding, bcsSource as bcs } from '../../_framework/bcs';
 import { initLoaderIfNeeded } from '../../_framework/init-source';
 import { structClassLoaderSource } from '../../_framework/loader';
-import { FieldsWithTypes, Type, parseTypeName } from '../../_framework/util';
-import { Encoding } from '@mysten/bcs';
+import { FieldsWithTypes, Type, compressSuiType, parseTypeName } from '../../_framework/util';
 import { SuiClient, SuiParsedData } from '@mysten/sui.js/client';
 
 /* ============================== DynamicFields =============================== */
@@ -12,6 +11,7 @@ bcs.registerStructType('0x2::object::DynamicFields<K>', {
 });
 
 export function isDynamicFields(type: Type): boolean {
+  type = compressSuiType(type);
   return type.startsWith('0x2::object::DynamicFields<');
 }
 
@@ -98,6 +98,7 @@ bcs.registerStructType('0x2::object::ID', {
 });
 
 export function isID(type: Type): boolean {
+  type = compressSuiType(type);
   return type === '0x2::object::ID';
 }
 
@@ -139,6 +140,7 @@ bcs.registerStructType('0x2::object::Ownership', {
 });
 
 export function isOwnership(type: Type): boolean {
+  type = compressSuiType(type);
   return type === '0x2::object::Ownership';
 }
 
@@ -203,6 +205,7 @@ bcs.registerStructType('0x2::object::UID', {
 });
 
 export function isUID(type: Type): boolean {
+  type = compressSuiType(type);
   return type === '0x2::object::UID';
 }
 

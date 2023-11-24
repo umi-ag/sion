@@ -1,8 +1,7 @@
-import { bcsOnchain as bcs } from '../../../../_framework/bcs';
-import { FieldsWithTypes, Type } from '../../../../_framework/util';
+import { Encoding, bcsOnchain as bcs } from '../../../../_framework/bcs';
+import { FieldsWithTypes, Type, compressSuiType } from '../../../../_framework/util';
 import { String } from '../../0x1/string/structs';
 import { UID } from '../object/structs';
-import { Encoding } from '@mysten/bcs';
 import { SuiClient, SuiParsedData } from '@mysten/sui.js/client';
 
 /* ============================== AuthenticatorState =============================== */
@@ -13,6 +12,7 @@ bcs.registerStructType('0x2::authenticator_state::AuthenticatorState', {
 });
 
 export function isAuthenticatorState(type: Type): boolean {
+  type = compressSuiType(type);
   return type === '0x2::authenticator_state::AuthenticatorState';
 }
 
@@ -84,6 +84,7 @@ bcs.registerStructType('0x2::authenticator_state::AuthenticatorStateInner', {
 });
 
 export function isAuthenticatorStateInner(type: Type): boolean {
+  type = compressSuiType(type);
   return type === '0x2::authenticator_state::AuthenticatorStateInner';
 }
 
@@ -138,6 +139,7 @@ bcs.registerStructType('0x2::authenticator_state::JWK', {
 });
 
 export function isJWK(type: Type): boolean {
+  type = compressSuiType(type);
   return type === '0x2::authenticator_state::JWK';
 }
 
@@ -202,6 +204,7 @@ bcs.registerStructType('0x2::authenticator_state::JwkId', {
 });
 
 export function isJwkId(type: Type): boolean {
+  type = compressSuiType(type);
   return type === '0x2::authenticator_state::JwkId';
 }
 
@@ -254,6 +257,7 @@ bcs.registerStructType('0x2::authenticator_state::ActiveJwk', {
 });
 
 export function isActiveJwk(type: Type): boolean {
+  type = compressSuiType(type);
   return type === '0x2::authenticator_state::ActiveJwk';
 }
 

@@ -1,6 +1,5 @@
-import { bcsOnchain as bcs } from '../../../../_framework/bcs';
-import { FieldsWithTypes, Type } from '../../../../_framework/util';
-import { Encoding } from '@mysten/bcs';
+import { Encoding, bcsOnchain as bcs } from '../../../../_framework/bcs';
+import { FieldsWithTypes, Type, compressSuiType } from '../../../../_framework/util';
 
 /* ============================== String =============================== */
 
@@ -9,6 +8,7 @@ bcs.registerStructType('0x1::string::String', {
 });
 
 export function isString(type: Type): boolean {
+  type = compressSuiType(type);
   return type === '0x1::string::String';
 }
 

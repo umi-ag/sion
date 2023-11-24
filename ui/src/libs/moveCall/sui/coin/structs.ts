@@ -1,11 +1,10 @@
 import { String as String1 } from '../../_dependencies/source/0x1/ascii/structs';
 import { Option } from '../../_dependencies/source/0x1/option/structs';
 import { String } from '../../_dependencies/source/0x1/string/structs';
-import { bcsSource as bcs } from '../../_framework/bcs';
-import { FieldsWithTypes, Type, parseTypeName } from '../../_framework/util';
+import { Encoding, bcsSource as bcs } from '../../_framework/bcs';
+import { FieldsWithTypes, Type, compressSuiType, parseTypeName } from '../../_framework/util';
 import { Balance, Supply } from '../balance/structs';
 import { UID } from '../object/structs';
-import { Encoding } from '@mysten/bcs';
 import { SuiClient, SuiParsedData } from '@mysten/sui.js/client';
 
 /* ============================== Coin =============================== */
@@ -16,6 +15,7 @@ bcs.registerStructType('0x2::coin::Coin<T>', {
 });
 
 export function isCoin(type: Type): boolean {
+  type = compressSuiType(type);
   return type.startsWith('0x2::coin::Coin<');
 }
 
@@ -97,6 +97,7 @@ bcs.registerStructType('0x2::coin::CoinMetadata<T>', {
 });
 
 export function isCoinMetadata(type: Type): boolean {
+  type = compressSuiType(type);
   return type.startsWith('0x2::coin::CoinMetadata<');
 }
 
@@ -208,6 +209,7 @@ bcs.registerStructType('0x2::coin::CurrencyCreated<T>', {
 });
 
 export function isCurrencyCreated(type: Type): boolean {
+  type = compressSuiType(type);
   return type.startsWith('0x2::coin::CurrencyCreated<');
 }
 
@@ -258,6 +260,7 @@ bcs.registerStructType('0x2::coin::TreasuryCap<T>', {
 });
 
 export function isTreasuryCap(type: Type): boolean {
+  type = compressSuiType(type);
   return type.startsWith('0x2::coin::TreasuryCap<');
 }
 

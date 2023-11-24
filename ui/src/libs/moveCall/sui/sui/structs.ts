@@ -1,6 +1,5 @@
-import { bcsSource as bcs } from '../../_framework/bcs';
-import { FieldsWithTypes, Type } from '../../_framework/util';
-import { Encoding } from '@mysten/bcs';
+import { Encoding, bcsSource as bcs } from '../../_framework/bcs';
+import { FieldsWithTypes, Type, compressSuiType } from '../../_framework/util';
 
 /* ============================== SUI =============================== */
 
@@ -9,6 +8,7 @@ bcs.registerStructType('0x2::sui::SUI', {
 });
 
 export function isSUI(type: Type): boolean {
+  type = compressSuiType(type);
   return type === '0x2::sui::SUI';
 }
 

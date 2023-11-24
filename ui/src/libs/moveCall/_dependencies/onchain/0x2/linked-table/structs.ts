@@ -1,10 +1,9 @@
-import { bcsOnchain as bcs } from '../../../../_framework/bcs';
+import { Encoding, bcsOnchain as bcs } from '../../../../_framework/bcs';
 import { initLoaderIfNeeded } from '../../../../_framework/init-onchain';
 import { structClassLoaderOnchain } from '../../../../_framework/loader';
-import { FieldsWithTypes, Type, parseTypeName } from '../../../../_framework/util';
+import { FieldsWithTypes, Type, compressSuiType, parseTypeName } from '../../../../_framework/util';
 import { Option } from '../../0x1/option/structs';
 import { UID } from '../object/structs';
-import { Encoding } from '@mysten/bcs';
 import { SuiClient, SuiParsedData } from '@mysten/sui.js/client';
 
 /* ============================== LinkedTable =============================== */
@@ -17,6 +16,7 @@ bcs.registerStructType('0x2::linked_table::LinkedTable<T0, T1>', {
 });
 
 export function isLinkedTable(type: Type): boolean {
+  type = compressSuiType(type);
   return type.startsWith('0x2::linked_table::LinkedTable<');
 }
 
@@ -128,6 +128,7 @@ bcs.registerStructType('0x2::linked_table::Node<T0, T1>', {
 });
 
 export function isNode(type: Type): boolean {
+  type = compressSuiType(type);
   return type.startsWith('0x2::linked_table::Node<');
 }
 

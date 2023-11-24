@@ -1,9 +1,8 @@
 import { Option } from '../../_dependencies/onchain/0x1/option/structs';
 import { UID } from '../../_dependencies/onchain/0x2/object/structs';
 import { Table } from '../../_dependencies/onchain/0x2/table/structs';
-import { bcsOnchain as bcs } from '../../_framework/bcs';
-import { FieldsWithTypes, Type } from '../../_framework/util';
-import { Encoding } from '@mysten/bcs';
+import { Encoding, bcsOnchain as bcs } from '../../_framework/bcs';
+import { FieldsWithTypes, Type, compressSuiType } from '../../_framework/util';
 import { SuiClient, SuiParsedData } from '@mysten/sui.js/client';
 
 /* ============================== MembershipRegistry =============================== */
@@ -18,6 +17,7 @@ bcs.registerStructType(
 );
 
 export function isMembershipRegistry(type: Type): boolean {
+  type = compressSuiType(type);
   return (
     type ===
     '0xeb4c51db47d14a40856b5bf2878c458b190eb4f0abf87cefecffbe3fbba4dfd0::membership_registry::MembershipRegistry'
@@ -105,6 +105,7 @@ bcs.registerStructType(
 );
 
 export function isContainsMemberEvent(type: Type): boolean {
+  type = compressSuiType(type);
   return (
     type ===
     '0xeb4c51db47d14a40856b5bf2878c458b190eb4f0abf87cefecffbe3fbba4dfd0::membership_registry::ContainsMemberEvent'

@@ -1,7 +1,6 @@
-import { bcsSource as bcs } from '../../_framework/bcs';
-import { FieldsWithTypes, Type, parseTypeName } from '../../_framework/util';
+import { Encoding, bcsSource as bcs } from '../../_framework/bcs';
+import { FieldsWithTypes, Type, compressSuiType, parseTypeName } from '../../_framework/util';
 import { UID } from '../object/structs';
-import { Encoding } from '@mysten/bcs';
 import { SuiClient, SuiParsedData } from '@mysten/sui.js/client';
 
 /* ============================== ObjectTable =============================== */
@@ -12,6 +11,7 @@ bcs.registerStructType('0x2::object_table::ObjectTable<K, V>', {
 });
 
 export function isObjectTable(type: Type): boolean {
+  type = compressSuiType(type);
   return type.startsWith('0x2::object_table::ObjectTable<');
 }
 

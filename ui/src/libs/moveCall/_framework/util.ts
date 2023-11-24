@@ -1,5 +1,9 @@
 import { normalizeSuiAddress } from '@mysten/sui.js/utils';
-import { TransactionArgument, TransactionBlock } from '@mysten/sui.js/transactions';
+import {
+  TransactionArgument,
+  TransactionBlock,
+  TransactionObjectArgument,
+} from '@mysten/sui.js/transactions';
 import { bcs, ObjectArg as SuiObjectArg } from '@mysten/sui.js/bcs';
 import { BCS } from '@mysten/bcs';
 
@@ -44,6 +48,18 @@ export function isTransactionArgument(arg: GenericArg): arg is TransactionArgume
   }
 
   return 'kind' in arg;
+}
+
+export function isTransactionObjectArgument(arg: GenericArg): arg is TransactionObjectArgument {
+  if (!isTransactionArgument(arg)) {
+    return false;
+  }
+
+  if (arg.kind === 'Input' && arg.type === 'pure') {
+    return false;
+  }
+
+  return true;
 }
 
 export function obj(txb: TransactionBlock, arg: ObjectArg) {
@@ -123,9 +139,9 @@ export function pure(txb: TransactionBlock, arg: PureArg, type: Type) {
       ) {
         throw new Error('mixing TransactionArgument with other types is not currently supported');
       }
-      if (isTransactionArgument(arg[0])) {
+      if (isTransactionObjectArgument(arg[0])) {
         return txb.makeMoveVec({
-          objects: arg as Array<TransactionArgument>,
+          objects: arg as Array<TransactionObjectArgument>,
           type: typeArgs[0],
         });
       }
@@ -167,7 +183,7 @@ export function generic(txb: TransactionBlock, type: Type, arg: GenericArg) {
       const itemType = typeArgs[0];
 
       return txb.makeMoveVec({
-        objects: arg.map((item) => obj(txb, item as ObjectArg)),
+        objects: arg.map((item) => obj(txb, item as ObjectArg)) as Array<TransactionObjectArgument>,
         type: itemType,
       });
     } else {
@@ -188,7 +204,9 @@ export function vector(
   } else {
     const { typeName: itemTypeName, typeArgs: itemTypeArgs } = parseTypeName(itemType);
     if (itemTypeName === '0x1::option::Option') {
-      const objects = items.map((item) => option(txb, itemTypeArgs[0], item));
+      const objects = items.map((item) =>
+        option(txb, itemTypeArgs[0], item),
+      ) as Array<TransactionObjectArgument>;
       return txb.makeMoveVec({
         objects,
         type: itemType,
@@ -196,7 +214,7 @@ export function vector(
     }
 
     return txb.makeMoveVec({
-      objects: items as Array<TransactionArgument>,
+      objects: items as Array<TransactionObjectArgument>,
       type: itemType,
     });
   }
@@ -225,5 +243,46 @@ export function typeArgIsPure(type: Type): boolean {
       return typeArgIsPure(typeArgs[0]);
     default:
       return false;
+  }
+}
+
+export function compressSuiAddress(addr: string): string {
+  // remove leading zeros
+  const stripped = addr.split('0x').join('');
+  for (let i = 0; i < stripped.length; i++) {
+    if (stripped[i] !== '0') {
+      return `0x${stripped.substring(i)}`;
+    }
+  }
+  return '0x0';
+}
+
+export function compressSuiType(type: string): string {
+  const { typeName, typeArgs } = parseTypeName(type);
+  switch (typeName) {
+    case 'bool':
+    case 'u8':
+    case 'u16':
+    case 'u32':
+    case 'u64':
+    case 'u128':
+    case 'u256':
+    case 'address':
+    case 'signer':
+      return typeName;
+    case 'vector':
+      return `vector<${compressSuiType(typeArgs[0])}>`;
+    default: {
+      const tok = typeName.split('::');
+      tok[0] = compressSuiAddress(tok[0]);
+      const compressedName = tok.join('::');
+      if (typeArgs.length > 0) {
+        return `${compressedName}<${typeArgs
+          .map((typeArg) => compressSuiType(typeArg))
+          .join(',')}>`;
+      } else {
+        return compressedName;
+      }
+    }
   }
 }

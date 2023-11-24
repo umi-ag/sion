@@ -1,8 +1,7 @@
-import { bcsSource as bcs } from '../../_framework/bcs';
-import { FieldsWithTypes, Type, parseTypeName } from '../../_framework/util';
+import { Encoding, bcsSource as bcs } from '../../_framework/bcs';
+import { FieldsWithTypes, Type, compressSuiType, parseTypeName } from '../../_framework/util';
 import { ID, UID } from '../object/structs';
 import { VecMap } from '../vec-map/structs';
-import { Encoding } from '@mysten/bcs';
 import { SuiClient, SuiParsedData } from '@mysten/sui.js/client';
 
 /* ============================== Display =============================== */
@@ -14,6 +13,7 @@ bcs.registerStructType('0x2::display::Display<T>', {
 });
 
 export function isDisplay(type: Type): boolean {
+  type = compressSuiType(type);
   return type.startsWith('0x2::display::Display<');
 }
 
@@ -98,6 +98,7 @@ bcs.registerStructType('0x2::display::DisplayCreated<T>', {
 });
 
 export function isDisplayCreated(type: Type): boolean {
+  type = compressSuiType(type);
   return type.startsWith('0x2::display::DisplayCreated<');
 }
 
@@ -149,6 +150,7 @@ bcs.registerStructType('0x2::display::VersionUpdated<T>', {
 });
 
 export function isVersionUpdated(type: Type): boolean {
+  type = compressSuiType(type);
   return type.startsWith('0x2::display::VersionUpdated<');
 }
 

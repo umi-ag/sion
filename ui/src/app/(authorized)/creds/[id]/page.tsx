@@ -5,11 +5,22 @@ import { LineChart, generateRandomData } from 'src/components/LineChart';
 import { Certificate } from '../Certificate';
 import { certificates } from '../data';
 
-import { claimSchemaListDrivingBehavior, sampleClaimDrivingBehavior } from 'sion-sdk';
+import {
+  CredentialClaim,
+  claimSchemaListDrivingBehavior,
+  sampleClaimDrivingBehavior,
+} from 'sion-sdk';
+import { useState } from 'react';
+import { moveCallIssueCreds } from 'src/libs/authenticator/issueCreds';
+import { useZkLogin } from 'src/store';
 
 const Page = ({ params }: { params: { id: string } }) => {
   const cert = certificates.find((certificate) => certificate.id === params.id) as Certificate;
   const graphData = generateRandomData(JSON.stringify(cert), 20, 10, 50);
+
+  const [credClaims, setCredClaims] = useState<CredentialClaim[]>([]);
+
+  const { zkLogin } = useZkLogin();
 
   return (
     <>
@@ -28,6 +39,22 @@ const Page = ({ params }: { params: { id: string } }) => {
       >
         btn
       </button>
+
+      <button
+        className="btn btn-primary"
+        onClick={async () => {
+          const args = {
+            memberAddress: zkLogin.zkLoginAddress,
+            claimList: sampleClaimDrivingBehavior,
+          };
+          console.log({ args });
+          await moveCallIssueCreds(args);
+          setCredClaims(sampleClaimDrivingBehavior);
+        }}
+      >
+        証明書をリクエスト
+      </button>
+
       <div className="mb-8">
         <p className="text-lg font-semibold mb-2">現在のスコア</p>
         <p>{cert.value}</p>

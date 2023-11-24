@@ -6,3 +6,6 @@ export const authenticatorKeypair = () => {
   const secretkey = Buffer.from(AUTHENTICATOR_SECRET_KEY, 'base64').slice(1);
   return Ed25519Keypair.fromSecretKey(secretkey);
 };
+
+export const MEMBERSHIP_REGISTRY_OBJECT_ID =
+  '0xd05196b65134ddaa2637a66938c1ff9879e6d0120bff0080f941db3814da7019 ';

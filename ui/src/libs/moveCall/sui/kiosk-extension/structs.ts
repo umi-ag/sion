@@ -1,7 +1,6 @@
-import { bcsSource as bcs } from '../../_framework/bcs';
-import { FieldsWithTypes, Type, parseTypeName } from '../../_framework/util';
+import { Encoding, bcsSource as bcs } from '../../_framework/bcs';
+import { FieldsWithTypes, Type, compressSuiType, parseTypeName } from '../../_framework/util';
 import { Bag } from '../bag/structs';
-import { Encoding } from '@mysten/bcs';
 
 /* ============================== Extension =============================== */
 
@@ -12,6 +11,7 @@ bcs.registerStructType('0x2::kiosk_extension::Extension', {
 });
 
 export function isExtension(type: Type): boolean {
+  type = compressSuiType(type);
   return type === '0x2::kiosk_extension::Extension';
 }
 
@@ -66,6 +66,7 @@ bcs.registerStructType('0x2::kiosk_extension::ExtensionKey<Ext>', {
 });
 
 export function isExtensionKey(type: Type): boolean {
+  type = compressSuiType(type);
   return type.startsWith('0x2::kiosk_extension::ExtensionKey<');
 }
 

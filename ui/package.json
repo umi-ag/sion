@@ -10,13 +10,13 @@
     "start": "next start",
     "next": "next",
     "wrangler": "wrangler",
-    "gen:sui": "sui-client-gen -m sui-client-gen.toml -o src/libs/moveCall",
+    "gen:sui": "bun sui-client-gen && bun fmt",
+    "sui-client-gen": "sui-client-gen -m sui-client-gen.toml -o src/libs/moveCall",
     "lint": "biome lint ./src",
     "fmt": "biome format --write ./src"
   },
   "dependencies": {
     "@mysten/kiosk": "^0.6.0",
-    "@mysten/sui.js": "^0.42.0",
     "@mysten/zklogin": "^0.3.2",
     "@polymedia/webutils": "^2.3.4",
     "@suiet/wallet-kit": "^0.2.19",

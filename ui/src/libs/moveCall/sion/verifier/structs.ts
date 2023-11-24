@@ -1,6 +1,5 @@
-import { bcsOnchain as bcs } from '../../_framework/bcs';
-import { FieldsWithTypes, Type } from '../../_framework/util';
-import { Encoding } from '@mysten/bcs';
+import { Encoding, bcsOnchain as bcs } from '../../_framework/bcs';
+import { FieldsWithTypes, Type, compressSuiType } from '../../_framework/util';
 
 /* ============================== Groth16VerificationEvent =============================== */
 
@@ -15,6 +14,7 @@ bcs.registerStructType(
 );
 
 export function isGroth16VerificationEvent(type: Type): boolean {
+  type = compressSuiType(type);
   return (
     type ===
     '0xeb4c51db47d14a40856b5bf2878c458b190eb4f0abf87cefecffbe3fbba4dfd0::verifier::Groth16VerificationEvent'

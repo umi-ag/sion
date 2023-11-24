@@ -1,7 +1,6 @@
 import { ID, UID } from '../../_dependencies/onchain/0x2/object/structs';
-import { bcsOnchain as bcs } from '../../_framework/bcs';
-import { FieldsWithTypes, Type } from '../../_framework/util';
-import { Encoding } from '@mysten/bcs';
+import { Encoding, bcsOnchain as bcs } from '../../_framework/bcs';
+import { FieldsWithTypes, Type, compressSuiType } from '../../_framework/util';
 import { SuiClient, SuiParsedData } from '@mysten/sui.js/client';
 
 /* ============================== MembershipPointer =============================== */
@@ -17,6 +16,7 @@ bcs.registerStructType(
 );
 
 export function isMembershipPointer(type: Type): boolean {
+  type = compressSuiType(type);
   return (
     type ===
     '0xeb4c51db47d14a40856b5bf2878c458b190eb4f0abf87cefecffbe3fbba4dfd0::membership_pointer::MembershipPointer'

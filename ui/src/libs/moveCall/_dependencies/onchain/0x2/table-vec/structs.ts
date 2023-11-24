@@ -1,7 +1,6 @@
-import { bcsOnchain as bcs } from '../../../../_framework/bcs';
-import { FieldsWithTypes, Type, parseTypeName } from '../../../../_framework/util';
+import { Encoding, bcsOnchain as bcs } from '../../../../_framework/bcs';
+import { FieldsWithTypes, Type, compressSuiType, parseTypeName } from '../../../../_framework/util';
 import { Table } from '../table/structs';
-import { Encoding } from '@mysten/bcs';
 
 /* ============================== TableVec =============================== */
 
@@ -10,6 +9,7 @@ bcs.registerStructType('0x2::table_vec::TableVec<T0>', {
 });
 
 export function isTableVec(type: Type): boolean {
+  type = compressSuiType(type);
   return type.startsWith('0x2::table_vec::TableVec<');
 }
 

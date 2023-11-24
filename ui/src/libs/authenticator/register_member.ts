@@ -7,9 +7,7 @@ import {
 import { Ed25519Keypair } from '@mysten/sui.js/keypairs/ed25519';
 import { TransactionBlock } from '@mysten/sui.js/transactions';
 import { sionMoveCall } from 'sion-sdk';
-import { authenticatorKeypair } from './config';
-
-const MEMBER_ADDRESS = '0x640aff861034c71ba7a71488d64152772caa4101842502fed3132deebb550077';
+import { MEMBERSHIP_REGISTRY_OBJECT_ID, authenticatorKeypair } from './config';
 
 const client = new SuiClient({
   url: getFullnodeUrl('testnet'),
@@ -18,7 +16,7 @@ const client = new SuiClient({
 const address = authenticatorKeypair().toSuiAddress();
 console.log({ address });
 
-const membershipRegistryObject = await (async () => {
+export const moveCallMembershipRegistryObject = async () => {
   const txb = new TransactionBlock();
   sionMoveCall.createMembershipRegister(txb);
   const result: SuiTransactionBlockResponse = await client.signAndExecuteTransactionBlock({
@@ -38,16 +36,18 @@ const membershipRegistryObject = await (async () => {
   );
 
   return membershipRegistryObject as SuiObjectData;
-})();
+};
 
-console.log({ membershipRegistryObject });
-
-await (async () => {
+export const moveCallInsertMember = async (args: {
+  memberAddress: string;
+}) => {
   const txb = new TransactionBlock();
+
   sionMoveCall.insertMember(txb, {
-    membershipRegistryId: membershipRegistryObject.objectId,
-    memberAddress: MEMBER_ADDRESS,
+    membershipRegistryId: MEMBERSHIP_REGISTRY_OBJECT_ID,
+    memberAddress: args.memberAddress,
   });
+
   const result: SuiTransactionBlockResponse = await client.signAndExecuteTransactionBlock({
     transactionBlock: txb,
     signer: authenticatorKeypair(),
@@ -61,6 +61,7 @@ await (async () => {
     // @ts-ignore
     (obj) => isMembership(obj?.objectType),
   );
+
   console.log({ membership });
 
   const membershipPointer = result.objectChanges?.find(
@@ -68,4 +69,4 @@ await (async () => {
     (obj) => isMembershipPointer(obj?.objectType),
   );
   console.log({ membershipPointer });
-})();
+};

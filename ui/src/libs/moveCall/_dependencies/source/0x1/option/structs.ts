@@ -1,8 +1,7 @@
-import { bcsSource as bcs } from '../../../../_framework/bcs';
+import { Encoding, bcsSource as bcs } from '../../../../_framework/bcs';
 import { initLoaderIfNeeded } from '../../../../_framework/init-source';
 import { structClassLoaderSource } from '../../../../_framework/loader';
-import { FieldsWithTypes, Type, parseTypeName } from '../../../../_framework/util';
-import { Encoding } from '@mysten/bcs';
+import { FieldsWithTypes, Type, compressSuiType, parseTypeName } from '../../../../_framework/util';
 
 /* ============================== Option =============================== */
 
@@ -11,6 +10,7 @@ bcs.registerStructType('0x1::option::Option<Element>', {
 });
 
 export function isOption(type: Type): boolean {
+  type = compressSuiType(type);
   return type.startsWith('0x1::option::Option<');
 }
 

@@ -1,13 +1,13 @@
-import { TransactionBlock } from '@mysten/sui.js/dist/cjs/builder';
-import { u64ToSha256Digest } from './bytes';
+import { TransactionBlock } from '@mysten/sui.js/transactions';
+import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui.js/utils';
+import { create, insertMember } from '../moveCall/sion/membership-registry/functions';
 import {
   boundCheck,
   containsClaimDigest,
   insertClaim,
 } from '../moveCall/sion/membership/functions';
+import { u64ToSha256Digest } from './bytes';
 import { CredentialClaim } from './types';
-import { create, insertMember } from '../moveCall/sion/membership-registry/functions';
-import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui.js/utils';
 
 export const sionMoveCall = {
   createMembershipRegister: async (txb: TransactionBlock) => {
@@ -36,11 +36,11 @@ export const sionMoveCall = {
     },
   ) => {
     for (const claim of args.claimList) {
-      const digest = u64ToSha256Digest(claim.value);
+      const digest = u64ToSha256Digest(claim.claim_value);
 
       insertClaim(txb, {
         membership: args.membershipId,
-        string: claim.key,
+        string: claim.claim_key,
         vecU8: Array.from(Buffer.from(digest, 'hex')),
       });
     }
