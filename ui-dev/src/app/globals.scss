@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url("https://fonts.googleapis.com/css2?family=EB+Garamond&family=Inter:wght@500&family=Nunito+Sans:wght@700&display=swap");
+
+.gradient-blur {
+  background: linear-gradient(180deg,
+      rgba(255, 255, 255, 0.0001) 0%,
+      white 100%);
+  backdrop-filter: blur(40px);
+  // -webkit-mask-image: linear-gradient(to bottom, black 10%, transparent 80%);
+  // mask-image: linear-gradient(to bottom, black 10%, transparent 80%);
+}

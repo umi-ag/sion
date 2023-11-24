@@ -3,14 +3,13 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { useEffect } from 'react';
+import { lalezar } from 'src/app/fonts';
 import { useOauth, useZkLogin } from 'src/store';
-import { getLoginUrl } from 'src/utils/getLoginUrl';
 import { getUrlHash, parseUrlHash } from 'src/utils/url';
-import { lalezar } from '../fonts';
 import { LoginButton } from './LoginButton';
 
 const Page = () => {
-  const { initZkLoginState, setZkLoginAddress } = useZkLogin();
+  const { initZkLoginState, setZkLoginAddress, loginUrl } = useZkLogin();
   const { initOauthState, setOauth } = useOauth();
 
   const initLoginState = () => {
@@ -21,15 +20,20 @@ const Page = () => {
 
   const startLogin = async () => {
     const states = initLoginState();
-    const loginUrl = getLoginUrl({
-      nonce: states.zkLogin.nonce,
-      provider: states.zkLogin.provider,
-    });
-    window.location.href = loginUrl;
+    // const loginUrl = getLoginUrl({
+    //   redirectUri: window.location.href,
+    //   nonce: states.zkLogin.nonce,
+    //   provider: states.zkLogin.provider,
+    // });
+    const u = new URL(loginUrl);
+    u.searchParams.set('nonce', states.zkLogin.nonce);
+
+    window.location.href = u.toString();
   };
 
   const completeLogin = (hash: string) => {
     const newOauthState = parseUrlHash(hash);
+    console.log('newOauthState', newOauthState);
     setOauth(newOauthState);
     setZkLoginAddress(newOauthState.jwt);
   };

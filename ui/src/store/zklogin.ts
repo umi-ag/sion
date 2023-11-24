@@ -9,7 +9,7 @@ import { atom, useAtom } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
 import { suiClient } from 'src/config/sui';
 import { OpenIdProvider, ZKProof, ZkProofParams } from 'src/types';
-import { loadStorage } from 'src/utils/storage';
+import { useGetLoginUrl } from 'src/utils/getLoginUrl';
 import { deserializeKeypair, fetchZkProof, serializeKeypair } from 'src/utils/zkLogin';
 import useSWR, { SWRConfiguration } from 'swr';
 import { jwtAtom } from '.';
@@ -35,7 +35,7 @@ export type ZkLoginInit = {
 export const defaultZkLoginState = ({
   provider = 'Google',
   maxEpoch = 1000,
-  salt = '',
+  salt = '0',
 }: ZkLoginInit = {}) => {
   const jwtRandomness = generateRandomness();
   const ephemeralKeyPair = new Ed25519Keypair();
@@ -61,7 +61,7 @@ export const defaultZkLoginState = ({
 
 export const persistedZkLoginAtom = atomWithStorage<ZkLoginState>(
   'zklogin-state',
-  loadStorage('zklogin-state') ?? defaultZkLoginState(),
+  defaultZkLoginState(),
 );
 
 export const zkLoginAtom = atom(
@@ -71,12 +71,16 @@ export const zkLoginAtom = atom(
     const extendedEphemeralPublicKey = getExtendedEphemeralPublicKey(
       ephemeralKeyPair.getPublicKey() as never,
     );
+    // const loginUrl = useGetLoginUrl({ nonce, provider });
 
-    return {
+    const ret = {
       ...get(persistedZkLoginAtom),
       ephemeralKeyPair,
       extendedEphemeralPublicKey,
+      // loginUrl,
     };
+    console.log({ ret });
+    return ret;
   },
   (_, set, update: ZkLoginState) => {
     set(persistedZkLoginAtom, update);
@@ -111,12 +115,14 @@ export const useZkLogin = () => {
   const [zkLogin, setZkLogin] = useAtom(zkLoginAtom);
   const [jwt] = useAtom(jwtAtom);
   const currentEpochQuery = useCurrentEpoch();
+  const loginUrl = useGetLoginUrl({ nonce: zkLogin.nonce, provider: zkLogin.provider });
 
   const initZkLoginState = (init: ZkLoginInit = {}) => {
     const maxEpoch = currentEpochQuery.currentEpoch + (init.maxEpoch ?? 2);
     const state = defaultZkLoginState({
       ...init,
       maxEpoch,
+      salt: '1',
     });
     setZkLogin(state);
     return state;
@@ -150,6 +156,8 @@ export const useZkLogin = () => {
 
   return {
     zkLogin,
+    loginUrl,
+    // ephemeralKeyPair,
     setZkLogin,
     initZkLoginState,
     setZkLoginAddress,

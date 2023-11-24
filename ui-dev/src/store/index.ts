@@ -27,6 +27,36 @@ export const defaultOauthState = (): OauthState => ({
   accessToken: '',
 });
 
+// const persistedOauthAtom = atomWithStorage<OauthState>('oauth-state', defaultOauthState());
+
+// export const useOauth = () => {
+//   const oauthAtom = atom(
+//     (get) => {
+//       const { jwt } = get(persistedOauthAtom);
+//       const loginStatus = jwt ? 'loggedIn' : 'loggedOut';
+
+//       return {
+//         ...get(persistedOauthAtom),
+//         loginStatus,
+//       };
+//     },
+//     (_, set, update: OauthState) => {
+//       set(persistedOauthAtom, update);
+//     },
+//   );
+//   const [oauth, setOauth] = useAtom(oauthAtom);
+
+//   const initOauthState = () => {
+//     setOauth(defaultOauthState());
+//   };
+
+//   return {
+//     oauth,
+//     setOauth,
+//     initOauthState,
+//   };
+// };
+
 export const persistedOauthAtom = atomWithStorage<OauthState>('oauth-state', defaultOauthState());
 
 export const oauthAtom = atom(
@@ -44,15 +74,11 @@ export const oauthAtom = atom(
   },
 );
 
-export const jwtAtom = atom((get) => get(oauthAtom).jwt);
-
 export const useOauth = () => {
   const [oauth, setOauth] = useAtom(oauthAtom);
 
   const initOauthState = () => {
-    const state = defaultOauthState();
-    setOauth(state);
-    return state;
+    setOauth(defaultOauthState());
   };
 
   return {

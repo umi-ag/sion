@@ -1,6 +1,8 @@
+'use client';
+
 import { File } from 'src/types';
 import useSWR from 'swr';
-import { useOauth } from '.';
+import { useOauth } from './oauth';
 
 // export type GdriveState = {
 //   // gdrive
