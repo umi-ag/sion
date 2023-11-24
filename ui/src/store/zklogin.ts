@@ -109,7 +109,6 @@ export const useZkLogin = () => {
     });
   };
 
-
   return {
     zkLogin,
     loginUrl,

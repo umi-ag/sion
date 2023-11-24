@@ -5,6 +5,8 @@ import { LineChart, generateRandomData } from 'src/components/LineChart';
 import { Certificate } from '../Certificate';
 import { certificates } from '../data';
 
+import { claimSchemaListDrivingBehavior, sampleClaimDrivingBehavior } from 'sion-sdk';
+
 const Page = ({ params }: { params: { id: string } }) => {
   const cert = certificates.find((certificate) => certificate.id === params.id) as Certificate;
   const graphData = generateRandomData(JSON.stringify(cert), 20, 10, 50);
@@ -17,6 +19,15 @@ const Page = ({ params }: { params: { id: string } }) => {
         <LineChart data={graphData} />
       </div>
 
+      <button
+        className="btn btn-primary"
+        onClick={() => {
+          console.log({ sampleClaimDrivingBehavior });
+          console.log({ claimSchemaListDrivingBehavior });
+        }}
+      >
+        btn
+      </button>
       <div className="mb-8">
         <p className="text-lg font-semibold mb-2">現在のスコア</p>
         <p>{cert.value}</p>

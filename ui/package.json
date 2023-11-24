@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "add:sion": "cp -r ./src/libs/sion ./src/libs/$1",
     "build": "next build",
     "flare": "wrangler pages dev -- next dev",
     "start": "next start",
@@ -45,6 +46,7 @@
     "react-number-format": "^5.3.1",
     "sass": "^1.69.5",
     "shinami": "^0.5.0",
+    "sion-sdk": "../sui/sdk-ts",
     "swr": "^2.2.2",
     "tailwindcss": "3.3.3",
     "three": "^0.158.0",
