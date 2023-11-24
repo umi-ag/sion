@@ -1,4 +1,6 @@
-import { LineChart, generateRandomData } from '../../../../components/LineChart';
+'use client';
+
+import { LineChart, generateRandomData } from 'src/components/LineChart';
 import { Certificate } from '../Certificate';
 import { certificates } from '../data';
 

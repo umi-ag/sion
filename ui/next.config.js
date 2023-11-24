@@ -4,13 +4,9 @@ const nextConfig = {
   images: {
     domains: [
       // 'storage.googleapis.com',
-      "user-images.githubusercontent.com",
-      "assets.coingecko.com",
+      // "user-images.githubusercontent.com",
+      // "assets.coingecko.com",
     ],
-  },
-  experimental: {
-    appDir: true,
-    runtime: "experimental-edge",
   },
 };
 

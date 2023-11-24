@@ -9,6 +9,7 @@ import { atom, useAtom } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
 import { OpenIdProvider, ZKProof, ZkProofParams } from 'src/types';
 import { useGetLoginUrl } from 'src/utils/getLoginUrl';
+
 export type ZkLoginState = {
   provider: OpenIdProvider;
   maxEpoch: number;

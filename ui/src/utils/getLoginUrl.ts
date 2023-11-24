@@ -1,12 +1,25 @@
+import { useEffect, useState } from 'react';
 import config from 'src/config/config.json';
 import { OpenIdProvider } from 'src/types';
 import { match } from 'ts-pattern';
 
+const useRidirectUrl = () => {
+  const [redirectUri, setRedirectUri] = useState('');
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setRedirectUri(`${window.location.origin}/login`);
+    }
+  }, []);
+
+  return [redirectUri, setRedirectUri] as const;
+};
+
 export const useGetLoginUrl = (props: { provider: OpenIdProvider; nonce: string }) => {
-  const REDIRECT_URI = `${window.location.origin}/login`;
+  const [redirect_uri] = useRidirectUrl();
   const urlParamsBase = {
     nonce: props.nonce,
-    redirect_uri: REDIRECT_URI,
+    redirect_uri,
     response_type: 'id_token token',
     scope: ['openid', 'email', 'profile', 'https://www.googleapis.com/auth/drive'].join(' '),
   };

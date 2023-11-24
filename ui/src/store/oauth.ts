@@ -27,10 +27,7 @@ export const defaultOauthState = (): OauthState => ({
   accessToken: '',
 });
 
-export const persistedOauthAtom = atomWithStorage<OauthState>(
-  'oauth-state',
-  defaultOauthState(),
-);
+export const persistedOauthAtom = atomWithStorage<OauthState>('oauth-state', defaultOauthState());
 
 export const oauthAtom = atom(
   (get) => {

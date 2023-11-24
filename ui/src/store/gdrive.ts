@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { File } from 'src/types';
 import useSWR from 'swr';

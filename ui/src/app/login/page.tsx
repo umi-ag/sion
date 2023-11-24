@@ -3,9 +3,9 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { useEffect } from 'react';
+import { lalezar } from 'src/app/fonts';
 import { useOauth, useZkLogin } from 'src/store';
 import { getUrlHash, parseUrlHash } from 'src/utils/url';
-import { lalezar } from '../fonts';
 import { LoginButton } from './LoginButton';
 
 const Page = () => {
