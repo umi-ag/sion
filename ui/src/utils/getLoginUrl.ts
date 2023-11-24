@@ -3,7 +3,7 @@ import config from 'src/config/config.json';
 import { OpenIdProvider } from 'src/types';
 import { match } from 'ts-pattern';
 
-const useRidirectUrl = () => {
+const useRedirectUrl = () => {
   const [redirectUri, setRedirectUri] = useState('');
 
   useEffect(() => {
@@ -16,7 +16,7 @@ const useRidirectUrl = () => {
 };
 
 export const useGetLoginUrl = (props: { provider: OpenIdProvider; nonce: string }) => {
-  const [redirect_uri] = useRidirectUrl();
+  const [redirect_uri] = useRedirectUrl();
   const urlParamsBase = {
     nonce: props.nonce,
     redirect_uri,

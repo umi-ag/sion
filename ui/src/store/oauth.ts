@@ -44,11 +44,15 @@ export const oauthAtom = atom(
   },
 );
 
+export const jwtAtom = atom((get) => get(oauthAtom).jwt);
+
 export const useOauth = () => {
   const [oauth, setOauth] = useAtom(oauthAtom);
 
   const initOauthState = () => {
-    setOauth(defaultOauthState());
+    const state = defaultOauthState();
+    setOauth(state);
+    return state;
   };
 
   return {
