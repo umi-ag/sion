@@ -4,5 +4,6 @@
   "workspaces": [
     "sui/sdk-ts",
     "ui"
-  ]
+  ],
+  "scripts": {}
 }
