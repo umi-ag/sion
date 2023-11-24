@@ -1,0 +1,8 @@
+{
+  "name": "sion-workspace",
+  "private": true,
+  "workspaces": [
+    "sui/sdk-ts",
+    "ui"
+  ]
+}
