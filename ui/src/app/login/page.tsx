@@ -9,24 +9,33 @@ import { getUrlHash, parseUrlHash } from 'src/utils/url';
 import { LoginButton } from './LoginButton';
 
 const Page = () => {
-  const { zkLogin, initZkLoginState, setZkLoginAddress, loginUrl } = useZkLogin();
+  const { initZkLoginState, loginUrl } = useZkLogin();
   const { initOauthState, setOauth } = useOauth();
 
   const initLoginState = () => {
-    initZkLoginState();
-    initOauthState();
+    const zkLogin = initZkLoginState();
+    const oauth = initOauthState();
+    return { zkLogin, oauth };
   };
 
   const startLogin = async () => {
-    initLoginState();
-    console.log('zkLogin', loginUrl, zkLogin);
-    window.location.href = loginUrl;
+    const states = initLoginState();
+    // const loginUrl = getLoginUrl({
+    //   redirectUri: window.location.href,
+    //   nonce: states.zkLogin.nonce,
+    //   provider: states.zkLogin.provider,
+    // });
+    const u = new URL(loginUrl);
+    u.searchParams.set('nonce', states.zkLogin.nonce);
+
+    window.location.href = u.toString();
   };
 
   const completeLogin = (hash: string) => {
     const newOauthState = parseUrlHash(hash);
+    console.log('newOauthState', newOauthState);
     setOauth(newOauthState);
-    setZkLoginAddress(newOauthState.jwt);
+    // setZkLoginAddress(newOauthState.jwt);
   };
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
