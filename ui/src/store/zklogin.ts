@@ -1,19 +1,18 @@
-import { Ed25519Keypair, Ed25519PublicKey } from '@mysten/sui.js/keypairs/ed25519';
+import { Ed25519Keypair } from '@mysten/sui.js/keypairs/ed25519';
 import {
   generateNonce,
   generateRandomness,
   getExtendedEphemeralPublicKey,
   jwtToAddress,
 } from '@mysten/zklogin';
-import { toBigIntBE } from 'bigint-buffer';
 import { atom, useAtom } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
 import { OpenIdProvider, ZKProof, ZkProofParams } from 'src/types';
 import { getLoginUrl } from 'src/utils/getLoginUrl';
 import { loadStorage } from 'src/utils/storage';
-import { fetchZkProof } from 'src/utils/zkLogin';
+import { deserializeKeypair, fetchZkProof, serializeKeypair } from 'src/utils/zkLogin';
 import useSWR, { SWRConfiguration } from 'swr';
-import { jwtAtom, persistedOauthAtom } from '.';
+import { jwtAtom } from '.';
 
 export type ZkLoginState = {
   provider: OpenIdProvider;
@@ -21,6 +20,7 @@ export type ZkLoginState = {
   jwtRandomness: string;
   ephemeralSecretKeyStr: string;
   ephemeralPublicKeyStr: string;
+  ephemeralKeypairStr: string;
   salt: string;
   nonce: string; // maxEpoch + randomness + ephemeralPublicKey
   zkLoginAddress: string; // jwt + salt
@@ -40,15 +40,9 @@ export const defaultZkLoginState = ({
   const jwtRandomness = generateRandomness();
   const ephemeralKeyPair = new Ed25519Keypair();
   const pk = ephemeralKeyPair.getPublicKey();
+  const ephemeralKeypairStr = serializeKeypair(ephemeralKeyPair);
   const ephemeralPublicKeyStr = pk.toSuiAddress();
-  // ephemeralKeyPair.
-  // const ephemeralPublicKeyStr = toBigIntBE(
-  //   Buffer.from(ephemeralKeyPair.getPublicKey().toSuiBytes()),
-  // ).toString();
-  // console.log('1', ephemeralPublicKeyStr);
-  // console.log('2', ephemeralKeyPair.getPublicKey().toSuiAddress());
   const ephemeralSecretKeyStr = ephemeralKeyPair.export().privateKey;
-  // ephemeralKeyPair;
   const nonce = generateNonce(pk as never, maxEpoch, jwtRandomness);
 
   return {
@@ -57,6 +51,7 @@ export const defaultZkLoginState = ({
     jwtRandomness,
     ephemeralSecretKeyStr,
     ephemeralPublicKeyStr,
+    ephemeralKeypairStr,
     nonce,
     salt,
     zkLoginAddress: '',
@@ -71,12 +66,10 @@ export const persistedZkLoginAtom = atomWithStorage<ZkLoginState>(
 
 export const zkLoginAtom = atom(
   (get) => {
-    const { ephemeralSecretKeyStr, ephemeralPublicKeyStr, provider, nonce } =
-      get(persistedZkLoginAtom);
-    const ephemeralKeyPair = Ed25519Keypair.deriveKeypairFromSeed(ephemeralSecretKeyStr);
+    const { ephemeralKeypairStr, provider, nonce } = get(persistedZkLoginAtom);
+    const ephemeralKeyPair = deserializeKeypair(ephemeralKeypairStr);
     const extendedEphemeralPublicKey = getExtendedEphemeralPublicKey(
-      // ephemeralKeyPair.getPublicKey() as never,
-      new Ed25519PublicKey(ephemeralPublicKeyStr) as never,
+      ephemeralKeyPair.getPublicKey() as never,
     );
     const loginUrl = getLoginUrl({ nonce, provider });
 
