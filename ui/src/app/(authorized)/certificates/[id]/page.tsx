@@ -1,4 +1,5 @@
 'use client';
+export const runtime = 'edge';
 
 import { LineChart, generateRandomData } from 'src/components/LineChart';
 import { Certificate } from '../Certificate';
