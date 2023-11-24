@@ -1,4 +1,4 @@
-import { LineChart, generateRandomData } from '../../../components/LineChart';
+import { LineChart, generateRandomData } from '../../../../components/LineChart';
 import { Certificate } from '../Certificate';
 import { certificates } from '../data';
 

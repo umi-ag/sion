@@ -8,8 +8,8 @@ const Page = () => {
     <>
       <h1 className="text-2xl font-bold mb-8">証明書一覧</h1>
       {certificates.map((certificate) => (
-        <Link href={`/certificates/${certificate.id}`}>
-          <Certificate key={certificate.id} certificate={certificate} />
+        <Link href={`/certificates/${certificate.id}`} key={certificate.id}>
+          <Certificate certificate={certificate} />
         </Link>
       ))}
     </>

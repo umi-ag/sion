@@ -1,5 +1,5 @@
 import React from 'react';
-import { LineChart, generateRandomData } from '../../components/LineChart';
+import { LineChart, generateRandomData } from '../../../components/LineChart';
 
 export type Certificate = {
   id: string;
