@@ -1,9 +1,10 @@
 [package]
-name = "Sion"
+name = "muzin"
 version = "0.0.1"
 
 [dependencies]
+Sion = {local = "../sion"}
 Sui = {git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "framework/testnet"}
 
 [addresses]
-sion = "0x0"
+muzin = "0x0"

@@ -15,12 +15,12 @@ module sion::verifier {
     // preimage proof and range proof
     public fun verify_hash_preimage_and_range_proof(
         expected_digest: vector<u8>,
-        gte_bound: u64,
-        lt_bound: u64,
+        lower_bound_gte: u64,
+        upper_bound_lt: u64,
         proof: vector<u8>,
         vk: vector<u8>,
     ): bool {
-        let public_inputs = sion::public_inputs::build_public_inputs_bytes(expected_digest, gte_bound, lt_bound);
+        let public_inputs = sion::public_inputs::build_public_inputs_bytes(expected_digest, lower_bound_gte, upper_bound_lt);
         verify_groth16_bn254(vk, public_inputs, proof)
     }
 
