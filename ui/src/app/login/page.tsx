@@ -9,7 +9,7 @@ import { getUrlHash, parseUrlHash } from 'src/utils/url';
 import { LoginButton } from './LoginButton';
 
 const Page = () => {
-  const { initZkLoginState, setZkLoginAddress, loginUrl } = useZkLogin();
+  const { initZkLoginState, loginUrl } = useZkLogin();
   const { initOauthState, setOauth } = useOauth();
 
   const initLoginState = () => {
@@ -35,7 +35,7 @@ const Page = () => {
     const newOauthState = parseUrlHash(hash);
     console.log('newOauthState', newOauthState);
     setOauth(newOauthState);
-    setZkLoginAddress(newOauthState.jwt);
+    // setZkLoginAddress(newOauthState.jwt);
   };
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>

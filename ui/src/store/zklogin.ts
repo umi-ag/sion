@@ -66,18 +66,20 @@ export const persistedZkLoginAtom = atomWithStorage<ZkLoginState>(
 
 export const zkLoginAtom = atom(
   (get) => {
-    const { ephemeralKeypairStr } = get(persistedZkLoginAtom);
+    const { ephemeralKeypairStr, salt } = get(persistedZkLoginAtom);
+    const jwt = get(jwtAtom);
     const ephemeralKeyPair = deserializeKeypair(ephemeralKeypairStr);
     const extendedEphemeralPublicKey = getExtendedEphemeralPublicKey(
       ephemeralKeyPair.getPublicKey() as never,
     );
-    // const loginUrl = useGetLoginUrl({ nonce, provider });
+    const zkLoginAddress = jwt && jwtToAddress(jwt, salt);
 
     const ret = {
       ...get(persistedZkLoginAtom),
       ephemeralKeyPair,
       extendedEphemeralPublicKey,
-      // loginUrl,
+      zkLoginAddress,
+      jwt,
     };
     console.log({ ret });
     return ret;
@@ -128,12 +130,12 @@ export const useZkLogin = () => {
     return state;
   };
 
-  const setZkLoginAddress = (jwt: string) => {
-    setZkLogin({
-      ...zkLogin,
-      zkLoginAddress: jwtToAddress(jwt, zkLogin.salt),
-    });
-  };
+  // const setZkLoginAddress = (jwt: string) => {
+  //   setZkLogin({
+  //     ...zkLogin,
+  //     // zkLoginAddress: jwtToAddress(jwt, zkLogin.salt),
+  //   });
+  // };
 
   const zkProofQuery = useZkProof(
     {
@@ -160,7 +162,7 @@ export const useZkLogin = () => {
     // ephemeralKeyPair,
     setZkLogin,
     initZkLoginState,
-    setZkLoginAddress,
+    // setZkLoginAddress,
     zkProofQuery,
     currentEpochQuery,
   };
