@@ -7,6 +7,7 @@ import {
 } from '@mysten/zklogin';
 import { atom, useAtom } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
+import { suiClient } from 'src/config/sui';
 import { OpenIdProvider, ZKProof, ZkProofParams } from 'src/types';
 import { loadStorage } from 'src/utils/storage';
 import { deserializeKeypair, fetchZkProof, serializeKeypair } from 'src/utils/zkLogin';
@@ -95,12 +96,30 @@ export const useZkProof = (params: ZkProofParams, config?: SWRConfiguration) => 
   };
 };
 
+export const useCurrentEpoch = () => {
+  const fetcher = suiClient.getLatestSuiSystemState;
+
+  const shouldFetch = true;
+  const key = shouldFetch ? ['current-epoch'] : null;
+  const { data, ...rest } = useSWR(key, fetcher);
+
+  return {
+    currentEpoch: Number(data?.epoch ?? 0),
+    ...rest,
+  };
+};
+
 export const useZkLogin = () => {
   const [zkLogin, setZkLogin] = useAtom(zkLoginAtom);
   const [jwt] = useAtom(jwtAtom);
+  const { currentEpoch } = useCurrentEpoch();
 
-  const initZkLoginState = () => {
-    const state = defaultZkLoginState();
+  const initZkLoginState = (init: ZkLoginInit = {}) => {
+    const maxEpoch = currentEpoch + (init.maxEpoch ?? 2);
+    const state = defaultZkLoginState({
+      ...init,
+      maxEpoch,
+    });
     setZkLogin(state);
     return state;
   };
