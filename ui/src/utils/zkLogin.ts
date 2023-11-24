@@ -10,13 +10,6 @@ export const fetchZkProof = async ({
   jwt,
   salt,
 }: ZkProofParams) => {
-  console.log('fetchZkProof', {
-    maxEpoch,
-    jwtRandomness,
-    extendedEphemeralPublicKey,
-    jwt,
-    salt,
-  });
   const r = await fetch(PROVER_URL, {
     method: 'POST',
     headers: {

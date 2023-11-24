@@ -44,7 +44,6 @@ export const defaultZkLoginState = ({
   const ephemeralPublicKeyStr = pk.toSuiAddress();
   const ephemeralSecretKeyStr = ephemeralKeyPair.export().privateKey;
   const nonce = generateNonce(pk as never, maxEpoch, jwtRandomness);
-  console.log('nonce org', nonce, { maxEpoch, jwtRandomness, ephemeralPublicKeyStr, salt });
 
   return {
     provider,
@@ -98,10 +97,9 @@ export const useZkProof = (params: ZkProofParams, config?: SWRConfiguration) => 
 
 export const useCurrentEpoch = () => {
   const fetcher = suiClient.getLatestSuiSystemState;
-
   const shouldFetch = true;
   const key = shouldFetch ? ['current-epoch'] : null;
-  const { data, ...rest } = useSWR(key, fetcher);
+  const { data, ...rest } = useSWR(key, fetcher, { revalidateOnFocus: false });
 
   return {
     currentEpoch: Number(data?.epoch ?? 0),
@@ -112,10 +110,10 @@ export const useCurrentEpoch = () => {
 export const useZkLogin = () => {
   const [zkLogin, setZkLogin] = useAtom(zkLoginAtom);
   const [jwt] = useAtom(jwtAtom);
-  const { currentEpoch } = useCurrentEpoch();
+  const currentEpochQuery = useCurrentEpoch();
 
   const initZkLoginState = (init: ZkLoginInit = {}) => {
-    const maxEpoch = currentEpoch + (init.maxEpoch ?? 2);
+    const maxEpoch = currentEpochQuery.currentEpoch + (init.maxEpoch ?? 2);
     const state = defaultZkLoginState({
       ...init,
       maxEpoch,
@@ -156,5 +154,6 @@ export const useZkLogin = () => {
     initZkLoginState,
     setZkLoginAddress,
     zkProofQuery,
+    currentEpochQuery,
   };
 };
