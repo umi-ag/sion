@@ -31,7 +31,7 @@ const listFiles = async (accessToken: string) => {
   return json.files as File[];
 };
 
-export const listFilesQuery = () => {
+export const useFiles = () => {
   const { oauth } = useOauth();
 
   const shouldFetch = !!oauth.accessToken;
@@ -46,6 +46,6 @@ export const listFilesQuery = () => {
 
 export const useGdrive = () => {
   return {
-    listFilesQuery: listFilesQuery(),
+    useFiles: useFiles(),
   };
 };

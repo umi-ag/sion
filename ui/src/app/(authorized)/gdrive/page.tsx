@@ -7,7 +7,7 @@ import { useGdrive, useOauth } from 'src/store';
 
 const Page = () => {
   const { oauth } = useOauth();
-  const { listFilesQuery } = useGdrive();
+  const { useFiles } = useGdrive();
 
   useEffect(() => {
     if (oauth.loginStatus === 'loggedOut') {
@@ -29,9 +29,9 @@ const Page = () => {
           List
         </button>
       </div>
-      {listFilesQuery.isLoading && <p>Loading...</p>}
+      {useFiles.isLoading && <p>Loading...</p>}
       <ul>
-        {listFilesQuery.files.map((file) => (
+        {useFiles.files.map((file) => (
           <li key={file.id}>{file.name}</li>
         ))}
       </ul>
