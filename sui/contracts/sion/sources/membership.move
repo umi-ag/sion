@@ -30,8 +30,8 @@ module sion::membership {
         subject: address,
         claim_key: String,
         claim_digest:  vector<u8>,
-        gte_bound: u64,
-        lt_bound: u64,
+        lower_bound_gte: u64,
+        upper_bound_lt: u64,
         is_verified: bool,
     }
 
@@ -134,16 +134,16 @@ module sion::membership {
     public fun bound_check(
         self: &Membership,
         key: String,
-        gte_bound: u64,
-        lt_bound: u64,
+        lower_bound_gte: u64,
+        upper_bound_lt: u64,
         proof: vector<u8>,
         vk: vector<u8>,
     ): bool {
         let digest = *borrow_claim_digest_by_key(self, key);
         let is_verified = sion::verifier::verify_hash_preimage_and_range_proof(
             digest,
-            gte_bound,
-            lt_bound,
+            lower_bound_gte,
+            upper_bound_lt,
             proof,
             vk,
         );
@@ -152,8 +152,8 @@ module sion::membership {
             subject: self.subject,
             claim_key: key,
             claim_digest: digest,
-            gte_bound,
-            lt_bound,
+            lower_bound_gte,
+            upper_bound_lt,
             is_verified,
         });
 
