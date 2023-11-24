@@ -185,6 +185,7 @@ const getLoginUrl = (props: { provider: OpenIdProvider; nonce: string }) => {
     response_type: 'id_token token',
     scope: ['openid', 'email', 'profile', 'https://www.googleapis.com/auth/drive'].join(' '),
   };
+  console.log(urlParamsBase);
 
   const loginUrl = match(props.provider)
     .with('Google', () => {

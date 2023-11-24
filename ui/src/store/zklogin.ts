@@ -66,12 +66,14 @@ export const zkLoginAtom = atom(
     );
     const loginUrl = useGetLoginUrl({ nonce, provider });
 
-    return {
+    const ret = {
       ...get(persistedZkLoginAtom),
       ephemeralKeyPair,
       extendedEphemeralPublicKey,
       loginUrl,
     };
+    console.log({ ret });
+    return ret;
   },
   (_, set, update: ZkLoginState) => {
     set(persistedZkLoginAtom, update);
@@ -91,7 +93,10 @@ export const zkLoginAtom = atom(
 // };
 
 export const useZkLogin = () => {
-  const [zkLogin, setZkLogin] = useAtom(zkLoginAtom);
+  const [zkLogin, setZkLogin] = useAtom(persistedZkLoginAtom);
+  const ephemeralKeyPair = Ed25519Keypair.deriveKeypairFromSeed(zkLogin.ephemeralSecretKeyStr);
+  const { nonce, provider } = zkLogin;
+  const loginUrl = useGetLoginUrl({ nonce, provider });
 
   const initZkLoginState = () => {
     setZkLogin(defaultZkLoginState());
@@ -104,8 +109,11 @@ export const useZkLogin = () => {
     });
   };
 
+
   return {
     zkLogin,
+    loginUrl,
+    ephemeralKeyPair,
     setZkLogin,
     initZkLoginState,
     setZkLoginAddress,

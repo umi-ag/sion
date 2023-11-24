@@ -9,7 +9,7 @@ import { getUrlHash, parseUrlHash } from 'src/utils/url';
 import { LoginButton } from './LoginButton';
 
 const Page = () => {
-  const { zkLogin, initZkLoginState, setZkLoginAddress } = useZkLogin();
+  const { zkLogin, initZkLoginState, setZkLoginAddress, loginUrl } = useZkLogin();
   const { initOauthState, setOauth } = useOauth();
 
   const initLoginState = () => {
@@ -19,8 +19,8 @@ const Page = () => {
 
   const startLogin = async () => {
     initLoginState();
-    console.log('zkLogin', zkLogin.loginUrl, zkLogin);
-    window.location.href = zkLogin.loginUrl;
+    console.log('zkLogin', loginUrl, zkLogin);
+    window.location.href = loginUrl;
   };
 
   const completeLogin = (hash: string) => {
