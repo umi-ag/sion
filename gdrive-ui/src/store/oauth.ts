@@ -48,6 +48,8 @@ export const oauthAtom = atom(
   },
 );
 
+export const jwtAtom = atom((get) => get(oauthAtom).jwt);
+
 export const useOauth = () => {
   const [oauth, setOauth] = useAtom(oauthAtom);
 

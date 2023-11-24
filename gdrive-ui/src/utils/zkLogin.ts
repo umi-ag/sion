@@ -18,12 +18,16 @@ export const fetchZkProof = async ({
   });
   const r = await fetch(PROVER_URL, {
     method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify({
       maxEpoch,
       jwtRandomness,
       extendedEphemeralPublicKey,
       jwt,
       salt,
+      keyClaimName: 'sub',
     }),
   });
 
