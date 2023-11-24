@@ -96,7 +96,7 @@ export const useZkProof = (params: ZkProofParams, config?: SWRConfiguration) => 
 };
 
 export const useCurrentEpoch = () => {
-  const fetcher = suiClient.getLatestSuiSystemState;
+  const fetcher = () => suiClient.getLatestSuiSystemState();
   const shouldFetch = true;
   const key = shouldFetch ? ['current-epoch'] : null;
   const { data, ...rest } = useSWR(key, fetcher, { revalidateOnFocus: false });

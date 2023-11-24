@@ -1,8 +1,8 @@
 'use client';
-import { useLottie } from 'src/utils/useLottie';
 import googleAnimationData from 'src/components/interface/animations/google.json';
+import { useLottie } from 'src/utils/useLottie';
 
-export const LoginButton: React.FC<{ onClick?: () => void }> = props => {
+export const LoginButton: React.FC<{ onClick?: () => void }> = (props) => {
   const { container: googleAnimationContainer } = useLottie(googleAnimationData, true);
 
   return (
@@ -12,7 +12,7 @@ export const LoginButton: React.FC<{ onClick?: () => void }> = props => {
         onClick={() => props.onClick?.()}
       >
         <div className="flex items-center">
-          <div className="w-[50px] h-[50px]" ref={googleAnimationContainer}></div>
+          <div className="w-[50px] h-[50px]" ref={googleAnimationContainer} />
           <div className="mr-5 text-lg">Login with Google</div>
         </div>
       </button>
