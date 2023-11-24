@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 import { useOauth } from 'src/store/oauth';
 
 import 'src/store/gdrive';
-import 'src/store/zklogin';
+import 'src/store/zkLogin';
 
 const Page = () => {
   const { oauth } = useOauth();
