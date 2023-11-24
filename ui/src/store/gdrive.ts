@@ -1,6 +1,8 @@
+'use client';
+
 import { File } from 'src/types';
 import useSWR from 'swr';
-import { useOauth } from '.';
+import { useOauth } from './oauth';
 
 // export type GdriveState = {
 //   // gdrive
@@ -31,7 +33,7 @@ const listFiles = async (accessToken: string) => {
   return json.files as File[];
 };
 
-export const listFilesQuery = () => {
+export const useListFilesQuery = () => {
   const { oauth } = useOauth();
 
   const shouldFetch = !!oauth.accessToken;
@@ -46,6 +48,6 @@ export const listFilesQuery = () => {
 
 export const useGdrive = () => {
   return {
-    listFilesQuery: listFilesQuery(),
+    listFilesQuery: useListFilesQuery(),
   };
 };

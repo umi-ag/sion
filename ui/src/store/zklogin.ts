@@ -8,11 +8,7 @@ import {
 import { atom, useAtom } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
 import { OpenIdProvider, ZKProof, ZkProofParams } from 'src/types';
-import { getLoginUrl } from 'src/utils/getLoginUrl';
-import { loadStorage } from 'src/utils/storage';
-import { fetchZkProof } from 'src/utils/zkLogin';
-import useSWR, { SWRConfig, SWRConfiguration } from 'swr';
-import { useOauth } from '.';
+import { useGetLoginUrl } from 'src/utils/getLoginUrl';
 
 export type ZkLoginState = {
   provider: OpenIdProvider;
@@ -58,7 +54,7 @@ export const defaultZkLoginState = ({
 
 export const persistedZkLoginAtom = atomWithStorage<ZkLoginState>(
   'zklogin-state',
-  loadStorage('zklogin-state') ?? defaultZkLoginState(),
+  defaultZkLoginState(),
 );
 
 export const zkLoginAtom = atom(
@@ -68,14 +64,16 @@ export const zkLoginAtom = atom(
     const extendedEphemeralPublicKey = getExtendedEphemeralPublicKey(
       ephemeralKeyPair.getPublicKey() as never,
     );
-    const loginUrl = getLoginUrl({ nonce, provider });
+    const loginUrl = useGetLoginUrl({ nonce, provider });
 
-    return {
+    const ret = {
       ...get(persistedZkLoginAtom),
       ephemeralKeyPair,
       extendedEphemeralPublicKey,
       loginUrl,
     };
+    console.log({ ret });
+    return ret;
   },
   (_, set, update: ZkLoginState) => {
     set(persistedZkLoginAtom, update);
@@ -95,7 +93,10 @@ export const zkLoginAtom = atom(
 // };
 
 export const useZkLogin = () => {
-  const [zkLogin, setZkLogin] = useAtom(zkLoginAtom);
+  const [zkLogin, setZkLogin] = useAtom(persistedZkLoginAtom);
+  const ephemeralKeyPair = Ed25519Keypair.deriveKeypairFromSeed(zkLogin.ephemeralSecretKeyStr);
+  const { nonce, provider } = zkLogin;
+  const loginUrl = useGetLoginUrl({ nonce, provider });
 
   const initZkLoginState = () => {
     setZkLogin(defaultZkLoginState());
@@ -108,8 +109,11 @@ export const useZkLogin = () => {
     });
   };
 
+
   return {
     zkLogin,
+    loginUrl,
+    ephemeralKeyPair,
     setZkLogin,
     initZkLoginState,
     setZkLoginAddress,

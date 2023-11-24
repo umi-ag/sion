@@ -2,7 +2,7 @@
 import { useLottie } from 'src/utils/useLottie';
 import googleAnimationData from 'src/components/interface/animations/google.json';
 
-export const LoginButton: React.FC<{ onClick?: () => void }> = props => {
+export const LoginButton: React.FC<{ onClick?: () => void }> = (props) => {
   const { container: googleAnimationContainer } = useLottie(googleAnimationData, true);
 
   return (

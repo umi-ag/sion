@@ -34,7 +34,7 @@ export const useZkLoginSetup = create<ZkLoginState>(
       zkProofs: null,
       salt: () => '',
       isProofsLoading: false,
-      beginZkLogin: async provider => {
+      beginZkLogin: async (provider) => {
         // const { epoch } = await suiClient.getLatestSuiSystemState();
         // const maxEpoch = Number(epoch) + MAX_EPOCH; // the ephemeral key will be valid for MAX_EPOCH from now
         const maxEpoch = 1000;
@@ -54,7 +54,7 @@ export const useZkLoginSetup = create<ZkLoginState>(
         const nonce = generateNonce(ephemeralKeyPair.getPublicKey() as never, maxEpoch, randomness);
         set({ randomness, nonce });
       },
-      completeZkLogin: async account => {
+      completeZkLogin: async (account) => {
         set({
           provider: account.provider as OpenIdProvider,
           maxEpoch: account.maxEpoch,
@@ -125,7 +125,7 @@ export const useZkLoginSetup = create<ZkLoginState>(
         return 'loggedIn';
       },
       accessToken: '',
-      parseUrlHash: hash => {
+      parseUrlHash: (hash) => {
         const urlParams = new URLSearchParams(hash);
         const jwt = urlParams.get('id_token');
         const accessToken = urlParams.get('access_token');
@@ -185,6 +185,7 @@ const getLoginUrl = (props: { provider: OpenIdProvider; nonce: string }) => {
     response_type: 'id_token token',
     scope: ['openid', 'email', 'profile', 'https://www.googleapis.com/auth/drive'].join(' '),
   };
+  console.log(urlParamsBase);
 
   const loginUrl = match(props.provider)
     .with('Google', () => {

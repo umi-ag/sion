@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "flare": "wrangler pages dev -- next dev",
     "start": "next start",
     "next": "next",
     "wrangler": "wrangler",
@@ -69,6 +70,6 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-unused-imports": "^3.0.0",
     "typescript": "^5.2.2",
-    "wrangler": "^3.5.1"
+    "wrangler": "^3.17.1"
   }
 }

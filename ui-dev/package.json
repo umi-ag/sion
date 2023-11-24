@@ -1,0 +1,33 @@
+{
+  "name": "frostend",
+  "version": "0.202309.2",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "next": "next",
+    "wrangler": "wrangler",
+    "gen:sui": "sui-client-gen -m sui-client-gen.toml -o src/libs/moveCall",
+    "lint": "biome lint ./src",
+    "fmt": "biome format --write ./src"
+  },
+  "dependencies": {
+    "@mysten/sui.js": "^0.47.0",
+    "@mysten/zklogin": "^0.3.7",
+    "jotai": "^2.5.1",
+    "next": "13.4.18",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-hot-toast": "^2.4.1",
+    "swr": "^2.2.4",
+    "ts-pattern": "^5.0.5"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.3.3",
+    "@types/node": "20.5.0",
+    "@types/react": "18.2.20",
+    "@types/react-dom": "18.2.7",
+    "typescript": "^5.2.2"
+  }
+}
