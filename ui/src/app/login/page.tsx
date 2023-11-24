@@ -42,7 +42,7 @@ const Page = () => {
     const hash = getUrlHash();
     if (hash) {
       completeLogin(hash);
-      redirect('/certificates');
+      redirect('/creds');
     }
   }, []);
 
