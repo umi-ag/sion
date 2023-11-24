@@ -63,6 +63,7 @@ const getOwnedMembershipObjectId = async (address: string) => {
   });
 
   console.log(JSON.stringify(data, null, 2));
+  // @ts-ignore
   const membershipId = data.data?.content?.fields?.membership_id ?? null;
   return membershipId;
 };
