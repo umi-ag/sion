@@ -2,7 +2,7 @@
 
 import { TransactionBlock } from '@mysten/sui.js/transactions';
 import { useRouter } from 'next/navigation';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { FooterMenu } from 'src/components/FooterMenu';
 import { moveCallMintNft } from 'src/libs/__coco';
 import { moveCallSponsored } from 'src/libs/sponsoredZkLogin';
@@ -17,11 +17,11 @@ export default function AuthorizedRouteLayout({
   const { zkLogin, initZkLoginState, zkProofQuery } = useZkLogin();
   const router = useRouter();
 
-  useEffect(() => {
-    if (!oauth.jwt) {
-      router.push('/login');
-    }
-  }, [oauth, router]);
+  // useEffect(() => {
+  //   if (!oauth.jwt) {
+  //     router.push('/login');
+  //   }
+  // }, [oauth, router]);
 
   const logout = () => {
     initOauthState();
