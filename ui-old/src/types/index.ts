@@ -1,5 +1,4 @@
 // ui/src/app/types/index.ts
-import { File } from './gdrive';
 
 export type ZKProof = {
   proofPoints: {
@@ -35,7 +34,7 @@ export interface SponsoredTransaction {
   expireAtTime: number;
   expireAfterEpoch: number;
 }
-export type SponsoredTransactionStatus = 'IN_FLIGHT' | 'COMPLETE' | 'INVALID';
+export type SponsoredTransactionStatus = "IN_FLIGHT" | "COMPLETE" | "INVALID";
 
 export interface SponsorRpc {
   gas_sponsorTransactionBlock(
@@ -43,10 +42,12 @@ export interface SponsorRpc {
     sender: string,
     gasBudget: number,
   ): SponsoredTransaction;
-  gas_getSponsoredTransactionBlockStatus(txDigest: string): SponsoredTransactionStatus;
+  gas_getSponsoredTransactionBlockStatus(
+    txDigest: string,
+  ): SponsoredTransactionStatus;
 }
 
-export type OpenIdProvider = 'Google' | 'Twitch' | 'Facebook';
+export type OpenIdProvider = "Google" | "Twitch" | "Facebook";
 
 export type SetupData = {
   provider: OpenIdProvider;
@@ -56,9 +57,9 @@ export type SetupData = {
   ephemeralPrivateKey: string;
 };
 
-export type ZkLoginState = SetupData & {
-  beginZkLogin: (provider: OpenIdProvider) => Promise<void>;
-  completeZkLogin: (account: Account) => Promise<void>;
+export type zkLoginState = SetupData & {
+  beginZkLogin: (provider: OpenIdProvider) => void;
+  completeZkLogin: (account: Account) => void;
   nonce: string;
   loginUrl: () => string;
   userAddr: string;
@@ -70,12 +71,8 @@ export type ZkLoginState = SetupData & {
   zkProofs: any;
   account: () => Account;
   isProofsLoading: boolean;
-  loginStatus: () => 'loggedOut' | 'loggedIn';
-  accessToken: string;
-  parseUrlHash: (hash: string) => void;
-  files: File[];
-  listFiles: () => Promise<void>;
-  createFile: (name: string, content: string) => Promise<void>;
+  addressSeed: () => BigInt;
+  zkloginAddress: () => string;
 };
 
 export type AccountData = {
@@ -98,13 +95,3 @@ export type ColorsType = {
   r2: number;
   r3: number;
 };
-
-export type ZkProofParams = {
-  maxEpoch: number;
-  jwtRandomness: string;
-  extendedEphemeralPublicKey: string;
-  jwt: string;
-  salt: string;
-};
-
-export * from './gdrive';
