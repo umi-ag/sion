@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { redirect } from 'next/navigation';
+import { useOauth } from 'src/store';
 
 const Page = () => {
-  const router = useRouter();
+  const { oauth } = useOauth();
 
-  useEffect(() => {
-    router.push("/demo");
-  }, []);
-
-  return <div></div>;
+  if (!oauth.jwt) {
+    redirect('/login');
+  } else {
+    redirect('/gdrive');
+  }
 };
 
 export default Page;

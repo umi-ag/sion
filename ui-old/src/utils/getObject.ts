@@ -1,6 +1,9 @@
-import { suiClient } from 'src/config/sui';
+import { suiClient } from "src/config/sui";
 
-export async function getOwnedCocoObjectId(address: string, objectType: string) {
+export async function getOwnedCocoObjectId(
+  address: string,
+  objectType: string
+) {
   const data = await suiClient.getOwnedObjects({
     owner: address,
     filter: {
@@ -27,5 +30,5 @@ export async function getOwnedCocoObjectId(address: string, objectType: string) 
   if (data && data.data && data.data[0] && data.data[0].data) {
     return data.data[0].data.objectId;
   }
-  return '';
+  return "";
 }
