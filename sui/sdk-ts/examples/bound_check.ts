@@ -33,20 +33,20 @@ const membershipId = await sionClient.getOwnedMembershipObjectId(client, {
 
 const claimList: CredentialClaim[] = [
   {
-    key: 'mileage',
-    value: BigInt(0xab),
+    claim_key: 'mileage',
+    claim_value: BigInt(0xab),
   },
   {
-    key: 'hard_accelerations',
-    value: BigInt(0x25),
+    claim_key: 'hard_accelerations',
+    claim_value: BigInt(0x25),
   },
   {
-    key: 'hard_brakings',
-    value: BigInt(0x12),
+    claim_key: 'hard_brakings',
+    claim_value: BigInt(0x12),
   },
   {
-    key: 'traffic_violations',
-    value: BigInt(0x123456),
+    claim_key: 'traffic_violations',
+    claim_value: BigInt(0x123456),
     // value: "2b596e4b230759a22d18592d73c889dc1f67b0d3ebc082f2c0c32bb379782edb",
   },
 ];
