@@ -1,6 +1,7 @@
 import CryptoJS from 'crypto-js';
 
 export const u64ToLEBytes = (number: bigint): Buffer => {
+  console.log({ number });
   const buffer = Buffer.alloc(8);
   buffer.writeBigUInt64LE(number);
   return buffer;

@@ -9,6 +9,11 @@
         "dist/**"
       ]
     },
+    "fmt": {
+      "dependsOn": [
+        "^fmt"
+      ]
+    },
     "lint": {
       "outputs": []
     },

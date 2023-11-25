@@ -48,12 +48,12 @@ export default function AuthorizedRouteLayout({
         <FooterMenu />
       </div>
 
-      <div className="fixed bottom-0 right-0 p-4 flex gap-4">
-        <button className="btn btn-primary" onClick={logout}>
+      <div className="fixed top-0 right-0 p-4 flex gap-4">
+        <button className="btn btn-info" onClick={logout}>
           Log out
         </button>
 
-        <button className="btn btn-primary" onClick={sendTestTx}>
+        <button className="btn btn-info" onClick={sendTestTx}>
           {!zkLogin.zkProof && zkProofQuery.isLoading ? (
             <>
               <span className="loading loading-spinner" />
