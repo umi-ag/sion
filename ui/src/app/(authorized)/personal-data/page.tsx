@@ -12,17 +12,6 @@ const Card = ({
     <div className="card w-96 bg-accent-200 shadow-xl mb-8 hover:shadow-2xl transition-shadow">
       <div className="card-body">
         <h2 className="card-title">{title}</h2>
-        {/* <ul>
-          {credClaims.map((claim) => (
-            <li key={claim.label}>
-              <Checkbox
-                label={toLabel(claim)}
-                checked={selectedClaims.includes(claim.claim_key)}
-                onChange={(checked) => select(claim.claim_key, checked)}
-              />
-            </li>
-          ))}
-        </ul> */}
       </div>
     </div>
   );
@@ -47,10 +36,6 @@ const Page = () => {
       <Link href="/personal-data/all-japan">
         <Card title="全日本海上保険" />
       </Link>
-
-      {/* <div className="grid place-items-center w-full">
-        <button className="btn btn-active btn-accent">データを開示する</button>
-      </div> */}
     </>
   );
 };
