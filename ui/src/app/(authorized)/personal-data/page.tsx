@@ -1,10 +1,11 @@
 'use client';
 
-import React from 'react';
-import { LineChart, generateRandomData } from 'src/components/LineChart';
+import React, { useState } from 'react';
+import { CredentialClaim, sampleClaimDrivingBehavior, sampleClaimTrafficViolation } from 'sion-sdk';
+import { formatClaim } from 'src/utils/formatClaim';
 
 const Checkbox: React.FC<{
-  label: string;
+  label: React.ReactNode;
   checked?: boolean;
   onChange?: (checked: boolean) => void;
 }> = ({ label, checked, onChange }) => {
@@ -23,46 +24,77 @@ const Checkbox: React.FC<{
   );
 };
 
-const Card = () => {
-  const graphData = generateRandomData('マツダロイヤリティ', 20, 10, 50);
+const Card = ({
+  title,
+  claim,
+}: {
+  title: string;
+  claim: CredentialClaim[];
+}) => {
+  const [credClaims] = useState<CredentialClaim[]>(claim);
+  const [selectedClaims, setSelectedClaims] = useState<string[]>([]);
+
+  const toLabel = (claim: CredentialClaim) => {
+    const display = formatClaim(claim);
+    return (
+      <>
+        <span>{claim.label}: </span>
+        <span className="font-semibold">{display}</span>
+      </>
+    );
+  };
+
+  const select = (key: string, checked: boolean) => {
+    if (checked) {
+      setSelectedClaims([...selectedClaims, key]);
+    } else {
+      setSelectedClaims(selectedClaims.filter((c) => c !== key));
+    }
+  };
 
   return (
-    <div className="card w-96 bg-accent-200 shadow-xl">
-      <figure className="px-10 pt-10">
-        <div className="grid place-items-center bg-white w-80 h-40 rounded-xl">
-          <div className="scale-150">
-            <LineChart data={graphData} />
-          </div>
-        </div>
-      </figure>
+    <div className="card w-96 bg-accent-200 shadow-xl mb-8">
       <div className="card-body">
-        <h2 className="card-title">MAZDA ロイヤリティ</h2>
-        <p className="text-4xl font-bold">140</p>
-        <h3 className="text-xl">これまでのデータ</h3>
+        <h2 className="card-title">{title}</h2>
         <ul>
-          <li>
-            <Checkbox label="イベント参加回数: 12回" checked />
-          </li>
-          <li>
-            <Checkbox label="総走行距離: 12,345km" />
-          </li>
-          <li>
-            <Checkbox label="急ハンドル回数: 6回" checked />
-          </li>
+          {credClaims.map((claim) => (
+            <li key={claim.label}>
+              <Checkbox
+                label={toLabel(claim)}
+                checked={selectedClaims.includes(claim.claim_key)}
+                onChange={(checked) => select(claim.claim_key, checked)}
+              />
+            </li>
+          ))}
         </ul>
-        {/* <div className="card-actions grid place-items-center">
-          <button className="btn btn-primary">Buy Now</button>
-        </div> */}
       </div>
     </div>
   );
 };
 
 const Page = () => {
+  const claimList = {
+    drivingData: {
+      title: 'MAZDA車走行データ',
+      claim: sampleClaimDrivingBehavior,
+    },
+    safeDriving: {
+      title: '安全運転データ',
+      claim: sampleClaimTrafficViolation,
+    },
+  };
+
   return (
     <>
-      <h1 className="text-2xl font-bold mb-8">情報開示</h1>
-      <Card />
+      <h1 className="text-2xl font-bold mb-2">情報開示</h1>
+      <p className="text-sm text-gray-400 mb-8">開示するデータを選択してください</p>
+
+      <Card {...claimList.drivingData} />
+      {/* <Card {...claimList.safeDriving} /> */}
+
+      <div className="grid place-items-center w-full">
+        <button className="btn btn-active btn-accent">申請する</button>
+      </div>
     </>
   );
 };
