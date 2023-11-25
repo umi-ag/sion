@@ -1,12 +1,19 @@
 {
   "name": "sion-workspace",
   "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "_build": "turbo run fmt && turbo run build",
+    "fmt": "turbo run fmt",
+    "lint": "turbo run lint"
+  },
   "workspaces": [
     "sui/sdk-ts",
     "ui"
   ],
-  "scripts": {
-    "build": "turbo run build"
+  "dependencies": {
+    "@mysten/bcs": "^0.8.1",
+    "@mysten/sui.js": "^0.47.0"
   },
   "devDependencies": {
     "turbo": "^1.10.16"

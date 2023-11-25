@@ -36,3 +36,8 @@ script = '''
 cd solana/programs/counter
 anchor build -p counter
 '''
+
+[tasks."install:sui-client-gen"]
+script = '''
+cargo install --locked --git https://github.com/kunalabs-io/sui-client-gen.git
+'''

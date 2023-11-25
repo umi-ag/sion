@@ -1,4 +1,4 @@
-import { SuiClient } from '@mysten/sui.js/dist/cjs/client';
+import { SuiClient } from '@mysten/sui.js/client';
 import { MembershipPointer } from '../moveCall/sion/membership-pointer/structs';
 
 const getOwnedMembershipPointerObjectId = async (client: SuiClient, args: { address: string }) => {
@@ -36,6 +36,7 @@ const getOwnedMembershipObjectId = async (client: SuiClient, args: { address: st
   });
 
   console.log(JSON.stringify(data, null, 2));
+  // @ts-ignore
   const membershipId = data.data?.content?.fields?.membership_id ?? null;
   return membershipId;
 };

@@ -1,6 +1,7 @@
 export type CredentialClaim = {
   claim_key: string;
   claim_value: bigint;
+  type?: string;
   label?: string;
   description?: string;
 };
