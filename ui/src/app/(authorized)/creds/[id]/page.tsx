@@ -25,15 +25,15 @@ const Page = ({ params }: { params: { id: string } }) => {
 
   const { zkLogin } = useZkLogin();
 
-  const [ status, setStatus] = useState<'waiting' | 'loading' | 'done'>('waiting');
+  const [status, setStatus] = useState<'waiting' | 'loading' | 'done'>('waiting');
 
   const DisplayClaim = (claim: CredentialClaim) => {
-    let number = new Decimal(claim.claim_value.toString()).div(1e6).toNumber();
+    const num = new Decimal(claim.claim_value.toString()).div(1e6).toNumber();
     const display = match(claim.type)
-      .with('count', () => `${numeral(number).format('0')} 回`)
-      .with('meter', () => `${numeral(number / 1000).format('0')} km`)
-      .with('ratio', () => `${numeral(number).format('0.0 %')}`)
-      .with('hour', () => `${numeral(number).format('0')} 時間`)
+      .with('count', () => `${numeral(num).format('0')} 回`)
+      .with('meter', () => `${numeral(num / 1000).format('0')} km`)
+      .with('ratio', () => `${numeral(num).format('0.0 %')}`)
+      .with('hour', () => `${numeral(num).format('0')} 時間`)
       .otherwise(() => '');
 
     return (
@@ -68,13 +68,11 @@ const Page = ({ params }: { params: { id: string } }) => {
           setStatus('done');
         }}
       >
-        {
-          match(status)
+        {match(status)
           .with('waiting', () => '証明書をリクエスト')
           .with('loading', () => '証明車を発行中...')
           .with('done', () => '証明書 発行済み')
-          .exhaustive()
-        }
+          .exhaustive()}
       </button>
 
       <div className="my-8">
