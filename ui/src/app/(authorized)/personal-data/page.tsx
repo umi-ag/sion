@@ -1,62 +1,18 @@
 'use client';
 
-import React, { useState } from 'react';
-import { CredentialClaim, sampleClaimDrivingBehavior, sampleClaimTrafficViolation } from 'sion-sdk';
-import { formatClaim } from 'src/utils/formatClaim';
-
-const Checkbox: React.FC<{
-  label: React.ReactNode;
-  checked?: boolean;
-  onChange?: (checked: boolean) => void;
-}> = ({ label, checked, onChange }) => {
-  return (
-    <div className="form-control">
-      <label className="cursor-pointer label justify-start gap-4">
-        <input
-          type="checkbox"
-          checked={!!checked}
-          onChange={(e) => onChange?.(e.target.checked)}
-          className="checkbox checkbox-accent"
-        />
-        <span className="label-text">{label}</span>
-      </label>
-    </div>
-  );
-};
-
+import Link from 'next/link';
+import React from 'react';
+import { sampleClaimDrivingBehavior, sampleClaimTrafficViolation } from 'sion-sdk';
 const Card = ({
   title,
-  claim,
 }: {
   title: string;
-  claim: CredentialClaim[];
 }) => {
-  const [credClaims] = useState<CredentialClaim[]>(claim);
-  const [selectedClaims, setSelectedClaims] = useState<string[]>([]);
-
-  const toLabel = (claim: CredentialClaim) => {
-    const display = formatClaim(claim);
-    return (
-      <>
-        <span>{claim.label}: </span>
-        <span className="font-semibold">{display}</span>
-      </>
-    );
-  };
-
-  const select = (key: string, checked: boolean) => {
-    if (checked) {
-      setSelectedClaims([...selectedClaims, key]);
-    } else {
-      setSelectedClaims(selectedClaims.filter((c) => c !== key));
-    }
-  };
-
   return (
-    <div className="card w-96 bg-accent-200 shadow-xl mb-8">
+    <div className="card w-96 bg-accent-200 shadow-xl mb-8 hover:shadow-2xl transition-shadow">
       <div className="card-body">
         <h2 className="card-title">{title}</h2>
-        <ul>
+        {/* <ul>
           {credClaims.map((claim) => (
             <li key={claim.label}>
               <Checkbox
@@ -66,12 +22,11 @@ const Card = ({
               />
             </li>
           ))}
-        </ul>
+        </ul> */}
       </div>
     </div>
   );
 };
-
 const Page = () => {
   const claimList = {
     drivingData: {
@@ -87,14 +42,15 @@ const Page = () => {
   return (
     <>
       <h1 className="text-2xl font-bold mb-2">情報開示</h1>
-      <p className="text-sm text-gray-400 mb-8">開示するデータを選択してください</p>
+      <p className="text-sm text-gray-400 mb-8">データを開示する相手を選択してください</p>
 
-      <Card {...claimList.drivingData} />
-      {/* <Card {...claimList.safeDriving} /> */}
+      <Link href="/personal-data/all-japan">
+        <Card title="全日本海上保険" />
+      </Link>
 
-      <div className="grid place-items-center w-full">
+      {/* <div className="grid place-items-center w-full">
         <button className="btn btn-active btn-accent">データを開示する</button>
-      </div>
+      </div> */}
     </>
   );
 };
