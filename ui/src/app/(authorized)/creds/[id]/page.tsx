@@ -2,8 +2,6 @@
 export const runtime = 'edge';
 
 import { LineChart, generateRandomData } from 'src/components/LineChart';
-import { Certificate } from '../Certificate';
-import { certificates } from '../data';
 
 import { Decimal } from 'decimal.js';
 
@@ -20,12 +18,14 @@ import numeral from 'numeral';
 import { sleep } from 'src/utils';
 
 const Page = ({ params }: { params: { id: string } }) => {
-  const cert = certificates.find((certificate) => certificate.id === params.id) as Certificate;
-  const graphData = generateRandomData(JSON.stringify(cert), 20, 10, 50);
+  // const cert = certificates.find((certificate) => certificate.id === params.id) as Certificate;
+  // const graphData = generateRandomData(JSON.stringify(cert), 20, 10, 50);
 
   const [credClaims, setCredClaims] = useState<CredentialClaim[]>([]);
 
   const { zkLogin } = useZkLogin();
+
+  const [ status, setStatus] = useState<'waiting' | 'loading' | 'done'>('waiting');
 
   const DisplayClaim = (claim: CredentialClaim) => {
     let number = new Decimal(claim.claim_value.toString()).div(1e6).toNumber();
@@ -37,7 +37,7 @@ const Page = ({ params }: { params: { id: string } }) => {
       .otherwise(() => '');
 
     return (
-      <li className='flex items-center gap-3'>
+      <li className="flex items-center gap-3">
         <span>{claim.label}:</span>
         <span>{display}</span>
       </li>
@@ -46,7 +46,7 @@ const Page = ({ params }: { params: { id: string } }) => {
 
   return (
     <>
-      <h1 className="text-2xl font-bold mb-8">MAZDA車保有データ</h1>
+      <h1 className="text-2xl font-bold mb-8">MAZDA車走行データ</h1>
       <h2 className="text-lg font-bold mb-8">発行者: マツダ株式会社</h2>
 
       {/* <div className="grid place-items-center scale-x-[200%] mb-8">
@@ -56,17 +56,25 @@ const Page = ({ params }: { params: { id: string } }) => {
       <button
         className="btn btn-primary"
         onClick={async () => {
+          setStatus('loading');
           const args = {
             memberAddress: zkLogin.zkLoginAddress,
             claimList: sampleClaimDrivingBehavior,
           };
           console.log({ args });
           // await moveCallIssueCreds(args);
-          await sleep(3000)
+          await sleep(3000);
           setCredClaims(sampleClaimDrivingBehavior);
+          setStatus('done');
         }}
       >
-        証明書をリクエスト
+        {
+          match(status)
+          .with('waiting', () => '証明書をリクエスト')
+          .with('loading', () => '証明車を発行中...')
+          .with('done', () => '証明書 発行済み')
+          .exhaustive()
+        }
       </button>
 
       <div className="my-8">
