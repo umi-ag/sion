@@ -1,21 +1,12 @@
 'use client';
 export const runtime = 'edge';
 
-import { LineChart, generateRandomData } from 'src/components/LineChart';
-
-import { Decimal } from 'decimal.js';
-
-import {
-  CredentialClaim,
-  claimSchemaListDrivingBehavior,
-  sampleClaimDrivingBehavior,
-} from 'sion-sdk';
 import { useState } from 'react';
-import { moveCallIssueCreds } from 'src/libs/authenticator/issueCreds';
+import { CredentialClaim, sampleClaimDrivingBehavior } from 'sion-sdk';
 import { useZkLogin } from 'src/store';
-import { match } from 'ts-pattern';
-import numeral from 'numeral';
 import { sleep } from 'src/utils';
+import { match } from 'ts-pattern';
+import { DisplayClaim } from './DisplayClaim';
 
 const Page = ({ params }: { params: { id: string } }) => {
   // const cert = certificates.find((certificate) => certificate.id === params.id) as Certificate;
@@ -26,23 +17,6 @@ const Page = ({ params }: { params: { id: string } }) => {
   const { zkLogin } = useZkLogin();
 
   const [status, setStatus] = useState<'waiting' | 'loading' | 'done'>('waiting');
-
-  const DisplayClaim = (claim: CredentialClaim) => {
-    const num = new Decimal(claim.claim_value.toString()).div(1e6).toNumber();
-    const display = match(claim.type)
-      .with('count', () => `${numeral(num).format('0')} 回`)
-      .with('meter', () => `${numeral(num / 1000).format('0')} km`)
-      .with('ratio', () => `${numeral(num).format('0.0 %')}`)
-      .with('hour', () => `${numeral(num).format('0')} 時間`)
-      .otherwise(() => '');
-
-    return (
-      <li className="flex items-center gap-3">
-        <span>{claim.label}:</span>
-        <span>{display}</span>
-      </li>
-    );
-  };
 
   return (
     <>
@@ -70,7 +44,7 @@ const Page = ({ params }: { params: { id: string } }) => {
       >
         {match(status)
           .with('waiting', () => '証明書をリクエスト')
-          .with('loading', () => '証明車を発行中...')
+          .with('loading', () => '証明書を発行中...')
           .with('done', () => '証明書 発行済み')
           .exhaustive()}
       </button>
