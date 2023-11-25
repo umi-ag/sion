@@ -48,11 +48,7 @@ export default function AuthorizedRouteLayout({
         <FooterMenu />
       </div>
 
-      <div className="fixed top-0 right-0 p-4 flex gap-4">
-        <button className="btn btn-info" onClick={logout}>
-          Log out
-        </button>
-
+      <div className="fixed top-0 right-0 p-4 flex flex-col gap-4">
         <button className="btn btn-info" onClick={sendTestTx}>
           {!zkLogin.zkProof && zkProofQuery.isLoading ? (
             <>
@@ -62,6 +58,10 @@ export default function AuthorizedRouteLayout({
           ) : (
             'Send sponsored tx with zk login'
           )}
+        </button>
+
+        <button className="btn btn-info" onClick={logout}>
+          Log out
         </button>
       </div>
     </>
