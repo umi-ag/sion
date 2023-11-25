@@ -93,7 +93,7 @@ const Page = () => {
       {/* <Card {...claimList.safeDriving} /> */}
 
       <div className="grid place-items-center w-full">
-        <button className="btn btn-active btn-accent">申請する</button>
+        <button className="btn btn-active btn-accent">データを開示する</button>
       </div>
     </>
   );
