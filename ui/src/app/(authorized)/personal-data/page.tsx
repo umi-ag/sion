@@ -1,68 +1,41 @@
 'use client';
 
+import Link from 'next/link';
 import React from 'react';
-import { LineChart, generateRandomData } from 'src/components/LineChart';
-
-const Checkbox: React.FC<{
-  label: string;
-  checked?: boolean;
-  onChange?: (checked: boolean) => void;
-}> = ({ label, checked, onChange }) => {
+import { sampleClaimDrivingBehavior, sampleClaimTrafficViolation } from 'sion-sdk';
+const Card = ({
+  title,
+}: {
+  title: string;
+}) => {
   return (
-    <div className="form-control">
-      <label className="cursor-pointer label justify-start gap-4">
-        <input
-          type="checkbox"
-          checked={!!checked}
-          onChange={(e) => onChange?.(e.target.checked)}
-          className="checkbox checkbox-accent"
-        />
-        <span className="label-text">{label}</span>
-      </label>
-    </div>
-  );
-};
-
-const Card = () => {
-  const graphData = generateRandomData('マツダロイヤリティ', 20, 10, 50);
-
-  return (
-    <div className="card w-96 bg-accent-200 shadow-xl">
-      <figure className="px-10 pt-10">
-        <div className="grid place-items-center bg-white w-80 h-40 rounded-xl">
-          <div className="scale-150">
-            <LineChart data={graphData} />
-          </div>
-        </div>
-      </figure>
+    <div className="card w-96 bg-accent-200 shadow-xl mb-8 hover:shadow-2xl transition-shadow">
       <div className="card-body">
-        <h2 className="card-title">MAZDA ロイヤリティ</h2>
-        <p className="text-4xl font-bold">140</p>
-        <h3 className="text-xl">これまでのデータ</h3>
-        <ul>
-          <li>
-            <Checkbox label="イベント参加回数: 12回" checked />
-          </li>
-          <li>
-            <Checkbox label="総走行距離: 12,345km" />
-          </li>
-          <li>
-            <Checkbox label="急ハンドル回数: 6回" checked />
-          </li>
-        </ul>
-        {/* <div className="card-actions grid place-items-center">
-          <button className="btn btn-primary">Buy Now</button>
-        </div> */}
+        <h2 className="card-title">{title}</h2>
       </div>
     </div>
   );
 };
-
 const Page = () => {
+  const claimList = {
+    drivingData: {
+      title: 'MAZDA車走行データ',
+      claim: sampleClaimDrivingBehavior,
+    },
+    safeDriving: {
+      title: '安全運転データ',
+      claim: sampleClaimTrafficViolation,
+    },
+  };
+
   return (
     <>
-      <h1 className="text-2xl font-bold mb-8">情報開示</h1>
-      <Card />
+      <h1 className="text-2xl font-bold mb-2">情報開示</h1>
+      <p className="text-sm text-gray-400 mb-8">データを開示する相手を選択してください</p>
+
+      <Link href="/personal-data/all-japan">
+        <Card title="全日本海上保険" />
+      </Link>
     </>
   );
 };

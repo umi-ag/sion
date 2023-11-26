@@ -1,7 +1,7 @@
 import React from 'react';
-import { CredentailProfile } from './data';
+import { CredentialProfile } from './data';
 
-export const CredencialCard: React.FC<{ cred: CredentailProfile }> = (props) => {
+export const CredentialCard: React.FC<{ cred: CredentialProfile }> = (props) => {
   const cert = props.cred;
   // サンプルデータ
   // const sampleData = generateRandomData(JSON.stringify(props), 10, 10, 50);

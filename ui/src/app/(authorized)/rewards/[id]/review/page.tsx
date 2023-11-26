@@ -82,29 +82,6 @@ const Page = () => {
       {status === 1 && <Status1 />}
       {status === 2 && <Status2 />}
       {status >= 3 && <Status3 />}
-
-      {/* <div className="grid place-items-center h-40">
-        <p className="text-center">1. 証明生成</p>
-        <span className="loading loading-dots loading-lg" />
-        <p className="text-center">2. 審査</p>
-        <span className="loading loading-dots loading-lg" />
-      </div> */}
-
-      {/* <div>
-        <ul className="steps steps-vertical">
-          <li className="step step-primary">証明生成完了！</li>
-          <li className="step">審査中です...</li>
-        </ul>
-
-        <span className="loading loading-ring loading-lg" />
-      </div>
-
-      <div>
-        <ul className="steps steps-vertical">
-          <li className="step step-primary">証明生成完了！</li>
-          <li className="step step-primary">審査完了！</li>
-        </ul>
-      </div> */}
     </>
   );
 };
