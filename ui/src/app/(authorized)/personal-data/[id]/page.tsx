@@ -5,6 +5,8 @@ import React, { useState } from 'react';
 import { CredentialClaim, sampleClaimDrivingBehavior, sampleClaimTrafficViolation } from 'sion-sdk';
 import { formatClaim } from 'src/utils/formatClaim';
 
+export const runtime = 'edge';
+
 const Checkbox: React.FC<{
   label: React.ReactNode;
   checked?: boolean;

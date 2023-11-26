@@ -3,6 +3,8 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
+export const runtime = 'edge';
+
 const Status1 = () => {
   return (
     <div className="grid place-items-center">
