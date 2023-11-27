@@ -1,10 +1,11 @@
 module sion::membership {
-    use sui::clock::{Self, Clock};
-    use sui::object::{Self, UID};
     use std::string::{String};
-    use sui::tx_context::{TxContext};
-    use sui::table::{Self, Table};
+
+    use sui::clock::{Self, Clock};
     use sui::event;
+    use sui::object::{Self, UID};
+    use sui::table::{Self, Table};
+    use sui::tx_context::{TxContext};
 
     friend sion::membership_registry;
 

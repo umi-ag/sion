@@ -24,7 +24,7 @@ module sion::verifier {
         verify_groth16_bn254(vk, public_inputs, proof)
     }
 
-    fun verify_groth16_bn254(vk: vector<u8>, public_inputs: vector<u8>, proof: vector<u8>): bool {
+    public fun verify_groth16_bn254(vk: vector<u8>, public_inputs: vector<u8>, proof: vector<u8>): bool {
         let cuvre = groth16::bn254();
         let pvk = groth16::prepare_verifying_key(&cuvre, &vk);
 

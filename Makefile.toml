@@ -1,3 +1,14 @@
+[tasks."echo"]
+script = '''
+echo "Hello World"
+'''
+
+[tasks."build:ui"]
+script = '''
+bun i
+bun run build
+'''
+
 [tasks."credx-clean:build"]
 script = '''
 cd crates/credx-clean

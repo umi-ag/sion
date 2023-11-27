@@ -1,10 +1,6 @@
 module sion::membership_pointer {
-    use sui::clock::{Self, Clock};
     use sui::object::{Self, ID, UID};
-    use std::string::{String};
     use sui::tx_context::{TxContext};
-    use sui::table::{Self, Table};
-    use sui::event;
 
     friend sion::membership_registry;
 
