@@ -27,11 +27,15 @@ export const listFiles = async (accessToken: string) => {
 // バウンダリ文字列を定義
 const BOUNDARY = '-------314159265358979323846';
 
-export const uploadFile = async ({ name, mimeType, content }: NewFile, accessToken: string) => {
+export const uploadFile = async (
+  { name, mimeType, content, parents }: NewFile,
+  accessToken: string,
+) => {
   // メタデータを定義
   const metadata = {
     name, // ファイル名
     mimeType, // MIMEタイプ
+    parents, // 親フォルダのID
   };
 
   // ファイルの中身
@@ -68,3 +72,28 @@ export const uploadFile = async ({ name, mimeType, content }: NewFile, accessTok
 };
 
 export const toGdriveUrl = (fileId: string) => `https://drive.google.com/file/d/${fileId}/view`;
+
+export const createFolder = async (name: string, accessToken: string) => {
+  const metadata = {
+    name,
+    mimeType: 'application/vnd.google-apps.folder',
+  };
+
+  const r = await fetch('https://www.googleapis.com/drive/v3/files', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(metadata),
+  });
+
+  if (!r.ok) {
+    throw new Error(await r.text());
+  }
+
+  const json = await r.json();
+  console.log(json);
+
+  return json as File;
+};
