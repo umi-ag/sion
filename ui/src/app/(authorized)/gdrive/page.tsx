@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useGdrive } from 'src/store';
 
 const Page = () => {
-  const { filesQuery, uploadFile } = useGdrive();
+  const { filesQuery, uploadFileMutation } = useGdrive();
   const [file, setFile] = useState({
     name: '',
     mimeType: 'text/plain',
@@ -43,7 +43,12 @@ const Page = () => {
           onInput={(e) => setFile({ ...file, content: e.currentTarget.value })}
         />
 
-        <button className="btn btn-accent" onClick={() => uploadFile(file as never)}>
+        <button
+          className="btn btn-accent"
+          onClick={() => uploadFileMutation.uploadFile(file as never)}
+          disabled={uploadFileMutation.isMutating}
+        >
+          {uploadFileMutation.isMutating && <span className="loading loading-spinner" />}
           Upload
         </button>
       </div>

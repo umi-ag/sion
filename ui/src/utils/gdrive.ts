@@ -1,17 +1,8 @@
-'use client';
-
-import { File } from 'src/types';
-import useSWR from 'swr';
-import { useOauth } from './oauth';
-
-// export type GdriveState = {
-//   // gdrive
-//   files: File[];
-// };
+import { File, NewFile } from 'src/types';
 
 const API_KEY = 'AIzaSyDII8ecl6Kzef3ccXh9XYt-kHIWWcFtbqk';
 
-const listFiles = async (accessToken: string) => {
+export const listFiles = async (accessToken: string) => {
   const url = `https://www.googleapis.com/drive/v3/files?key=${API_KEY}`;
   // const accessToken = get().accessToken;
 
@@ -33,16 +24,10 @@ const listFiles = async (accessToken: string) => {
   return json.files as File[];
 };
 
-export type NewFile = {
-  name: string;
-  mimeType: string;
-  content: string;
-};
-
 // バウンダリ文字列を定義
 const BOUNDARY = '-------314159265358979323846';
 
-const uploadFile = async ({ name, mimeType, content }: NewFile, accessToken: string) => {
+export const uploadFile = async ({ name, mimeType, content }: NewFile, accessToken: string) => {
   // メタデータを定義
   const metadata = {
     name, // ファイル名
@@ -82,36 +67,4 @@ const uploadFile = async ({ name, mimeType, content }: NewFile, accessToken: str
   return json as File;
 };
 
-export const useFiles = (accessToken: string) => {
-  const shouldFetch = !!accessToken;
-  const key = shouldFetch ? ['gdrive-list-files', accessToken] : null;
-  const { data, ...rest } = useSWR(key, ([_, accessToken]) => listFiles(accessToken));
-
-  return {
-    files: data ?? [],
-    ...rest,
-  };
-};
-
-export const useUploadFileMutation = (accessToken: string) => {
-  const { data, mutate, ...rest } = useSWR<File>('gdrive-upload-file');
-
-  return {
-    ...rest,
-    uploadFileResult: data,
-    uploadFile: async (file: NewFile) => {
-      const r = await mutate(() => uploadFile(file, accessToken));
-      return r;
-    },
-  };
-};
-
-export const useGdrive = () => {
-  const { oauth } = useOauth();
-
-  return {
-    filesQuery: useFiles(oauth.accessToken),
-    uploadFileMutation: useUploadFileMutation(oauth.accessToken),
-    uploadFile: (file: NewFile) => uploadFile(file, oauth.accessToken),
-  };
-};
+export const toGdriveUrl = (fileId: string) => `https://drive.google.com/file/d/${fileId}/view`;

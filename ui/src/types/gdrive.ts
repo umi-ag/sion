@@ -6,3 +6,9 @@ export type File = {
   created: string;
   type: string;
 };
+
+export type NewFile = {
+  name: string;
+  mimeType: string;
+  content: string;
+};
