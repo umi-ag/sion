@@ -73,14 +73,13 @@ const uploadFile = async ({ name, mimeType, content }: NewFile, accessToken: str
   });
 
   if (!r.ok) {
-    console.error(await r.json());
-    return;
+    throw new Error(await r.text());
   }
 
   const json = await r.json();
   console.log(json);
 
-  return json;
+  return json as File;
 };
 
 export const useFiles = (accessToken: string) => {
@@ -94,11 +93,25 @@ export const useFiles = (accessToken: string) => {
   };
 };
 
+export const useUploadFileMutation = (accessToken: string) => {
+  const { data, mutate, ...rest } = useSWR<File>('gdrive-upload-file');
+
+  return {
+    ...rest,
+    uploadFileResult: data,
+    uploadFile: async (file: NewFile) => {
+      const r = await mutate(() => uploadFile(file, accessToken));
+      return r;
+    },
+  };
+};
+
 export const useGdrive = () => {
   const { oauth } = useOauth();
 
   return {
-    useFiles: () => useFiles(oauth.accessToken),
+    filesQuery: useFiles(oauth.accessToken),
+    uploadFileMutation: useUploadFileMutation(oauth.accessToken),
     uploadFile: (file: NewFile) => uploadFile(file, oauth.accessToken),
   };
 };

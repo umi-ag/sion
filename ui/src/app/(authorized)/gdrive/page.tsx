@@ -5,10 +5,10 @@ import { useState } from 'react';
 import { useGdrive } from 'src/store';
 
 const Page = () => {
-  const { useFiles, uploadFile, uploadFile2 } = useGdrive();
-  const { files, isLoading } = useFiles();
+  const { filesQuery, uploadFile } = useGdrive();
   const [file, setFile] = useState({
     name: '',
+    mimeType: 'text/plain',
     content: '',
   });
 
@@ -29,6 +29,14 @@ const Page = () => {
           onInput={(e) => setFile({ ...file, name: e.currentTarget.value })}
         />
 
+        <input
+          type="text"
+          placeholder="mime type"
+          className="input input-bordered input-primary input-sm w-full max-w-xs mb-4"
+          value={file.mimeType}
+          onInput={(e) => setFile({ ...file, mimeType: e.currentTarget.value })}
+        />
+
         <textarea
           className="textarea textarea-bordered w-full mb-4"
           placeholder="Bio"
@@ -38,17 +46,13 @@ const Page = () => {
         <button className="btn btn-accent" onClick={() => uploadFile(file as never)}>
           Upload
         </button>
-
-        <button className="btn btn-accent" onClick={() => uploadFile2()}>
-          Upload2
-        </button>
       </div>
 
       <details>
-        <summary>{isLoading ? <span>Loading...</span> : <span>Files</span>}</summary>
+        <summary>{filesQuery.isLoading ? <span>Loading...</span> : <span>Files</span>}</summary>
 
         <ul>
-          {files.map((file) => (
+          {filesQuery.files.map((file) => (
             <li key={file.id}>{file.name}</li>
           ))}
         </ul>
