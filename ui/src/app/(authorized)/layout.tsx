@@ -63,6 +63,10 @@ export default function AuthorizedRouteLayout({
         <button className="btn btn-info" onClick={logout}>
           Log out
         </button>
+
+        <button className="btn btn-info" onClick={() => router.push('/gdrive')}>
+          Google Drive
+        </button>
       </div>
     </>
   );

@@ -1,8 +1,13 @@
 export type File = {
+  kind: string;
+  mimeType: string;
   id: string;
   name: string;
-  size: number;
-  modified: string;
-  created: string;
-  type: string;
+};
+
+export type NewFile = {
+  name: string;
+  mimeType: string;
+  content: string;
+  parents: string[];
 };
