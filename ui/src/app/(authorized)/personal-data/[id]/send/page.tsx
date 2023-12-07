@@ -14,7 +14,7 @@ const Status1 = () => {
   );
 };
 
-const Status2 = () => {
+const Status2 = ({ id }: { id: string }) => {
   const router = useRouter();
 
   return (
@@ -24,17 +24,17 @@ const Status2 = () => {
         <button
           className="btn btn-active btn-accent"
           onClick={() => {
-            router.push('/personal-data');
+            router.push(`/personal-data/${id}/verify`);
           }}
         >
-          もどる
+          検証する
         </button>
       </div>
     </div>
   );
 };
 
-const Page = () => {
+const Page = ({ params }: { params: { id: string } }) => {
   const [status, setStatus] = useState(1);
 
   // 5秒おきにステータスを更新
@@ -46,9 +46,9 @@ const Page = () => {
     <>
       <h1 className="text-2xl font-bold mb-2">情報開示</h1>
 
-      <div className="grid place-items-center h-1/2">
+      <div className="grid place-items-center h-64">
         {status === 1 && <Status1 />}
-        {status >= 2 && <Status2 />}
+        {status >= 2 && <Status2 id={params.id} />}
       </div>
     </>
   );

@@ -1,11 +1,11 @@
 'use client';
 
-import { useAtom } from 'jotai';
+import { useAtomValue } from 'jotai';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { CredentialClaim } from 'sion-sdk';
 import { formatClaim } from 'src/utils/formatClaim';
-import { claimList, disclosedClaimKeysAtom } from '../data';
+import { claimList, disclosedClaimKeysAtom } from '../../data';
 
 export const runtime = 'edge';
 
@@ -32,15 +32,16 @@ const Checkbox: React.FC<{
 const Card = ({
   title,
   claims,
-  selectedClaims,
+  disclosedClaims,
   onChange,
 }: {
   title: string;
   claims: CredentialClaim[];
-  selectedClaims: string[];
+  disclosedClaims: string[];
   onChange?: (claimKey: string, checked: boolean) => void;
 }) => {
   const [credClaims] = useState<CredentialClaim[]>(claims);
+  const disclosed = (claimKey: string) => disclosedClaims.includes(claimKey);
 
   const toLabel = (claim: CredentialClaim) => {
     const display = formatClaim(claim);
@@ -52,18 +53,30 @@ const Card = ({
     );
   };
 
+  const Badge = ({ claimKey }: { claimKey: string }) => {
+    return (
+      <div
+        className={`badge badge-accent ${
+          !disclosed(claimKey) && 'bg-gray-400 border-gray-400'
+        } rounded-full`}
+      />
+    );
+  };
+
   return (
     <div className="card w-96 bg-accent-200 shadow-xl mb-8">
       <div className="card-body">
         <h2 className="card-title">{title}</h2>
         <ul>
           {credClaims.map((claim) => (
-            <li key={claim.label}>
-              <Checkbox
+            <li key={claim.label} className="flex items-center gap-2 mb-2 last:mb-0">
+              {/* <Checkbox
                 label={toLabel(claim)}
-                checked={selectedClaims.includes(claim.claim_key)}
+                checked={disclosedClaims.includes(claim.claim_key)}
                 onChange={(checked) => onChange?.(claim.claim_key, checked)}
-              />
+              /> */}
+              <Badge claimKey={claim.claim_key} />
+              <span>{toLabel(claim)}</span>
             </li>
           ))}
         </ul>
@@ -73,38 +86,38 @@ const Card = ({
 };
 
 const Page = () => {
-  const [selectedClaims, setSelectedClaims] = useState<string[]>([]);
+  // const [selectedClaims, setSelectedClaims] = useState<string[]>([]);
   const router = useRouter();
-  const [, setDisclosedClaims] = useAtom(disclosedClaimKeysAtom);
+  const disclosedClaimKeys = useAtomValue(disclosedClaimKeysAtom);
 
   const select = (key: string, checked: boolean) => {
-    if (checked) {
-      setSelectedClaims([...selectedClaims, key]);
-    } else {
-      setSelectedClaims(selectedClaims.filter((c) => c !== key));
-    }
+    // if (checked) {
+    //   setSelectedClaims([...selectedClaims, key]);
+    // } else {
+    //   setSelectedClaims(selectedClaims.filter((c) => c !== key));
+    // }
   };
 
   const disclose = () => {
-    setDisclosedClaims(selectedClaims);
-    router.push('/personal-data/all-japan/send');
+    // setDisclosedClaims(selectedClaims);
+    // router.push('/personal-data/all-japan/send');
   };
 
   return (
     <>
       <h1 className="text-2xl font-bold mb-2">情報開示</h1>
-      <p className="text-sm text-gray-400 mb-8">全日本海上保険に開示するデータを選択してください</p>
+      {/* <p className="text-sm text-gray-400 mb-8">全日本海上保険に開示するデータを選択してください</p> */}
 
-      <Card {...claimList.drivingData} selectedClaims={selectedClaims} onChange={select} />
+      <Card {...claimList.drivingData} disclosedClaims={disclosedClaimKeys} onChange={select} />
       {/* <Card {...claimList.safeDriving} /> */}
 
       <div className="grid place-items-center w-full">
         <button
           className="btn btn-active btn-accent"
-          disabled={selectedClaims.length === 0}
+          // disabled={selectedClaims.length === 0}
           onClick={disclose}
         >
-          データを開示する
+          検証
         </button>
       </div>
     </>
