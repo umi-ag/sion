@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 
 export const runtime = 'edge';
@@ -14,19 +14,20 @@ const Status1 = () => {
   );
 };
 
-const Status2 = ({ id }: { id: string }) => {
+const Status2 = () => {
   const router = useRouter();
+  const { id } = useParams();
+  const searchParams = useSearchParams();
+
+  const next = () => {
+    router.push(`/personal-data/${id}/verify?${searchParams.toString()}`);
+  };
 
   return (
     <div className="grid place-items-center">
       <p className="mb-4">送信完了！</p>
       <div className="grid place-items-center w-full">
-        <button
-          className="btn btn-active btn-accent"
-          onClick={() => {
-            router.push(`/personal-data/${id}/verify`);
-          }}
-        >
+        <button className="btn btn-active btn-accent" onClick={next}>
           検証する
         </button>
       </div>
@@ -34,7 +35,7 @@ const Status2 = ({ id }: { id: string }) => {
   );
 };
 
-const Page = ({ params }: { params: { id: string } }) => {
+const Page = () => {
   const [status, setStatus] = useState(1);
 
   // 5秒おきにステータスを更新
@@ -48,7 +49,7 @@ const Page = ({ params }: { params: { id: string } }) => {
 
       <div className="grid place-items-center h-64">
         {status === 1 && <Status1 />}
-        {status >= 2 && <Status2 id={params.id} />}
+        {status >= 2 && <Status2 />}
       </div>
     </>
   );

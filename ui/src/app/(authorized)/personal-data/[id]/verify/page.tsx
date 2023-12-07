@@ -1,11 +1,10 @@
 'use client';
 
-import { useAtomValue } from 'jotai';
-import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import React, { useMemo, useState } from 'react';
 import { CredentialClaim } from 'sion-sdk';
 import { formatClaim } from 'src/utils/formatClaim';
-import { claimList, disclosedClaimKeysAtom } from '../../data';
+import { claimList } from '../../data';
 
 export const runtime = 'edge';
 
@@ -44,6 +43,10 @@ const Card = ({
   const disclosed = (claimKey: string) => disclosedClaims.includes(claimKey);
 
   const toLabel = (claim: CredentialClaim) => {
+    if (!disclosed(claim.claim_key)) {
+      return <span className="text-gray-400">{claim.label}</span>;
+    }
+
     const display = formatClaim(claim);
     return (
       <>
@@ -88,7 +91,15 @@ const Card = ({
 const Page = () => {
   // const [selectedClaims, setSelectedClaims] = useState<string[]>([]);
   const router = useRouter();
-  const disclosedClaimKeys = useAtomValue(disclosedClaimKeysAtom);
+  // const disclosedClaimKeys = useAtomValue(disclosedClaimKeysAtom);
+  const searchParams = useSearchParams();
+  const disclosedClaimKeys = useMemo(() => {
+    const disclosedClaimKeys = searchParams.get('claims');
+    if (!disclosedClaimKeys) {
+      return [];
+    }
+    return disclosedClaimKeys.split(',');
+  }, [searchParams]);
 
   const select = (key: string, checked: boolean) => {
     // if (checked) {

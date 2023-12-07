@@ -1,11 +1,10 @@
 'use client';
 
-import { useAtom } from 'jotai';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { CredentialClaim } from 'sion-sdk';
 import { formatClaim } from 'src/utils/formatClaim';
-import { claimList, disclosedClaimKeysAtom } from '../data';
+import { claimList } from '../data';
 
 export const runtime = 'edge';
 
@@ -75,7 +74,7 @@ const Card = ({
 const Page = () => {
   const [selectedClaims, setSelectedClaims] = useState<string[]>([]);
   const router = useRouter();
-  const [, setDisclosedClaims] = useAtom(disclosedClaimKeysAtom);
+  const { id } = useParams();
 
   const select = (key: string, checked: boolean) => {
     if (checked) {
@@ -86,8 +85,8 @@ const Page = () => {
   };
 
   const disclose = () => {
-    setDisclosedClaims(selectedClaims);
-    router.push('/personal-data/all-japan/send');
+    const path = `/personal-data/${id}/send?claims=${selectedClaims.join(',')}`;
+    router.push(path);
   };
 
   return (
