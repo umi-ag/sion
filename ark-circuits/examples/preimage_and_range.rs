@@ -1,15 +1,12 @@
 // use ark_bls12_381::{Bls12_381 as Curve, Fr};
 use ark_bn254::{Bn254 as Curve, Fr};
-use ark_circuits::bound_check::BoundCheckCircuit;
 use ark_circuits::serde_utils::Groth16VerifierTuple;
 use ark_crypto_primitives::crh::sha256::constraints::{DigestVar, Sha256Gadget};
 use ark_ff::ToConstraintField;
 use ark_ff::{Field, PrimeField};
 use ark_groth16::Groth16;
 use ark_r1cs_std::eq::EqGadget;
-use ark_r1cs_std::uint64::UInt64;
 use ark_r1cs_std::uint8::UInt8;
-use ark_r1cs_std::ToBytesGadget;
 use ark_r1cs_std::{
     fields::fp::FpVar,
     prelude::{AllocVar, AllocationMode},
@@ -18,7 +15,6 @@ use ark_relations::r1cs::{ConstraintSynthesizer, ConstraintSystemRef, SynthesisE
 use ark_serialize::CanonicalSerialize;
 use ark_snark::SNARK;
 use ark_std::cmp::Ordering;
-use fastcrypto::encoding::Base58;
 use fastcrypto::hash::HashFunction;
 use fastcrypto::hash::Sha256;
 use rand::thread_rng;

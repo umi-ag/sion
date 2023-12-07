@@ -1,6 +1,6 @@
 // use ark_bls12_381::{Bls12_381 as Curve, Fr};
 use ark_bn254::{Bn254 as Curve, Fr};
-use ark_circuits::bound_check::BoundCheckCircuit;
+use ark_circuits::pure_bound_check::BoundCheckCircuit;
 use ark_circuits::serde_utils::Groth16VerifierTuple;
 use ark_ff::ToConstraintField;
 use ark_ff::{Field, PrimeField};
