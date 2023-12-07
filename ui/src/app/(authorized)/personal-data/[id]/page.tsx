@@ -1,9 +1,10 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
-import { CredentialClaim, sampleClaimDrivingBehavior, sampleClaimTrafficViolation } from 'sion-sdk';
+import { CredentialClaim } from 'sion-sdk';
 import { formatClaim } from 'src/utils/formatClaim';
+import { claimList } from '../data';
 
 export const runtime = 'edge';
 
@@ -29,16 +30,16 @@ const Checkbox: React.FC<{
 
 const Card = ({
   title,
-  claim,
+  claims,
   selectedClaims,
   onChange,
 }: {
   title: string;
-  claim: CredentialClaim[];
+  claims: CredentialClaim[];
   selectedClaims: string[];
   onChange?: (claimKey: string, checked: boolean) => void;
 }) => {
-  const [credClaims] = useState<CredentialClaim[]>(claim);
+  const [credClaims] = useState<CredentialClaim[]>(claims);
 
   const toLabel = (claim: CredentialClaim) => {
     const display = formatClaim(claim);
@@ -73,17 +74,7 @@ const Card = ({
 const Page = () => {
   const [selectedClaims, setSelectedClaims] = useState<string[]>([]);
   const router = useRouter();
-
-  const claimList = {
-    drivingData: {
-      title: 'MAZDA車走行データ',
-      claim: sampleClaimDrivingBehavior,
-    },
-    safeDriving: {
-      title: '安全運転データ',
-      claim: sampleClaimTrafficViolation,
-    },
-  };
+  const { id } = useParams();
 
   const select = (key: string, checked: boolean) => {
     if (checked) {
@@ -91,6 +82,11 @@ const Page = () => {
     } else {
       setSelectedClaims(selectedClaims.filter((c) => c !== key));
     }
+  };
+
+  const disclose = () => {
+    const path = `/personal-data/${id}/send?claims=${selectedClaims.join(',')}`;
+    router.push(path);
   };
 
   return (
@@ -105,9 +101,7 @@ const Page = () => {
         <button
           className="btn btn-active btn-accent"
           disabled={selectedClaims.length === 0}
-          onClick={() => {
-            router.push('/personal-data/all-japan/send');
-          }}
+          onClick={disclose}
         >
           データを開示する
         </button>

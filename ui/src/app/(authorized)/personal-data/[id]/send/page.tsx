@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 
 export const runtime = 'edge';
@@ -16,18 +16,19 @@ const Status1 = () => {
 
 const Status2 = () => {
   const router = useRouter();
+  const { id } = useParams();
+  const searchParams = useSearchParams();
+
+  const next = () => {
+    router.push(`/personal-data/${id}/verify?${searchParams.toString()}`);
+  };
 
   return (
     <div className="grid place-items-center">
       <p className="mb-4">送信完了！</p>
       <div className="grid place-items-center w-full">
-        <button
-          className="btn btn-active btn-accent"
-          onClick={() => {
-            router.push('/personal-data');
-          }}
-        >
-          もどる
+        <button className="btn btn-active btn-accent" onClick={next}>
+          検証する
         </button>
       </div>
     </div>
@@ -46,7 +47,7 @@ const Page = () => {
     <>
       <h1 className="text-2xl font-bold mb-2">情報開示</h1>
 
-      <div className="grid place-items-center h-1/2">
+      <div className="grid place-items-center h-64">
         {status === 1 && <Status1 />}
         {status >= 2 && <Status2 />}
       </div>

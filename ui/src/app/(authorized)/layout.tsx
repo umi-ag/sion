@@ -42,7 +42,7 @@ export default function AuthorizedRouteLayout({
 
   return (
     <>
-      {children}
+      <div className="pb-[104px]">{children}</div>
 
       <div className="absolute bottom-0 left-0 w-full">
         <FooterMenu />
