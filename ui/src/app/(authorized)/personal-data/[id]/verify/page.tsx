@@ -1,12 +1,13 @@
 'use client';
 
+import { TransactionBlock } from '@mysten/sui.js/transactions';
 import { useSearchParams } from 'next/navigation';
 import React, { useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
-import { CredentialClaim } from 'sion-sdk';
+import { CredentialClaim, sionMoveCall } from 'sion-sdk';
 import { sleep } from 'src/utils';
 import { formatClaim } from 'src/utils/formatClaim';
-import { claimList } from '../../data';
+import { credList } from '../../data';
 
 export const runtime = 'edge';
 
@@ -77,6 +78,39 @@ const Page = () => {
 
   const verify = async () => {
     toast('検証しています...');
+
+    const claimList = credList.drivingData.claims;
+    const disclosedClaims = claimList.filter((claim) =>
+      disclosedClaimKeys.includes(claim.claim_key),
+    );
+    console.log({ disclosedClaims });
+    console.log(disclosedClaimKeys);
+
+    // const txb = new TransactionBlock();
+    // sionMoveCall.boundCheck(txb, {
+    //   membershipId: membershipId,
+    //   claimKey: 'mileage',
+    //   lower_bound_gte: proverArgs.lowerBoundGte,
+    //   upper_bound_le: proverArgs.upperBoundLt,
+    //   proof: Buffer.from(verifier.proof, 'hex'),
+    //   vk: Buffer.from(verifier.vk, 'hex'),
+    // });
+
+    // const result: SuiTransactionBlockResponse = await client.signAndExecuteTransactionBlock({
+    //   transactionBlock: txb,
+    //   signer: keypair(),
+    //   requestType: 'WaitForLocalExecution',
+    //   options: {
+    //     showObjectChanges: true,
+    //     showEvents: true,
+    //   },
+    // });
+    // console.log(JSON.stringify(result, null, 2));
+
+    // const isVerified = sionTransactionResponseResolver.verifyBoundCheck(result, {
+    //   authenticator: keypair().toSuiAddress(),
+    // });
+
     setVerifyButtonContent(
       <>
         <span className="loading loading-spinner loading-sm" />
@@ -92,8 +126,8 @@ const Page = () => {
     <>
       <h1 className="text-2xl font-bold mb-2">情報開示</h1>
 
-      <Card {...claimList.drivingData} disclosedClaims={disclosedClaimKeys} />
-      {/* <Card {...claimList.safeDriving} /> */}
+      <Card {...credList.drivingData} disclosedClaims={disclosedClaimKeys} />
+      {/* <Card {...credList.safeDriving} /> */}
 
       <div className="grid place-items-center w-full">
         <button className="btn btn-active btn-accent" onClick={verify} disabled={verifying}>

@@ -1,6 +1,6 @@
 import { sampleClaimDrivingBehavior, sampleClaimTrafficViolation } from 'sion-sdk';
 
-export const claimList = {
+export const credList = {
   drivingData: {
     title: 'MAZDA車走行データ',
     claims: sampleClaimDrivingBehavior,
