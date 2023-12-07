@@ -3,10 +3,7 @@ use ark_ff::ToConstraintField;
 use ark_ff::{Field, PrimeField};
 use ark_r1cs_std::eq::EqGadget;
 use ark_r1cs_std::uint8::UInt8;
-use ark_r1cs_std::{
-    fields::fp::FpVar,
-    prelude::{AllocVar, AllocationMode},
-};
+use ark_r1cs_std::{fields::fp::FpVar, prelude::AllocVar};
 use ark_relations::r1cs::{ConstraintSynthesizer, ConstraintSystemRef, SynthesisError};
 use ark_std::cmp::Ordering;
 use fastcrypto::hash::HashFunction;
@@ -121,15 +118,13 @@ impl<F: PrimeField> ConstraintSynthesizer<F> for CircuitBoundCheck<F> {
 #[cfg(test)]
 mod test_bound_check {
     use ark_bn254::{Bn254 as Curve, Fr};
-    use ark_ff::ToConstraintField;
     use ark_groth16::{Groth16, Proof};
     use ark_serialize::CanonicalSerialize;
     use ark_snark::SNARK;
-    use fastcrypto::hash::HashFunction;
-    use fastcrypto::hash::Sha256;
     use rand::thread_rng;
 
     use super::*;
+    use crate::serde_utils::Groth16Verifier;
     use crate::serde_utils::PublicInputs;
 
     #[test]
@@ -189,5 +184,23 @@ mod test_bound_check {
             assert!(result);
             println!("verifying time: {} ms", start.elapsed().as_millis());
         }
+    }
+
+    #[test]
+    fn test_success_bound_check() {
+        let mut rng = thread_rng();
+        let request = ProofRequestBoundCheck::new(121, 100, 3000);
+        let circuit = CircuitBoundCheck::<Fr>::from(request);
+        let pk =
+            Groth16::<Curve>::generate_random_parameters_with_reduction(circuit.clone(), &mut rng)
+                .unwrap();
+        let proof = Groth16::<Curve>::prove(&pk, circuit.clone(), &mut rng).unwrap();
+        let verifier = Groth16Verifier::new(
+            &crate::serde_utils::to_bytes(&pk.vk),
+            &PublicInputs::new(circuit.get_public_inputs()).to_bytes(),
+            &crate::serde_utils::to_bytes(&proof),
+        );
+        let result = verifier.verify();
+        assert!(result);
     }
 }

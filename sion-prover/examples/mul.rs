@@ -6,22 +6,14 @@ use ark_r1cs_std::eq::EqGadget;
 use ark_r1cs_std::{
     fields::fp::FpVar,
     prelude::{AllocVar, AllocationMode},
-    R1CSVar,
 };
-use ark_relations::lc;
-use ark_relations::r1cs::{
-    ConstraintSynthesizer, ConstraintSystem, ConstraintSystemRef, SynthesisError,
-};
-use ark_serialize::CanonicalSerialize;
+use ark_relations::r1cs::{ConstraintSynthesizer, ConstraintSystemRef, SynthesisError};
 use ark_snark::SNARK;
 use ark_std::rand::thread_rng;
 use ark_std::UniformRand;
-use num_bigint::BigInt;
-use serde_json;
 use std::fs::File;
 use std::io::Write;
 use std::ops::Mul;
-use std::ops::MulAssign;
 use std::path::Path;
 
 // circuit: prover claims that she knows two factors a and b of some public value c

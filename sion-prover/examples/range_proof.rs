@@ -2,8 +2,6 @@
 use ark_bn254::{Bn254 as Curve, Fr};
 use ark_circuits::pure_bound_check::BoundCheckCircuit;
 use ark_circuits::serde_utils::Groth16Verifier;
-use ark_ff::ToConstraintField;
-use ark_ff::{Field, PrimeField};
 use ark_groth16::Groth16;
 use ark_serialize::CanonicalSerialize;
 use ark_snark::SNARK;

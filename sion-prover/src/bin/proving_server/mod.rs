@@ -1,15 +1,6 @@
-use axum::{
-    response::Json,
-    routing::{get, post},
-    Router,
-};
+use axum::{routing::post, Router};
 use clap::Parser;
-use num_bigint::BigInt;
-use num_traits::Num;
-use serde::Deserialize;
-use serde_json::json;
-use std::time::{SystemTime, UNIX_EPOCH};
-use std::{collections::HashMap, net::SocketAddr};
+use std::net::SocketAddr;
 use tower_http::cors::{Any, CorsLayer};
 
 mod generate_proofs;
@@ -41,7 +32,8 @@ async fn main() {
                 .allow_headers(Any),
         );
 
-    let addr = SocketAddr::from(([127, 0, 0, 1], arg.port));
+    let addr = SocketAddr::from(([0, 0, 0, 0], arg.port));
+    // let addr = SocketAddr::from(([127, 0, 0, 1], arg.port));
     axum::Server::bind(&addr)
         .serve(app.into_make_service())
         .await

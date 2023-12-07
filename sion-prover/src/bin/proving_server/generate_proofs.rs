@@ -6,14 +6,7 @@ use ark_circuits::{
 use ark_groth16::Groth16;
 use ark_snark::SNARK;
 use axum::response::Json;
-use num_bigint::BigInt;
-use num_traits::Num;
 use rand::thread_rng;
-use serde::Deserialize;
-use serde_json::json;
-use std::time::{SystemTime, UNIX_EPOCH};
-use std::{collections::HashMap, net::SocketAddr};
-use tower_http::cors::{Any, CorsLayer};
 
 pub async fn gen_proof_bound_check(
     body: axum::extract::Json<ProofRequestBoundCheck>,

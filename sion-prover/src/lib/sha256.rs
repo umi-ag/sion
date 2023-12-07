@@ -1,7 +1,7 @@
 // https://github.com/celer-network/arkworks-sha256-bench/blob/master/benches/sha_bench.rs
 
 use ark_crypto_primitives::crh::sha256::constraints::{DigestVar, Sha256Gadget};
-use ark_ff::{PrimeField, ToConstraintField};
+use ark_ff::PrimeField;
 use ark_r1cs_std::{prelude::EqGadget, uint8::UInt8};
 use ark_relations::r1cs::{ConstraintSynthesizer, ConstraintSystemRef, SynthesisError};
 use std::clone::Clone;

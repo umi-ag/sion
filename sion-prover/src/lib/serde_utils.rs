@@ -1,10 +1,7 @@
 pub use ark_bn254::{Bn254 as Curve, Fr};
-use ark_groth16::Groth16;
 use ark_serialize::{CanonicalDeserialize, CanonicalSerialize, Write};
-use fastcrypto_zkp::bn254::api::prepare_pvk_bytes;
 use num_bigint::BigInt;
 use num_traits::Num;
-use rand::thread_rng;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use serde_with::{hex::Hex, serde_as};

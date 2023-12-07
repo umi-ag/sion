@@ -1,5 +1,5 @@
 // use ark_bls12_381::{Bls12_381 as Curve, Fr};
-use ark_bn254::{Bn254 as Curve, Fr};
+use ark_bn254::Bn254 as Curve;
 use ark_circuits::serde_utils::Groth16Verifier;
 use ark_circuits::sha256::Sha256Circuit;
 use ark_ff::ToConstraintField;
