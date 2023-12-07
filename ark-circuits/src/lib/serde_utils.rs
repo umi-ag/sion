@@ -1,6 +1,7 @@
 pub use ark_bn254::{Bn254 as Curve, Fr};
 use ark_groth16::Groth16;
-use ark_serialize::{CanonicalSerialize, Write};
+use ark_serialize::{CanonicalDeserialize, CanonicalSerialize, Write};
+use fastcrypto_zkp::bn254::api::prepare_pvk_bytes;
 use num_bigint::BigInt;
 use num_traits::Num;
 use rand::thread_rng;
@@ -58,7 +59,7 @@ impl PublicInputs<Fr> {
 
 #[serde_as]
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct Groth16VerifierTuple {
+pub struct Groth16Verifier {
     #[serde_as(as = "Hex")]
     pub vk: Vec<u8>,
     #[serde_as(as = "Hex")]
@@ -67,7 +68,7 @@ pub struct Groth16VerifierTuple {
     pub proof: Vec<u8>,
 }
 
-impl Groth16VerifierTuple {
+impl Groth16Verifier {
     pub fn new(vk: &[u8], public_inputs: &[u8], proof: &[u8]) -> Self {
         Self {
             vk: vk.to_vec(),
@@ -81,10 +82,19 @@ impl Groth16VerifierTuple {
         println!("proof size: {}", self.proof.len());
     }
 
-    pub fn dump_json(&self, file_path: &str) {
+    pub fn dump_json(&self, path: &Path) {
         let serialized_data = serde_json::to_string(&self).expect("");
-        let path = Path::new(file_path);
         let mut file = File::create(path).expect("");
         file.write_all(serialized_data.as_bytes()).expect("");
+    }
+
+    pub fn verify(&self) -> bool {
+        let vk = ark_groth16::VerifyingKey::<Curve>::deserialize_compressed(&self.vk[..]).unwrap();
+        let vk_wrapped = fastcrypto_zkp::bn254::VerifyingKey::from(vk);
+        let pvk = fastcrypto_zkp::bn254::verifier::process_vk_special(&vk_wrapped);
+        let result =
+            fastcrypto_zkp::bn254::api::verify_groth16(&pvk, &self.public_inputs, &self.proof)
+                .expect("failed to verify");
+        result
     }
 }

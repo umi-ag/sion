@@ -1,6 +1,6 @@
 use ark_bn254::{Bn254 as Curve, Fr};
 use ark_circuits::bound_check::{CircuitBoundCheck, ProofRequestBoundCheck};
-use ark_circuits::serde_utils::{Groth16VerifierTuple, PublicInputs};
+use ark_circuits::serde_utils::{Groth16Verifier, PublicInputs};
 use ark_crypto_primitives::crh::sha256::constraints::{DigestVar, Sha256Gadget};
 use ark_ff::ToConstraintField;
 use ark_ff::{Field, PrimeField};
@@ -12,7 +12,7 @@ use ark_r1cs_std::{
     prelude::{AllocVar, AllocationMode},
 };
 use ark_relations::r1cs::{ConstraintSynthesizer, ConstraintSystemRef, SynthesisError};
-use ark_serialize::CanonicalSerialize;
+use ark_serialize::{CanonicalDeserialize, CanonicalSerialize};
 use ark_snark::SNARK;
 use ark_std::cmp::Ordering;
 use axum::http::request;
@@ -33,6 +33,8 @@ fn main() {
     let request =
         ProofRequestBoundCheck::new(private_number, input_lower_bound_gte, input_upper_bound_lt);
     let circuit = CircuitBoundCheck::<Fr>::from(request);
+
+    println!("num constraints: {}", &circuit.num_constraints());
 
     let pk = {
         let start = ark_std::time::Instant::now();
@@ -58,38 +60,30 @@ fn main() {
         proof
     };
 
-    let public_inputs = PublicInputs::new(circuit.get_public_inputs());
+    let verifier = Groth16Verifier::new(
+        &ark_circuits::serde_utils::to_bytes(&pk.vk),
+        &PublicInputs::new(circuit.get_public_inputs()).to_bytes(),
+        &ark_circuits::serde_utils::to_bytes(&proof),
+    );
 
     {
         let start = ark_std::time::Instant::now();
         let vk = fastcrypto_zkp::bn254::VerifyingKey::from(pk.vk.clone());
         let pvk = fastcrypto_zkp::bn254::verifier::process_vk_special(&vk);
-        let public_inputs_bytes = public_inputs.to_bytes();
+        let proof = &verifier.proof;
+        let public_inputs_bytes = &verifier.public_inputs;
 
-        let result = fastcrypto_zkp::bn254::api::verify_groth16(
-            &pvk,
-            &public_inputs_bytes.clone(),
-            &ark_circuits::serde_utils::to_bytes(&proof),
-        )
-        .expect("failed to verify");
+        let result = fastcrypto_zkp::bn254::api::verify_groth16(&pvk, public_inputs_bytes, proof)
+            .expect("failed to verify");
         assert!(result);
         println!("verifying time: {} ms", start.elapsed().as_millis());
     }
 
-    let tuple = Groth16VerifierTuple::new(
-        &ark_circuits::serde_utils::to_bytes(&pk.vk),
-        &ark_circuits::serde_utils::to_bytes(&circuit.get_public_inputs()),
-        &ark_circuits::serde_utils::to_bytes(&proof),
-    );
+    assert!(verifier.verify());
 
     println!("pk size: {}", &pk.compressed_size());
     println!("vk size: {}", &pk.vk.compressed_size());
-    println!("proof size: {}", &tuple.proof.len());
+    println!("proof size: {}", &verifier.proof.len());
 
-    {
-        let serialized_data = serde_json::to_string(&tuple).expect("");
-        let path = Path::new("output.json");
-        let mut file = File::create(path).expect("");
-        file.write_all(serialized_data.as_bytes()).expect("");
-    }
+    verifier.dump_json(Path::new("output.json"));
 }

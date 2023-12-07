@@ -1,7 +1,7 @@
 // use ark_bls12_381::{Bls12_381 as Curve, Fr};
 use ark_bn254::{Bn254 as Curve, Fr};
 use ark_circuits::pure_bound_check::BoundCheckCircuit;
-use ark_circuits::serde_utils::Groth16VerifierTuple;
+use ark_circuits::serde_utils::Groth16Verifier;
 use ark_ff::ToConstraintField;
 use ark_ff::{Field, PrimeField};
 use ark_groth16::Groth16;
@@ -61,7 +61,7 @@ fn main() {
 
     let pvk = Groth16::<Curve>::process_vk(&pk.vk).unwrap();
 
-    let tuple = Groth16VerifierTuple::new(
+    let tuple = Groth16Verifier::new(
         &ark_circuits::serde_utils::to_bytes(&pk.vk),
         &ark_circuits::serde_utils::to_bytes(&inputs),
         &ark_circuits::serde_utils::to_bytes(&proof),
