@@ -1,4 +1,3 @@
-import { atom } from 'jotai';
 import { sampleClaimDrivingBehavior, sampleClaimTrafficViolation } from 'sion-sdk';
 
 export const claimList = {
@@ -11,5 +10,3 @@ export const claimList = {
     claims: sampleClaimTrafficViolation,
   },
 };
-
-export const disclosedClaimKeysAtom = atom<string[]>([]);
