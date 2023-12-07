@@ -11,8 +11,9 @@ use ark_relations::r1cs::{ConstraintSynthesizer, ConstraintSystemRef, SynthesisE
 use ark_std::cmp::Ordering;
 use fastcrypto::hash::HashFunction;
 use fastcrypto::hash::Sha256;
+use serde::{Deserialize, Serialize};
 
-#[derive(Clone)]
+#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
 pub struct ProofRequestBoundCheck {
     value: u64,
     lower_bound_gte: u64,
@@ -29,7 +30,7 @@ impl ProofRequestBoundCheck {
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct CircuitBoundCheck<F: Field> {
     value: Vec<u8>,
     expected_digest: Vec<u8>,
@@ -39,7 +40,7 @@ pub struct CircuitBoundCheck<F: Field> {
 
 impl<F: Field> From<ProofRequestBoundCheck> for CircuitBoundCheck<F> {
     fn from(request: ProofRequestBoundCheck) -> Self {
-        let private_value = request.value.to_be_bytes().to_vec();
+        let private_value = request.value.to_le_bytes().to_vec();
         let expected_digest: Vec<u8> = Sha256::digest(&private_value).to_vec();
 
         Self {
@@ -138,16 +139,12 @@ mod test_bound_check {
         let input_lower_bound_gte: u64 = 0x1234;
         let input_upper_bound_lt: u64 = 0xABCDEF;
 
-        // let private_value = private_number.to_be_bytes().to_vec();
-        let private_value = private_number.to_le_bytes().to_vec();
-        let expected_digest: Vec<u8> = Sha256::digest(&private_value).to_vec();
-
-        let circuit = CircuitBoundCheck::<Fr>::new(
-            &private_value,
-            &expected_digest,
+        let request = ProofRequestBoundCheck::new(
+            private_number,
             input_lower_bound_gte,
             input_upper_bound_lt,
         );
+        let circuit = CircuitBoundCheck::<Fr>::from(request);
 
         let pk = {
             let start = ark_std::time::Instant::now();
@@ -175,24 +172,7 @@ mod test_bound_check {
             proof
         };
 
-        let public_inputs = {
-            let mut inputs: Vec<Fr> = [
-                // &circuit.blake2_seed[..], &circuit.expected_output[..]
-                // circuit.lower_bound_gte,
-                expected_digest,
-                // vec![input_lower_bound_gte, input_upper_bound_lt], // Fr::from(circuit.lower_bound_gte.unwrap()),
-                // Fr::from(circuit.upper_bound_lt.unwrap()),
-            ]
-            .iter()
-            .flat_map::<Vec<Fr>, _>(|x| x.to_field_elements().unwrap())
-            .map(Fr::from)
-            .collect();
-
-            inputs.push(Fr::from(input_lower_bound_gte));
-            inputs.push(Fr::from(input_upper_bound_lt));
-
-            PublicInputs::new(inputs)
-        };
+        let public_inputs = PublicInputs::new(circuit.get_public_inputs());
 
         {
             let start = ark_std::time::Instant::now();

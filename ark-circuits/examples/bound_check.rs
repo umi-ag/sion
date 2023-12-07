@@ -1,14 +1,11 @@
-// use ark_bls12_381::{Bls12_381 as Curve, Fr};
 use ark_bn254::{Bn254 as Curve, Fr};
 use ark_circuits::bound_check::{CircuitBoundCheck, ProofRequestBoundCheck};
-use ark_circuits::serde_utils::Groth16VerifierTuple;
+use ark_circuits::serde_utils::{Groth16VerifierTuple, PublicInputs};
 use ark_crypto_primitives::crh::sha256::constraints::{DigestVar, Sha256Gadget};
 use ark_ff::ToConstraintField;
 use ark_ff::{Field, PrimeField};
-use ark_groth16::Groth16;
+use ark_groth16::{Groth16, Proof};
 use ark_r1cs_std::eq::EqGadget;
-use ark_r1cs_std::uint64::UInt64;
-use ark_r1cs_std::uint8::UInt8;
 use ark_r1cs_std::ToBytesGadget;
 use ark_r1cs_std::{
     fields::fp::FpVar,
@@ -19,7 +16,6 @@ use ark_serialize::CanonicalSerialize;
 use ark_snark::SNARK;
 use ark_std::cmp::Ordering;
 use axum::http::request;
-use fastcrypto::encoding::Base58;
 use fastcrypto::hash::HashFunction;
 use fastcrypto::hash::Sha256;
 use rand::thread_rng;
@@ -30,10 +26,13 @@ use std::path::Path;
 
 fn main() {
     let mut rng = thread_rng();
+    let private_number: u64 = 0x123456;
+    let input_lower_bound_gte: u64 = 0x1234;
+    let input_upper_bound_lt: u64 = 0xABCDEF;
 
-    let request = ProofRequestBoundCheck::new(121, 100, 200);
+    let request =
+        ProofRequestBoundCheck::new(private_number, input_lower_bound_gte, input_upper_bound_lt);
     let circuit = CircuitBoundCheck::<Fr>::from(request);
-    let public_inputs = circuit.get_public_inputs();
 
     let pk = {
         let start = ark_std::time::Instant::now();
@@ -59,24 +58,32 @@ fn main() {
         proof
     };
 
+    let public_inputs = PublicInputs::new(circuit.get_public_inputs());
+
     {
         let start = ark_std::time::Instant::now();
-        let result = Groth16::<Curve>::verify(&pk.vk, &public_inputs, &proof).unwrap();
+        let vk = fastcrypto_zkp::bn254::VerifyingKey::from(pk.vk.clone());
+        let pvk = fastcrypto_zkp::bn254::verifier::process_vk_special(&vk);
+        let public_inputs_bytes = public_inputs.to_bytes();
+
+        let result = fastcrypto_zkp::bn254::api::verify_groth16(
+            &pvk,
+            &public_inputs_bytes.clone(),
+            &ark_circuits::serde_utils::to_bytes(&proof),
+        )
+        .expect("failed to verify");
         assert!(result);
         println!("verifying time: {} ms", start.elapsed().as_millis());
     }
 
-    let pvk = Groth16::<Curve>::process_vk(&pk.vk).unwrap();
-
     let tuple = Groth16VerifierTuple::new(
         &ark_circuits::serde_utils::to_bytes(&pk.vk),
-        &ark_circuits::serde_utils::to_bytes(&public_inputs),
+        &ark_circuits::serde_utils::to_bytes(&circuit.get_public_inputs()),
         &ark_circuits::serde_utils::to_bytes(&proof),
     );
 
     println!("pk size: {}", &pk.compressed_size());
     println!("vk size: {}", &pk.vk.compressed_size());
-    println!("pkv size: {}", &pvk.compressed_size());
     println!("proof size: {}", &tuple.proof.len());
 
     {

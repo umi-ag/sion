@@ -1,8 +1,8 @@
 {
-  "[rust]": {
-    "editor.formatOnSave": true
-  },
+  "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
-    "source.organizeImports": true
+    "source.fixAll": true,
+    "source.organizeImports": true,
+    "source.sortMembers": true,
   }
 }

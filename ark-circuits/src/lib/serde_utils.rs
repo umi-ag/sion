@@ -57,7 +57,7 @@ impl PublicInputs<Fr> {
 }
 
 #[serde_as]
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Groth16VerifierTuple {
     #[serde_as(as = "Hex")]
     pub vk: Vec<u8>,

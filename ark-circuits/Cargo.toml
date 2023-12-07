@@ -9,6 +9,10 @@ version = "0.1.0"
 name = "ark_circuits"
 path = "src/lib/mod.rs"
 
+[[bin]]
+name = "proving_server"
+path = "src/bin/proving_server/mod.rs"
+
 [features]
 parallel = [
   "ark-ff/parallel",

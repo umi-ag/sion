@@ -1,0 +1,12 @@
+
+post-bound-check:
+    curl -X POST -H "Content-Type: application/json" -d '{"value": 121, "lower_bound_gte": 100, "upper_bound_lt": 200}' localhost:8080/gen-proof
+
+run-proving-server:
+    cargo run --bin proving_server
+
+run-bound-check:
+    cargo run --example bound_check
+
+remove-unused-deps:
+    cargo +nightly udeps
