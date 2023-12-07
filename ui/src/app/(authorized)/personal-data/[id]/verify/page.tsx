@@ -2,7 +2,9 @@
 
 import { useSearchParams } from 'next/navigation';
 import React, { useMemo, useState } from 'react';
+import toast from 'react-hot-toast';
 import { CredentialClaim } from 'sion-sdk';
+import { sleep } from 'src/utils';
 import { formatClaim } from 'src/utils/formatClaim';
 import { claimList } from '../../data';
 
@@ -45,7 +47,7 @@ const Card = ({
   };
 
   return (
-    <div className="card w-96 bg-accent-200 shadow-xl mb-8">
+    <div className="card w-96 bg-sky-100 shadow-xl mb-8">
       <div className="card-body">
         <h2 className="card-title">{title}</h2>
         <ul>
@@ -70,6 +72,21 @@ const Page = () => {
     }
     return disclosedClaimKeys.split(',');
   }, [searchParams]);
+  const [verifyButtonContent, setVerifyButtonContent] = useState<React.ReactNode>('検証');
+  const verifying = verifyButtonContent !== '検証';
+
+  const verify = async () => {
+    toast('検証しています...');
+    setVerifyButtonContent(
+      <>
+        <span className="loading loading-spinner loading-sm" />
+        検証中...
+      </>,
+    );
+    await sleep(2000);
+    toast.success('検証成功！');
+    setVerifyButtonContent('検証');
+  };
 
   return (
     <>
@@ -79,7 +96,9 @@ const Page = () => {
       {/* <Card {...claimList.safeDriving} /> */}
 
       <div className="grid place-items-center w-full">
-        <button className="btn btn-active btn-accent">検証</button>
+        <button className="btn btn-active btn-accent" onClick={verify} disabled={verifying}>
+          {verifyButtonContent}
+        </button>
       </div>
     </>
   );
