@@ -2,31 +2,42 @@
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { Data, dataList, toPercent } from './dataList';
 
 export const runtime = 'edge';
 
-const DataListItem = ({
-  label,
-  value,
-  active,
-}: { label: string; value: string; active: boolean }) => {
+const DataListItem = (data: Data) => {
+  const { title, description, value, threshold, active } = data;
   return (
-    <li className="flex justify-start items-center gap-2">
-      <div
-        className={`badge ${active ? 'badge-accent' : 'bg-gray-400 border-gray-400'} badge-sm`}
-      />
-      <p>
-        {label}: <span className="font-semibold">{value}</span>
-      </p>
+    <li className="rounded border border-gray-200 px-2 py-4 mb-4 last:mb-0">
+      <div className="flex justify-start items-center gap-2 mb-2">
+        <div className={`badge ${active ? 'badge-accent' : 'bg-gray-400 border-gray-400'}`}>OK</div>
+        <p className="font-semibold">{title}</p>
+      </div>
+
+      <p className="mb-2">{description}</p>
+
+      <div className="w-full h-6 relative">
+        <progress
+          className="progress progress-accent w-full h-full"
+          value={toPercent(data)}
+          max="100"
+        />
+        <div className="absolute top-0 left-0 w-full h-full grid place-items-center font-semibold">
+          <span>
+            {value} / {threshold}
+          </span>
+        </div>
+      </div>
     </li>
   );
 };
 
-const DataList = ({ data }: { data: { label: string; value: string; active: boolean }[] }) => {
+const DataList = ({ data }: { data: Data[] }) => {
   return (
     <ul>
       {data.map((item) => (
-        <DataListItem key={item.label} label={item.label} value={item.value} active={item.active} />
+        <DataListItem key={item.title} {...item} />
       ))}
     </ul>
   );
@@ -37,7 +48,7 @@ const DataCard = ({
   data,
 }: {
   title: string;
-  data: { label: string; value: string; active: boolean }[];
+  data: Data[];
 }) => {
   return (
     <div className="mb-8">
@@ -48,8 +59,8 @@ const DataCard = ({
         <DataList data={data.filter((d) => d.active)} />
       </div>
 
-      <p className="text-sm text-gray-400">以下のデータは使用されません</p>
-      <DataList data={data.filter((d) => !d.active)} />
+      {/* <p className="text-sm text-gray-400">以下のデータは使用されません</p>
+      <DataList data={data.filter((d) => !d.active)} /> */}
     </div>
   );
 };
@@ -57,54 +68,6 @@ const DataCard = ({
 const Page = ({ params }: { params: { id: string } }) => {
   const router = useRouter();
   const id = params.id;
-
-  const dataList = {
-    marketing: {
-      title: 'MAZDAマーケティング',
-      data: [
-        {
-          label: 'MAZDA車での走行距離',
-          value: '20,345km',
-          active: true,
-        },
-        {
-          label: 'MAZDA車の保有期間',
-          value: '3年',
-          active: true,
-        },
-        {
-          label: 'イベント参加回数',
-          value: '8回',
-          active: false,
-        },
-      ],
-    },
-    ownership: {
-      title: 'MAZDA車保有',
-      data: [
-        {
-          label: '総走行距離',
-          value: '33,456km',
-          active: true,
-        },
-        {
-          label: '事故回数',
-          value: '2回',
-          active: false,
-        },
-        {
-          label: '急ブレーキ回数',
-          value: '8回',
-          active: true,
-        },
-        {
-          label: '急ハンドル回数',
-          value: '3回',
-          active: true,
-        },
-      ],
-    },
-  };
 
   return (
     <>

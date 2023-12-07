@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import React from 'react';
-import { sampleClaimDrivingBehavior, sampleClaimTrafficViolation } from 'sion-sdk';
+
 const Card = ({
   title,
 }: {
@@ -16,18 +16,8 @@ const Card = ({
     </div>
   );
 };
-const Page = () => {
-  const claimList = {
-    drivingData: {
-      title: 'MAZDA車走行データ',
-      claim: sampleClaimDrivingBehavior,
-    },
-    safeDriving: {
-      title: '安全運転データ',
-      claim: sampleClaimTrafficViolation,
-    },
-  };
 
+const Page = () => {
   return (
     <>
       <h1 className="text-2xl font-bold mb-2">情報開示</h1>
