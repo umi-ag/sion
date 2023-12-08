@@ -15,6 +15,7 @@
         "noUnusedImports": "off"
       },
       "complexity": {
+        "noForEach": "off",
         "useSimplifiedLogicExpression": "off"
       },
       "a11y": {

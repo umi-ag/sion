@@ -1,9 +1,9 @@
 
 post-bound-check:
-    curl -X POST -H "Content-Type: application/json" -d '{"value": 121, "lower_bound_gte": 100, "upper_bound_lt": 200}' localhost:8080/gen-proof
+    curl -X POST -H "Content-Type: application/json" -d '{"value": "121", "lowerBoundGte": "100", "upperBoundLt": "200"}' localhost:8080/gen-proof
 
 post-bound-check-alpha:
-    curl -X POST -H "Content-Type: application/json" -d '{"value": 121, "lower_bound_gte": 100, "upper_bound_lt": 200}' https://sion-prover.fly.dev/gen-proof
+    curl -X POST -H "Content-Type: application/json" -d '{"value": "121", "lowerBoundGte": "100", "upperBoundLt": "200"}' https://sion-prover.fly.dev/gen-proof
 
 run-proving-server:
     cargo run --bin proving_server -- --port 8000

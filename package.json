@@ -5,6 +5,7 @@
     "build": "turbo run build",
     "_build": "turbo run fmt && turbo run build",
     "fmt": "turbo run fmt",
+    "dev": "turbo run dev",
     "lint": "turbo run lint"
   },
   "workspaces": [
@@ -13,7 +14,7 @@
   ],
   "dependencies": {
     "@mysten/bcs": "^0.8.1",
-    "@mysten/sui.js": "^0.47.0"
+    "@mysten/sui.js": "^0.46.0"
   },
   "devDependencies": {
     "turbo": "^1.10.16"

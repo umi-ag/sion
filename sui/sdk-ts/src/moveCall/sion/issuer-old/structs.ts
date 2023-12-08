@@ -1,25 +1,13 @@
 import { String } from '../../_dependencies/onchain/0x1/string/structs';
 import { UID } from '../../_dependencies/onchain/0x2/object/structs';
-import { bcsOnchain as bcs } from '../../_framework/bcs';
-import { FieldsWithTypes, Type } from '../../_framework/util';
-import { Encoding } from '@mysten/bcs';
+import { FieldsWithTypes, Type, compressSuiType } from '../../_framework/util';
+import { bcs, fromHEX, toHEX } from '@mysten/bcs';
 import { SuiClient, SuiParsedData } from '@mysten/sui.js/client';
 
 /* ============================== Membership =============================== */
 
-bcs.registerStructType(
-  '0xeb4c51db47d14a40856b5bf2878c458b190eb4f0abf87cefecffbe3fbba4dfd0::issuer_old::Membership',
-  {
-    id: `0x2::object::UID`,
-    vin: `0x1::string::String`,
-    odometer_reading: `u64`,
-    fuel_usage: `u64`,
-    created_at: `u64`,
-    created_by: `address`,
-  },
-);
-
 export function isMembership(type: Type): boolean {
+  type = compressSuiType(type);
   return (
     type ===
     '0xeb4c51db47d14a40856b5bf2878c458b190eb4f0abf87cefecffbe3fbba4dfd0::issuer_old::Membership'
@@ -39,6 +27,22 @@ export class Membership {
   static readonly $typeName =
     '0xeb4c51db47d14a40856b5bf2878c458b190eb4f0abf87cefecffbe3fbba4dfd0::issuer_old::Membership';
   static readonly $numTypeParams = 0;
+
+  static get bcs() {
+    return bcs.struct('Membership', {
+      id: UID.bcs,
+      vin: String.bcs,
+      odometer_reading: bcs.u64(),
+      fuel_usage: bcs.u64(),
+      created_at: bcs.u64(),
+      created_by: bcs
+        .bytes(32)
+        .transform({
+          input: (val: string) => fromHEX(val),
+          output: (val: Uint8Array) => toHEX(val),
+        }),
+    });
+  }
 
   readonly id: string;
   readonly vin: string;
@@ -83,8 +87,8 @@ export class Membership {
     });
   }
 
-  static fromBcs(data: Uint8Array | string, encoding?: Encoding): Membership {
-    return Membership.fromFields(bcs.de([Membership.$typeName], data, encoding));
+  static fromBcs(data: Uint8Array): Membership {
+    return Membership.fromFields(Membership.bcs.parse(data));
   }
 
   static fromSuiParsedData(content: SuiParsedData) {

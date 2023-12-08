@@ -1,16 +1,11 @@
-import { bcsOnchain as bcs } from '../../../../_framework/bcs';
-import { FieldsWithTypes, Type, parseTypeName } from '../../../../_framework/util';
+import { FieldsWithTypes, Type, compressSuiType, parseTypeName } from '../../../../_framework/util';
 import { ID } from '../object/structs';
-import { Encoding } from '@mysten/bcs';
+import { bcs } from '@mysten/bcs';
 
 /* ============================== Receiving =============================== */
 
-bcs.registerStructType('0x2::transfer::Receiving<T0>', {
-  id: `0x2::object::ID`,
-  version: `u64`,
-});
-
 export function isReceiving(type: Type): boolean {
+  type = compressSuiType(type);
   return type.startsWith('0x2::transfer::Receiving<');
 }
 
@@ -22,6 +17,13 @@ export interface ReceivingFields {
 export class Receiving {
   static readonly $typeName = '0x2::transfer::Receiving';
   static readonly $numTypeParams = 1;
+
+  static get bcs() {
+    return bcs.struct('Receiving', {
+      id: ID.bcs,
+      version: bcs.u64(),
+    });
+  }
 
   readonly $typeArg: Type;
 
@@ -48,13 +50,10 @@ export class Receiving {
     }
     const { typeArgs } = parseTypeName(item.type);
 
-    return new Receiving(typeArgs[0], {
-      id: item.fields.id,
-      version: BigInt(item.fields.version),
-    });
+    return new Receiving(typeArgs[0], { id: item.fields.id, version: BigInt(item.fields.version) });
   }
 
-  static fromBcs(typeArg: Type, data: Uint8Array | string, encoding?: Encoding): Receiving {
-    return Receiving.fromFields(typeArg, bcs.de([Receiving.$typeName, typeArg], data, encoding));
+  static fromBcs(typeArg: Type, data: Uint8Array): Receiving {
+    return Receiving.fromFields(typeArg, Receiving.bcs.parse(data));
   }
 }

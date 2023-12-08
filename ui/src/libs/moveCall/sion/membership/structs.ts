@@ -1,23 +1,11 @@
 import { String } from '../../_dependencies/onchain/0x1/string/structs';
 import { UID } from '../../_dependencies/onchain/0x2/object/structs';
 import { Table } from '../../_dependencies/onchain/0x2/table/structs';
-import { Encoding, bcsOnchain as bcs } from '../../_framework/bcs';
 import { FieldsWithTypes, Type, compressSuiType } from '../../_framework/util';
+import { bcs, fromHEX, toHEX } from '@mysten/bcs';
 import { SuiClient, SuiParsedData } from '@mysten/sui.js/client';
 
 /* ============================== Membership =============================== */
-
-bcs.registerStructType(
-  '0xeb4c51db47d14a40856b5bf2878c458b190eb4f0abf87cefecffbe3fbba4dfd0::membership::Membership',
-  {
-    id: `0x2::object::UID`,
-    authenticator: `address`,
-    subject: `address`,
-    created_at: `u64`,
-    claims_key_to_digest: `0x2::table::Table<0x1::string::String, vector<u8>>`,
-    claims_digest_to_key: `0x2::table::Table<vector<u8>, 0x1::string::String>`,
-  },
-);
 
 export function isMembership(type: Type): boolean {
   type = compressSuiType(type);
@@ -40,6 +28,27 @@ export class Membership {
   static readonly $typeName =
     '0xeb4c51db47d14a40856b5bf2878c458b190eb4f0abf87cefecffbe3fbba4dfd0::membership::Membership';
   static readonly $numTypeParams = 0;
+
+  static get bcs() {
+    return bcs.struct('Membership', {
+      id: UID.bcs,
+      authenticator: bcs
+        .bytes(32)
+        .transform({
+          input: (val: string) => fromHEX(val),
+          output: (val: Uint8Array) => toHEX(val),
+        }),
+      subject: bcs
+        .bytes(32)
+        .transform({
+          input: (val: string) => fromHEX(val),
+          output: (val: Uint8Array) => toHEX(val),
+        }),
+      created_at: bcs.u64(),
+      claims_key_to_digest: Table.bcs,
+      claims_digest_to_key: Table.bcs,
+    });
+  }
 
   readonly id: string;
   readonly authenticator: string;
@@ -88,8 +97,8 @@ export class Membership {
     });
   }
 
-  static fromBcs(data: Uint8Array | string, encoding?: Encoding): Membership {
-    return Membership.fromFields(bcs.de([Membership.$typeName], data, encoding));
+  static fromBcs(data: Uint8Array): Membership {
+    return Membership.fromFields(Membership.bcs.parse(data));
   }
 
   static fromSuiParsedData(content: SuiParsedData) {
@@ -116,17 +125,6 @@ export class Membership {
 
 /* ============================== ContainsClaimEvent =============================== */
 
-bcs.registerStructType(
-  '0xeb4c51db47d14a40856b5bf2878c458b190eb4f0abf87cefecffbe3fbba4dfd0::membership::ContainsClaimEvent',
-  {
-    authenticator: `address`,
-    subject: `address`,
-    claim_key: `0x1::string::String`,
-    claim_digest: `vector<u8>`,
-    is_verified: `bool`,
-  },
-);
-
 export function isContainsClaimEvent(type: Type): boolean {
   type = compressSuiType(type);
   return (
@@ -147,6 +145,26 @@ export class ContainsClaimEvent {
   static readonly $typeName =
     '0xeb4c51db47d14a40856b5bf2878c458b190eb4f0abf87cefecffbe3fbba4dfd0::membership::ContainsClaimEvent';
   static readonly $numTypeParams = 0;
+
+  static get bcs() {
+    return bcs.struct('ContainsClaimEvent', {
+      authenticator: bcs
+        .bytes(32)
+        .transform({
+          input: (val: string) => fromHEX(val),
+          output: (val: Uint8Array) => toHEX(val),
+        }),
+      subject: bcs
+        .bytes(32)
+        .transform({
+          input: (val: string) => fromHEX(val),
+          output: (val: Uint8Array) => toHEX(val),
+        }),
+      claim_key: String.bcs,
+      claim_digest: bcs.vector(bcs.u8()),
+      is_verified: bcs.bool(),
+    });
+  }
 
   readonly authenticator: string;
   readonly subject: string;
@@ -187,25 +205,12 @@ export class ContainsClaimEvent {
     });
   }
 
-  static fromBcs(data: Uint8Array | string, encoding?: Encoding): ContainsClaimEvent {
-    return ContainsClaimEvent.fromFields(bcs.de([ContainsClaimEvent.$typeName], data, encoding));
+  static fromBcs(data: Uint8Array): ContainsClaimEvent {
+    return ContainsClaimEvent.fromFields(ContainsClaimEvent.bcs.parse(data));
   }
 }
 
 /* ============================== BoundCheckEvent =============================== */
-
-bcs.registerStructType(
-  '0xeb4c51db47d14a40856b5bf2878c458b190eb4f0abf87cefecffbe3fbba4dfd0::membership::BoundCheckEvent',
-  {
-    authenticator: `address`,
-    subject: `address`,
-    claim_key: `0x1::string::String`,
-    claim_digest: `vector<u8>`,
-    gte_bound: `u64`,
-    lt_bound: `u64`,
-    is_verified: `bool`,
-  },
-);
 
 export function isBoundCheckEvent(type: Type): boolean {
   type = compressSuiType(type);
@@ -229,6 +234,28 @@ export class BoundCheckEvent {
   static readonly $typeName =
     '0xeb4c51db47d14a40856b5bf2878c458b190eb4f0abf87cefecffbe3fbba4dfd0::membership::BoundCheckEvent';
   static readonly $numTypeParams = 0;
+
+  static get bcs() {
+    return bcs.struct('BoundCheckEvent', {
+      authenticator: bcs
+        .bytes(32)
+        .transform({
+          input: (val: string) => fromHEX(val),
+          output: (val: Uint8Array) => toHEX(val),
+        }),
+      subject: bcs
+        .bytes(32)
+        .transform({
+          input: (val: string) => fromHEX(val),
+          output: (val: Uint8Array) => toHEX(val),
+        }),
+      claim_key: String.bcs,
+      claim_digest: bcs.vector(bcs.u8()),
+      gte_bound: bcs.u64(),
+      lt_bound: bcs.u64(),
+      is_verified: bcs.bool(),
+    });
+  }
 
   readonly authenticator: string;
   readonly subject: string;
@@ -277,7 +304,7 @@ export class BoundCheckEvent {
     });
   }
 
-  static fromBcs(data: Uint8Array | string, encoding?: Encoding): BoundCheckEvent {
-    return BoundCheckEvent.fromFields(bcs.de([BoundCheckEvent.$typeName], data, encoding));
+  static fromBcs(data: Uint8Array): BoundCheckEvent {
+    return BoundCheckEvent.fromFields(BoundCheckEvent.bcs.parse(data));
   }
 }

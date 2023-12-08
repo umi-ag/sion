@@ -28,17 +28,11 @@ export function intoRemainderBytes(txb: TransactionBlock, bcs: ObjectArg) {
 }
 
 export function peelAddress(txb: TransactionBlock, bcs: ObjectArg) {
-  return txb.moveCall({
-    target: `${PUBLISHED_AT}::bcs::peel_address`,
-    arguments: [obj(txb, bcs)],
-  });
+  return txb.moveCall({ target: `${PUBLISHED_AT}::bcs::peel_address`, arguments: [obj(txb, bcs)] });
 }
 
 export function peelBool(txb: TransactionBlock, bcs: ObjectArg) {
-  return txb.moveCall({
-    target: `${PUBLISHED_AT}::bcs::peel_bool`,
-    arguments: [obj(txb, bcs)],
-  });
+  return txb.moveCall({ target: `${PUBLISHED_AT}::bcs::peel_bool`, arguments: [obj(txb, bcs)] });
 }
 
 export function peelOptionAddress(txb: TransactionBlock, bcs: ObjectArg) {
@@ -77,24 +71,15 @@ export function peelOptionU8(txb: TransactionBlock, bcs: ObjectArg) {
 }
 
 export function peelU128(txb: TransactionBlock, bcs: ObjectArg) {
-  return txb.moveCall({
-    target: `${PUBLISHED_AT}::bcs::peel_u128`,
-    arguments: [obj(txb, bcs)],
-  });
+  return txb.moveCall({ target: `${PUBLISHED_AT}::bcs::peel_u128`, arguments: [obj(txb, bcs)] });
 }
 
 export function peelU64(txb: TransactionBlock, bcs: ObjectArg) {
-  return txb.moveCall({
-    target: `${PUBLISHED_AT}::bcs::peel_u64`,
-    arguments: [obj(txb, bcs)],
-  });
+  return txb.moveCall({ target: `${PUBLISHED_AT}::bcs::peel_u64`, arguments: [obj(txb, bcs)] });
 }
 
 export function peelU8(txb: TransactionBlock, bcs: ObjectArg) {
-  return txb.moveCall({
-    target: `${PUBLISHED_AT}::bcs::peel_u8`,
-    arguments: [obj(txb, bcs)],
-  });
+  return txb.moveCall({ target: `${PUBLISHED_AT}::bcs::peel_u8`, arguments: [obj(txb, bcs)] });
 }
 
 export function peelVecAddress(txb: TransactionBlock, bcs: ObjectArg) {
@@ -126,17 +111,11 @@ export function peelVecU128(txb: TransactionBlock, bcs: ObjectArg) {
 }
 
 export function peelVecU64(txb: TransactionBlock, bcs: ObjectArg) {
-  return txb.moveCall({
-    target: `${PUBLISHED_AT}::bcs::peel_vec_u64`,
-    arguments: [obj(txb, bcs)],
-  });
+  return txb.moveCall({ target: `${PUBLISHED_AT}::bcs::peel_vec_u64`, arguments: [obj(txb, bcs)] });
 }
 
 export function peelVecU8(txb: TransactionBlock, bcs: ObjectArg) {
-  return txb.moveCall({
-    target: `${PUBLISHED_AT}::bcs::peel_vec_u8`,
-    arguments: [obj(txb, bcs)],
-  });
+  return txb.moveCall({ target: `${PUBLISHED_AT}::bcs::peel_vec_u8`, arguments: [obj(txb, bcs)] });
 }
 
 export function peelVecVecU8(txb: TransactionBlock, bcs: ObjectArg) {

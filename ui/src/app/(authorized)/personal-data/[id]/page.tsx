@@ -4,7 +4,7 @@ import { useParams, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { CredentialClaim } from 'sion-sdk';
 import { formatClaim } from 'src/utils/formatClaim';
-import { claimList } from '../data';
+import { credList } from '../data';
 
 export const runtime = 'edge';
 
@@ -94,8 +94,8 @@ const Page = () => {
       <h1 className="text-2xl font-bold mb-2">情報開示</h1>
       <p className="text-sm text-gray-400 mb-8">全日本海上保険に開示するデータを選択してください</p>
 
-      <Card {...claimList.drivingData} selectedClaims={selectedClaims} onChange={select} />
-      {/* <Card {...claimList.safeDriving} /> */}
+      <Card {...credList.drivingData} selectedClaims={selectedClaims} onChange={select} />
+      {/* <Card {...credList.safeDriving} /> */}
 
       <div className="grid place-items-center w-full">
         <button

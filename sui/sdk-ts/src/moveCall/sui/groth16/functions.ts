@@ -3,17 +3,11 @@ import { ObjectArg, obj, pure } from '../../_framework/util';
 import { TransactionArgument, TransactionBlock } from '@mysten/sui.js/transactions';
 
 export function bls12381(txb: TransactionBlock) {
-  return txb.moveCall({
-    target: `${PUBLISHED_AT}::groth16::bls12381`,
-    arguments: [],
-  });
+  return txb.moveCall({ target: `${PUBLISHED_AT}::groth16::bls12381`, arguments: [] });
 }
 
 export function bn254(txb: TransactionBlock) {
-  return txb.moveCall({
-    target: `${PUBLISHED_AT}::groth16::bn254`,
-    arguments: [],
-  });
+  return txb.moveCall({ target: `${PUBLISHED_AT}::groth16::bn254`, arguments: [] });
 }
 
 export interface PrepareVerifyingKeyArgs {

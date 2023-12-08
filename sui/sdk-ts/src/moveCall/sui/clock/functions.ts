@@ -3,10 +3,7 @@ import { ObjectArg, obj, pure } from '../../_framework/util';
 import { TransactionArgument, TransactionBlock } from '@mysten/sui.js/transactions';
 
 export function create(txb: TransactionBlock) {
-  return txb.moveCall({
-    target: `${PUBLISHED_AT}::clock::create`,
-    arguments: [],
-  });
+  return txb.moveCall({ target: `${PUBLISHED_AT}::clock::create`, arguments: [] });
 }
 
 export interface ConsensusCommitPrologueArgs {

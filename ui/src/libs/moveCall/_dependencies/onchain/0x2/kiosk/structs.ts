@@ -1,15 +1,10 @@
-import { Encoding, bcsOnchain as bcs } from '../../../../_framework/bcs';
 import { FieldsWithTypes, Type, compressSuiType, parseTypeName } from '../../../../_framework/util';
 import { Balance } from '../balance/structs';
 import { ID, UID } from '../object/structs';
+import { bcs, fromHEX, toHEX } from '@mysten/bcs';
 import { SuiClient, SuiParsedData } from '@mysten/sui.js/client';
 
 /* ============================== Borrow =============================== */
-
-bcs.registerStructType('0x2::kiosk::Borrow', {
-  kiosk_id: `0x2::object::ID`,
-  item_id: `0x2::object::ID`,
-});
 
 export function isBorrow(type: Type): boolean {
   type = compressSuiType(type);
@@ -24,6 +19,13 @@ export interface BorrowFields {
 export class Borrow {
   static readonly $typeName = '0x2::kiosk::Borrow';
   static readonly $numTypeParams = 0;
+
+  static get bcs() {
+    return bcs.struct('Borrow', {
+      kiosk_id: ID.bcs,
+      item_id: ID.bcs,
+    });
+  }
 
   readonly kioskId: string;
   readonly itemId: string;
@@ -47,20 +49,12 @@ export class Borrow {
     return new Borrow({ kioskId: item.fields.kiosk_id, itemId: item.fields.item_id });
   }
 
-  static fromBcs(data: Uint8Array | string, encoding?: Encoding): Borrow {
-    return Borrow.fromFields(bcs.de([Borrow.$typeName], data, encoding));
+  static fromBcs(data: Uint8Array): Borrow {
+    return Borrow.fromFields(Borrow.bcs.parse(data));
   }
 }
 
 /* ============================== Kiosk =============================== */
-
-bcs.registerStructType('0x2::kiosk::Kiosk', {
-  id: `0x2::object::UID`,
-  profits: `0x2::balance::Balance<0x2::sui::SUI>`,
-  owner: `address`,
-  item_count: `u32`,
-  allow_extensions: `bool`,
-});
 
 export function isKiosk(type: Type): boolean {
   type = compressSuiType(type);
@@ -78,6 +72,21 @@ export interface KioskFields {
 export class Kiosk {
   static readonly $typeName = '0x2::kiosk::Kiosk';
   static readonly $numTypeParams = 0;
+
+  static get bcs() {
+    return bcs.struct('Kiosk', {
+      id: UID.bcs,
+      profits: Balance.bcs,
+      owner: bcs
+        .bytes(32)
+        .transform({
+          input: (val: string) => fromHEX(val),
+          output: (val: Uint8Array) => toHEX(val),
+        }),
+      item_count: bcs.u32(),
+      allow_extensions: bcs.bool(),
+    });
+  }
 
   readonly id: string;
   readonly profits: Balance;
@@ -116,8 +125,8 @@ export class Kiosk {
     });
   }
 
-  static fromBcs(data: Uint8Array | string, encoding?: Encoding): Kiosk {
-    return Kiosk.fromFields(bcs.de([Kiosk.$typeName], data, encoding));
+  static fromBcs(data: Uint8Array): Kiosk {
+    return Kiosk.fromFields(Kiosk.bcs.parse(data));
   }
 
   static fromSuiParsedData(content: SuiParsedData) {
@@ -144,11 +153,6 @@ export class Kiosk {
 
 /* ============================== KioskOwnerCap =============================== */
 
-bcs.registerStructType('0x2::kiosk::KioskOwnerCap', {
-  id: `0x2::object::UID`,
-  for: `0x2::object::ID`,
-});
-
 export function isKioskOwnerCap(type: Type): boolean {
   type = compressSuiType(type);
   return type === '0x2::kiosk::KioskOwnerCap';
@@ -162,6 +166,13 @@ export interface KioskOwnerCapFields {
 export class KioskOwnerCap {
   static readonly $typeName = '0x2::kiosk::KioskOwnerCap';
   static readonly $numTypeParams = 0;
+
+  static get bcs() {
+    return bcs.struct('KioskOwnerCap', {
+      id: UID.bcs,
+      for: ID.bcs,
+    });
+  }
 
   readonly id: string;
   readonly for: string;
@@ -185,8 +196,8 @@ export class KioskOwnerCap {
     return new KioskOwnerCap({ id: item.fields.id.id, for: item.fields.for });
   }
 
-  static fromBcs(data: Uint8Array | string, encoding?: Encoding): KioskOwnerCap {
-    return KioskOwnerCap.fromFields(bcs.de([KioskOwnerCap.$typeName], data, encoding));
+  static fromBcs(data: Uint8Array): KioskOwnerCap {
+    return KioskOwnerCap.fromFields(KioskOwnerCap.bcs.parse(data));
   }
 
   static fromSuiParsedData(content: SuiParsedData) {
@@ -213,13 +224,6 @@ export class KioskOwnerCap {
 
 /* ============================== PurchaseCap =============================== */
 
-bcs.registerStructType('0x2::kiosk::PurchaseCap<T0>', {
-  id: `0x2::object::UID`,
-  kiosk_id: `0x2::object::ID`,
-  item_id: `0x2::object::ID`,
-  min_price: `u64`,
-});
-
 export function isPurchaseCap(type: Type): boolean {
   type = compressSuiType(type);
   return type.startsWith('0x2::kiosk::PurchaseCap<');
@@ -235,6 +239,15 @@ export interface PurchaseCapFields {
 export class PurchaseCap {
   static readonly $typeName = '0x2::kiosk::PurchaseCap';
   static readonly $numTypeParams = 1;
+
+  static get bcs() {
+    return bcs.struct('PurchaseCap', {
+      id: UID.bcs,
+      kiosk_id: ID.bcs,
+      item_id: ID.bcs,
+      min_price: bcs.u64(),
+    });
+  }
 
   readonly $typeArg: Type;
 
@@ -275,11 +288,8 @@ export class PurchaseCap {
     });
   }
 
-  static fromBcs(typeArg: Type, data: Uint8Array | string, encoding?: Encoding): PurchaseCap {
-    return PurchaseCap.fromFields(
-      typeArg,
-      bcs.de([PurchaseCap.$typeName, typeArg], data, encoding),
-    );
+  static fromBcs(typeArg: Type, data: Uint8Array): PurchaseCap {
+    return PurchaseCap.fromFields(typeArg, PurchaseCap.bcs.parse(data));
   }
 
   static fromSuiParsedData(content: SuiParsedData) {
@@ -306,10 +316,6 @@ export class PurchaseCap {
 
 /* ============================== Item =============================== */
 
-bcs.registerStructType('0x2::kiosk::Item', {
-  id: `0x2::object::ID`,
-});
-
 export function isItem(type: Type): boolean {
   type = compressSuiType(type);
   return type === '0x2::kiosk::Item';
@@ -322,6 +328,12 @@ export interface ItemFields {
 export class Item {
   static readonly $typeName = '0x2::kiosk::Item';
   static readonly $numTypeParams = 0;
+
+  static get bcs() {
+    return bcs.struct('Item', {
+      id: ID.bcs,
+    });
+  }
 
   readonly id: string;
 
@@ -340,17 +352,12 @@ export class Item {
     return new Item(item.fields.id);
   }
 
-  static fromBcs(data: Uint8Array | string, encoding?: Encoding): Item {
-    return Item.fromFields(bcs.de([Item.$typeName], data, encoding));
+  static fromBcs(data: Uint8Array): Item {
+    return Item.fromFields(Item.bcs.parse(data));
   }
 }
 
 /* ============================== Listing =============================== */
-
-bcs.registerStructType('0x2::kiosk::Listing', {
-  id: `0x2::object::ID`,
-  is_exclusive: `bool`,
-});
 
 export function isListing(type: Type): boolean {
   type = compressSuiType(type);
@@ -365,6 +372,13 @@ export interface ListingFields {
 export class Listing {
   static readonly $typeName = '0x2::kiosk::Listing';
   static readonly $numTypeParams = 0;
+
+  static get bcs() {
+    return bcs.struct('Listing', {
+      id: ID.bcs,
+      is_exclusive: bcs.bool(),
+    });
+  }
 
   readonly id: string;
   readonly isExclusive: boolean;
@@ -385,16 +399,12 @@ export class Listing {
     return new Listing({ id: item.fields.id, isExclusive: item.fields.is_exclusive });
   }
 
-  static fromBcs(data: Uint8Array | string, encoding?: Encoding): Listing {
-    return Listing.fromFields(bcs.de([Listing.$typeName], data, encoding));
+  static fromBcs(data: Uint8Array): Listing {
+    return Listing.fromFields(Listing.bcs.parse(data));
   }
 }
 
 /* ============================== Lock =============================== */
-
-bcs.registerStructType('0x2::kiosk::Lock', {
-  id: `0x2::object::ID`,
-});
 
 export function isLock(type: Type): boolean {
   type = compressSuiType(type);
@@ -408,6 +418,12 @@ export interface LockFields {
 export class Lock {
   static readonly $typeName = '0x2::kiosk::Lock';
   static readonly $numTypeParams = 0;
+
+  static get bcs() {
+    return bcs.struct('Lock', {
+      id: ID.bcs,
+    });
+  }
 
   readonly id: string;
 
@@ -426,18 +442,12 @@ export class Lock {
     return new Lock(item.fields.id);
   }
 
-  static fromBcs(data: Uint8Array | string, encoding?: Encoding): Lock {
-    return Lock.fromFields(bcs.de([Lock.$typeName], data, encoding));
+  static fromBcs(data: Uint8Array): Lock {
+    return Lock.fromFields(Lock.bcs.parse(data));
   }
 }
 
 /* ============================== ItemListed =============================== */
-
-bcs.registerStructType('0x2::kiosk::ItemListed<T0>', {
-  kiosk: `0x2::object::ID`,
-  id: `0x2::object::ID`,
-  price: `u64`,
-});
 
 export function isItemListed(type: Type): boolean {
   type = compressSuiType(type);
@@ -453,6 +463,14 @@ export interface ItemListedFields {
 export class ItemListed {
   static readonly $typeName = '0x2::kiosk::ItemListed';
   static readonly $numTypeParams = 1;
+
+  static get bcs() {
+    return bcs.struct('ItemListed', {
+      kiosk: ID.bcs,
+      id: ID.bcs,
+      price: bcs.u64(),
+    });
+  }
 
   readonly $typeArg: Type;
 
@@ -489,18 +507,12 @@ export class ItemListed {
     });
   }
 
-  static fromBcs(typeArg: Type, data: Uint8Array | string, encoding?: Encoding): ItemListed {
-    return ItemListed.fromFields(typeArg, bcs.de([ItemListed.$typeName, typeArg], data, encoding));
+  static fromBcs(typeArg: Type, data: Uint8Array): ItemListed {
+    return ItemListed.fromFields(typeArg, ItemListed.bcs.parse(data));
   }
 }
 
 /* ============================== ItemPurchased =============================== */
-
-bcs.registerStructType('0x2::kiosk::ItemPurchased<T0>', {
-  kiosk: `0x2::object::ID`,
-  id: `0x2::object::ID`,
-  price: `u64`,
-});
 
 export function isItemPurchased(type: Type): boolean {
   type = compressSuiType(type);
@@ -516,6 +528,14 @@ export interface ItemPurchasedFields {
 export class ItemPurchased {
   static readonly $typeName = '0x2::kiosk::ItemPurchased';
   static readonly $numTypeParams = 1;
+
+  static get bcs() {
+    return bcs.struct('ItemPurchased', {
+      kiosk: ID.bcs,
+      id: ID.bcs,
+      price: bcs.u64(),
+    });
+  }
 
   readonly $typeArg: Type;
 
@@ -552,20 +572,12 @@ export class ItemPurchased {
     });
   }
 
-  static fromBcs(typeArg: Type, data: Uint8Array | string, encoding?: Encoding): ItemPurchased {
-    return ItemPurchased.fromFields(
-      typeArg,
-      bcs.de([ItemPurchased.$typeName, typeArg], data, encoding),
-    );
+  static fromBcs(typeArg: Type, data: Uint8Array): ItemPurchased {
+    return ItemPurchased.fromFields(typeArg, ItemPurchased.bcs.parse(data));
   }
 }
 
 /* ============================== ItemDelisted =============================== */
-
-bcs.registerStructType('0x2::kiosk::ItemDelisted<T0>', {
-  kiosk: `0x2::object::ID`,
-  id: `0x2::object::ID`,
-});
 
 export function isItemDelisted(type: Type): boolean {
   type = compressSuiType(type);
@@ -580,6 +592,13 @@ export interface ItemDelistedFields {
 export class ItemDelisted {
   static readonly $typeName = '0x2::kiosk::ItemDelisted';
   static readonly $numTypeParams = 1;
+
+  static get bcs() {
+    return bcs.struct('ItemDelisted', {
+      kiosk: ID.bcs,
+      id: ID.bcs,
+    });
+  }
 
   readonly $typeArg: Type;
 
@@ -609,10 +628,7 @@ export class ItemDelisted {
     return new ItemDelisted(typeArgs[0], { kiosk: item.fields.kiosk, id: item.fields.id });
   }
 
-  static fromBcs(typeArg: Type, data: Uint8Array | string, encoding?: Encoding): ItemDelisted {
-    return ItemDelisted.fromFields(
-      typeArg,
-      bcs.de([ItemDelisted.$typeName, typeArg], data, encoding),
-    );
+  static fromBcs(typeArg: Type, data: Uint8Array): ItemDelisted {
+    return ItemDelisted.fromFields(typeArg, ItemDelisted.bcs.parse(data));
   }
 }

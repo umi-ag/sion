@@ -63,10 +63,7 @@ export function pow(txb: TransactionBlock, args: PowArgs) {
 }
 
 export function sqrt(txb: TransactionBlock, x: bigint | TransactionArgument) {
-  return txb.moveCall({
-    target: `${PUBLISHED_AT}::math::sqrt`,
-    arguments: [pure(txb, x, `u64`)],
-  });
+  return txb.moveCall({ target: `${PUBLISHED_AT}::math::sqrt`, arguments: [pure(txb, x, `u64`)] });
 }
 
 export function sqrtU128(txb: TransactionBlock, x: bigint | TransactionArgument) {

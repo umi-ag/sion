@@ -3,17 +3,11 @@ import { GenericArg, ObjectArg, Type, generic, obj, pure } from '../../_framewor
 import { TransactionArgument, TransactionBlock } from '@mysten/sui.js/transactions';
 
 export function version(txb: TransactionBlock, cap: ObjectArg) {
-  return txb.moveCall({
-    target: `${PUBLISHED_AT}::package::version`,
-    arguments: [obj(txb, cap)],
-  });
+  return txb.moveCall({ target: `${PUBLISHED_AT}::package::version`, arguments: [obj(txb, cap)] });
 }
 
 export function additivePolicy(txb: TransactionBlock) {
-  return txb.moveCall({
-    target: `${PUBLISHED_AT}::package::additive_policy`,
-    arguments: [],
-  });
+  return txb.moveCall({ target: `${PUBLISHED_AT}::package::additive_policy`, arguments: [] });
 }
 
 export interface AuthorizeUpgradeArgs {
@@ -69,17 +63,11 @@ export function commitUpgrade(txb: TransactionBlock, args: CommitUpgradeArgs) {
 }
 
 export function compatiblePolicy(txb: TransactionBlock) {
-  return txb.moveCall({
-    target: `${PUBLISHED_AT}::package::compatible_policy`,
-    arguments: [],
-  });
+  return txb.moveCall({ target: `${PUBLISHED_AT}::package::compatible_policy`, arguments: [] });
 }
 
 export function depOnlyPolicy(txb: TransactionBlock) {
-  return txb.moveCall({
-    target: `${PUBLISHED_AT}::package::dep_only_policy`,
-    arguments: [],
-  });
+  return txb.moveCall({ target: `${PUBLISHED_AT}::package::dep_only_policy`, arguments: [] });
 }
 
 export function fromModule(txb: TransactionBlock, typeArg: Type, self: ObjectArg) {

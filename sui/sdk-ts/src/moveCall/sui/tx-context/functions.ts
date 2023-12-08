@@ -15,31 +15,19 @@ export function deriveId(txb: TransactionBlock, args: DeriveIdArgs) {
 }
 
 export function idsCreated(txb: TransactionBlock) {
-  return txb.moveCall({
-    target: `${PUBLISHED_AT}::tx_context::ids_created`,
-    arguments: [],
-  });
+  return txb.moveCall({ target: `${PUBLISHED_AT}::tx_context::ids_created`, arguments: [] });
 }
 
 export function digest(txb: TransactionBlock) {
-  return txb.moveCall({
-    target: `${PUBLISHED_AT}::tx_context::digest`,
-    arguments: [],
-  });
+  return txb.moveCall({ target: `${PUBLISHED_AT}::tx_context::digest`, arguments: [] });
 }
 
 export function epoch(txb: TransactionBlock) {
-  return txb.moveCall({
-    target: `${PUBLISHED_AT}::tx_context::epoch`,
-    arguments: [],
-  });
+  return txb.moveCall({ target: `${PUBLISHED_AT}::tx_context::epoch`, arguments: [] });
 }
 
 export function epochTimestampMs(txb: TransactionBlock) {
-  return txb.moveCall({
-    target: `${PUBLISHED_AT}::tx_context::epoch_timestamp_ms`,
-    arguments: [],
-  });
+  return txb.moveCall({ target: `${PUBLISHED_AT}::tx_context::epoch_timestamp_ms`, arguments: [] });
 }
 
 export function freshObjectAddress(txb: TransactionBlock) {
@@ -50,8 +38,5 @@ export function freshObjectAddress(txb: TransactionBlock) {
 }
 
 export function sender(txb: TransactionBlock) {
-  return txb.moveCall({
-    target: `${PUBLISHED_AT}::tx_context::sender`,
-    arguments: [],
-  });
+  return txb.moveCall({ target: `${PUBLISHED_AT}::tx_context::sender`, arguments: [] });
 }

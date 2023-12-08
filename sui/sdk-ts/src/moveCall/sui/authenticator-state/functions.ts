@@ -25,10 +25,7 @@ export function checkSorted(
 }
 
 export function create(txb: TransactionBlock) {
-  return txb.moveCall({
-    target: `${PUBLISHED_AT}::authenticator_state::create`,
-    arguments: [],
-  });
+  return txb.moveCall({ target: `${PUBLISHED_AT}::authenticator_state::create`, arguments: [] });
 }
 
 export function deduplicate(txb: TransactionBlock, jwks: Array<ObjectArg> | TransactionArgument) {

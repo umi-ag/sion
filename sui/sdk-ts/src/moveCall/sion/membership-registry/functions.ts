@@ -10,10 +10,7 @@ export function new_(txb: TransactionBlock, address: string | TransactionArgumen
 }
 
 export function create(txb: TransactionBlock) {
-  return txb.moveCall({
-    target: `${PUBLISHED_AT}::membership_registry::create`,
-    arguments: [],
-  });
+  return txb.moveCall({ target: `${PUBLISHED_AT}::membership_registry::create`, arguments: [] });
 }
 
 export interface GetMembershipIdArgs {

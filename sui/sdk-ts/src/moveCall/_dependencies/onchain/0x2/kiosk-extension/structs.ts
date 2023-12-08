@@ -1,17 +1,11 @@
-import { bcsOnchain as bcs } from '../../../../_framework/bcs';
-import { FieldsWithTypes, Type, parseTypeName } from '../../../../_framework/util';
+import { FieldsWithTypes, Type, compressSuiType, parseTypeName } from '../../../../_framework/util';
 import { Bag } from '../bag/structs';
-import { Encoding } from '@mysten/bcs';
+import { bcs } from '@mysten/bcs';
 
 /* ============================== Extension =============================== */
 
-bcs.registerStructType('0x2::kiosk_extension::Extension', {
-  storage: `0x2::bag::Bag`,
-  permissions: `u128`,
-  is_enabled: `bool`,
-});
-
 export function isExtension(type: Type): boolean {
+  type = compressSuiType(type);
   return type === '0x2::kiosk_extension::Extension';
 }
 
@@ -24,6 +18,14 @@ export interface ExtensionFields {
 export class Extension {
   static readonly $typeName = '0x2::kiosk_extension::Extension';
   static readonly $numTypeParams = 0;
+
+  static get bcs() {
+    return bcs.struct('Extension', {
+      storage: Bag.bcs,
+      permissions: bcs.u128(),
+      is_enabled: bcs.bool(),
+    });
+  }
 
   readonly storage: Bag;
   readonly permissions: bigint;
@@ -54,18 +56,15 @@ export class Extension {
     });
   }
 
-  static fromBcs(data: Uint8Array | string, encoding?: Encoding): Extension {
-    return Extension.fromFields(bcs.de([Extension.$typeName], data, encoding));
+  static fromBcs(data: Uint8Array): Extension {
+    return Extension.fromFields(Extension.bcs.parse(data));
   }
 }
 
 /* ============================== ExtensionKey =============================== */
 
-bcs.registerStructType('0x2::kiosk_extension::ExtensionKey<T0>', {
-  dummy_field: `bool`,
-});
-
 export function isExtensionKey(type: Type): boolean {
+  type = compressSuiType(type);
   return type.startsWith('0x2::kiosk_extension::ExtensionKey<');
 }
 
@@ -76,6 +75,12 @@ export interface ExtensionKeyFields {
 export class ExtensionKey {
   static readonly $typeName = '0x2::kiosk_extension::ExtensionKey';
   static readonly $numTypeParams = 1;
+
+  static get bcs() {
+    return bcs.struct('ExtensionKey', {
+      dummy_field: bcs.bool(),
+    });
+  }
 
   readonly $typeArg: Type;
 
@@ -100,10 +105,7 @@ export class ExtensionKey {
     return new ExtensionKey(typeArgs[0], item.fields.dummy_field);
   }
 
-  static fromBcs(typeArg: Type, data: Uint8Array | string, encoding?: Encoding): ExtensionKey {
-    return ExtensionKey.fromFields(
-      typeArg,
-      bcs.de([ExtensionKey.$typeName, typeArg], data, encoding),
-    );
+  static fromBcs(typeArg: Type, data: Uint8Array): ExtensionKey {
+    return ExtensionKey.fromFields(typeArg, ExtensionKey.bcs.parse(data));
   }
 }

@@ -1,19 +1,9 @@
 import { ID, UID } from '../../_dependencies/onchain/0x2/object/structs';
-import { Encoding, bcsOnchain as bcs } from '../../_framework/bcs';
 import { FieldsWithTypes, Type, compressSuiType } from '../../_framework/util';
+import { bcs, fromHEX, toHEX } from '@mysten/bcs';
 import { SuiClient, SuiParsedData } from '@mysten/sui.js/client';
 
 /* ============================== MembershipPointer =============================== */
-
-bcs.registerStructType(
-  '0xeb4c51db47d14a40856b5bf2878c458b190eb4f0abf87cefecffbe3fbba4dfd0::membership_pointer::MembershipPointer',
-  {
-    id: `0x2::object::UID`,
-    membership_id: `0x2::object::ID`,
-    authenticator: `address`,
-    subject: `address`,
-  },
-);
 
 export function isMembershipPointer(type: Type): boolean {
   type = compressSuiType(type);
@@ -34,6 +24,25 @@ export class MembershipPointer {
   static readonly $typeName =
     '0xeb4c51db47d14a40856b5bf2878c458b190eb4f0abf87cefecffbe3fbba4dfd0::membership_pointer::MembershipPointer';
   static readonly $numTypeParams = 0;
+
+  static get bcs() {
+    return bcs.struct('MembershipPointer', {
+      id: UID.bcs,
+      membership_id: ID.bcs,
+      authenticator: bcs
+        .bytes(32)
+        .transform({
+          input: (val: string) => fromHEX(val),
+          output: (val: Uint8Array) => toHEX(val),
+        }),
+      subject: bcs
+        .bytes(32)
+        .transform({
+          input: (val: string) => fromHEX(val),
+          output: (val: Uint8Array) => toHEX(val),
+        }),
+    });
+  }
 
   readonly id: string;
   readonly membershipId: string;
@@ -68,8 +77,8 @@ export class MembershipPointer {
     });
   }
 
-  static fromBcs(data: Uint8Array | string, encoding?: Encoding): MembershipPointer {
-    return MembershipPointer.fromFields(bcs.de([MembershipPointer.$typeName], data, encoding));
+  static fromBcs(data: Uint8Array): MembershipPointer {
+    return MembershipPointer.fromFields(MembershipPointer.bcs.parse(data));
   }
 
   static fromSuiParsedData(content: SuiParsedData) {
