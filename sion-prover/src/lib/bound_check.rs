@@ -9,11 +9,17 @@ use ark_std::cmp::Ordering;
 use fastcrypto::hash::HashFunction;
 use fastcrypto::hash::Sha256;
 use serde::{Deserialize, Serialize};
+use serde_with::{serde_as, DisplayFromStr};
 
-#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
+#[serde_as]
+#[derive(Eq, PartialEq, Clone, Debug, Default, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct ProofRequestBoundCheck {
+    #[serde_as(as = "DisplayFromStr")]
     value: u64,
+    #[serde_as(as = "DisplayFromStr")]
     lower_bound_gte: u64,
+    #[serde_as(as = "DisplayFromStr")]
     upper_bound_lt: u64,
 }
 

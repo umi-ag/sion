@@ -1,17 +1,17 @@
 import {
-  getFullnodeUrl,
   SuiClient,
   SuiObjectData,
   SuiTransactionBlockResponse,
+  getFullnodeUrl,
 } from '@mysten/sui.js/client';
 import { Ed25519Keypair } from '@mysten/sui.js/keypairs/ed25519';
 import { TransactionBlock } from '@mysten/sui.js/transactions';
 import fetch from 'cross-fetch';
 import { sionClient } from '../src/libs/sionClient';
-import { isMembership } from '../src/moveCall/sion/membership/structs';
-import { CredentialClaim } from '../src/libs/types';
-import { sionMoveCall } from '../src/libs/sionTransaction';
 import { sionTransactionResponseResolver } from '../src/libs/sionResolver';
+import { sionMoveCall } from '../src/libs/sionTransaction';
+import { CredentialClaim } from '../src/libs/types';
+import { isMembership } from '../src/moveCall/sion/membership/structs';
 
 globalThis.fetch = fetch;
 
@@ -77,11 +77,15 @@ const membership = await (async () => {
 console.log(`https://suiexplorer.com/object/${membership.objectId}?network=testnet`);
 
 {
+  const disclosedClaimKeys = ['mileage', 'hard_accelerations'];
+  const disclosedClaims = claimList.filter((claim) => disclosedClaimKeys.includes(claim.claim_key));
+  console.log({ disclosedClaims });
+
   const txb = new TransactionBlock();
 
   sionMoveCall.verifyClaimDigest(txb, {
     membershipId,
-    claimValueList: [BigInt(0x12), BigInt(0x123456)],
+    claimValueList: disclosedClaims.map((claim) => claim.claim_value),
   });
 
   const result: SuiTransactionBlockResponse = await client.signAndExecuteTransactionBlock({

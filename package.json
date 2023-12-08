@@ -5,6 +5,7 @@
     "build": "turbo run build",
     "_build": "turbo run fmt && turbo run build",
     "fmt": "turbo run fmt",
+    "dev": "turbo run dev",
     "lint": "turbo run lint"
   },
   "workspaces": [
