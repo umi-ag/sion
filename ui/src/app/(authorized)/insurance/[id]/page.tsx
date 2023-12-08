@@ -95,7 +95,6 @@ const Page = () => {
       <p className="text-sm text-gray-400 mb-8">開示するデータを選択してください</p>
 
       <Card {...claimList.drivingData} selectedClaims={selectedClaims} onChange={select} />
-      {/* <Card {...claimList.safeDriving} /> */}
 
       <div className="grid place-items-center w-full">
         <button
