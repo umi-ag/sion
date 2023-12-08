@@ -3,10 +3,7 @@ import { pure } from '../../_framework/util';
 import { TransactionArgument, TransactionBlock } from '@mysten/sui.js/transactions';
 
 export function length(txb: TransactionBlock) {
-  return txb.moveCall({
-    target: `${PUBLISHED_AT}::address::length`,
-    arguments: [],
-  });
+  return txb.moveCall({ target: `${PUBLISHED_AT}::address::length`, arguments: [] });
 }
 
 export function toBytes(txb: TransactionBlock, a: string | TransactionArgument) {
@@ -34,10 +31,7 @@ export function fromU256(txb: TransactionBlock, n: bigint | TransactionArgument)
 }
 
 export function max(txb: TransactionBlock) {
-  return txb.moveCall({
-    target: `${PUBLISHED_AT}::address::max`,
-    arguments: [],
-  });
+  return txb.moveCall({ target: `${PUBLISHED_AT}::address::max`, arguments: [] });
 }
 
 export function toAsciiString(txb: TransactionBlock, a: string | TransactionArgument) {

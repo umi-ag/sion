@@ -76,10 +76,7 @@ export function remove(txb: TransactionBlock, typeArgs: [Type, Type], args: Remo
 }
 
 export function new_(txb: TransactionBlock) {
-  return txb.moveCall({
-    target: `${PUBLISHED_AT}::object_bag::new`,
-    arguments: [],
-  });
+  return txb.moveCall({ target: `${PUBLISHED_AT}::object_bag::new`, arguments: [] });
 }
 
 export interface AddArgs {

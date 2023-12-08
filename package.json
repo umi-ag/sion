@@ -14,7 +14,7 @@
   ],
   "dependencies": {
     "@mysten/bcs": "^0.8.1",
-    "@mysten/sui.js": "^0.47.0"
+    "@mysten/sui.js": "^0.46.0"
   },
   "devDependencies": {
     "turbo": "^1.10.16"

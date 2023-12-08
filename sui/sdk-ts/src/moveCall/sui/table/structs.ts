@@ -1,17 +1,12 @@
-import { bcsSource as bcs } from '../../_framework/bcs';
-import { FieldsWithTypes, Type, parseTypeName } from '../../_framework/util';
+import { FieldsWithTypes, Type, compressSuiType, parseTypeName } from '../../_framework/util';
 import { UID } from '../object/structs';
-import { Encoding } from '@mysten/bcs';
+import { bcs } from '@mysten/bcs';
 import { SuiClient, SuiParsedData } from '@mysten/sui.js/client';
 
 /* ============================== Table =============================== */
 
-bcs.registerStructType('0x2::table::Table<K, V>', {
-  id: `0x2::object::UID`,
-  size: `u64`,
-});
-
 export function isTable(type: Type): boolean {
+  type = compressSuiType(type);
   return type.startsWith('0x2::table::Table<');
 }
 
@@ -23,6 +18,13 @@ export interface TableFields {
 export class Table {
   static readonly $typeName = '0x2::table::Table';
   static readonly $numTypeParams = 2;
+
+  static get bcs() {
+    return bcs.struct('Table', {
+      id: UID.bcs,
+      size: bcs.u64(),
+    });
+  }
 
   readonly $typeArgs: [Type, Type];
 
@@ -37,10 +39,7 @@ export class Table {
   }
 
   static fromFields(typeArgs: [Type, Type], fields: Record<string, any>): Table {
-    return new Table(typeArgs, {
-      id: UID.fromFields(fields.id).id,
-      size: BigInt(fields.size),
-    });
+    return new Table(typeArgs, { id: UID.fromFields(fields.id).id, size: BigInt(fields.size) });
   }
 
   static fromFieldsWithTypes(item: FieldsWithTypes): Table {
@@ -55,8 +54,8 @@ export class Table {
     });
   }
 
-  static fromBcs(typeArgs: [Type, Type], data: Uint8Array | string, encoding?: Encoding): Table {
-    return Table.fromFields(typeArgs, bcs.de([Table.$typeName, ...typeArgs], data, encoding));
+  static fromBcs(typeArgs: [Type, Type], data: Uint8Array): Table {
+    return Table.fromFields(typeArgs, Table.bcs.parse(data));
   }
 
   static fromSuiParsedData(content: SuiParsedData) {

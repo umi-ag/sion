@@ -1,20 +1,10 @@
-import { bcsOnchain as bcs } from '../../_framework/bcs';
-import { FieldsWithTypes, Type } from '../../_framework/util';
-import { Encoding } from '@mysten/bcs';
+import { FieldsWithTypes, Type, compressSuiType } from '../../_framework/util';
+import { bcs } from '@mysten/bcs';
 
 /* ============================== Groth16VerificationEvent =============================== */
 
-bcs.registerStructType(
-  '0xeb4c51db47d14a40856b5bf2878c458b190eb4f0abf87cefecffbe3fbba4dfd0::verifier::Groth16VerificationEvent',
-  {
-    vk: `vector<u8>`,
-    public_inputs: `vector<u8>`,
-    proof: `vector<u8>`,
-    is_verified: `bool`,
-  },
-);
-
 export function isGroth16VerificationEvent(type: Type): boolean {
+  type = compressSuiType(type);
   return (
     type ===
     '0xeb4c51db47d14a40856b5bf2878c458b190eb4f0abf87cefecffbe3fbba4dfd0::verifier::Groth16VerificationEvent'
@@ -32,6 +22,15 @@ export class Groth16VerificationEvent {
   static readonly $typeName =
     '0xeb4c51db47d14a40856b5bf2878c458b190eb4f0abf87cefecffbe3fbba4dfd0::verifier::Groth16VerificationEvent';
   static readonly $numTypeParams = 0;
+
+  static get bcs() {
+    return bcs.struct('Groth16VerificationEvent', {
+      vk: bcs.vector(bcs.u8()),
+      public_inputs: bcs.vector(bcs.u8()),
+      proof: bcs.vector(bcs.u8()),
+      is_verified: bcs.bool(),
+    });
+  }
 
   readonly vk: Array<number>;
   readonly publicInputs: Array<number>;
@@ -66,9 +65,7 @@ export class Groth16VerificationEvent {
     });
   }
 
-  static fromBcs(data: Uint8Array | string, encoding?: Encoding): Groth16VerificationEvent {
-    return Groth16VerificationEvent.fromFields(
-      bcs.de([Groth16VerificationEvent.$typeName], data, encoding),
-    );
+  static fromBcs(data: Uint8Array): Groth16VerificationEvent {
+    return Groth16VerificationEvent.fromFields(Groth16VerificationEvent.bcs.parse(data));
   }
 }

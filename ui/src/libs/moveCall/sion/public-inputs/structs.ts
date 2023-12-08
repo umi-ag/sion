@@ -1,16 +1,7 @@
-import { Encoding, bcsOnchain as bcs } from '../../_framework/bcs';
 import { FieldsWithTypes, Type, compressSuiType } from '../../_framework/util';
+import { bcs } from '@mysten/bcs';
 
 /* ============================== PublicInputsArgs =============================== */
-
-bcs.registerStructType(
-  '0xeb4c51db47d14a40856b5bf2878c458b190eb4f0abf87cefecffbe3fbba4dfd0::public_inputs::PublicInputsArgs',
-  {
-    expected_digest: `vector<u8>`,
-    min: `u64`,
-    max: `u64`,
-  },
-);
 
 export function isPublicInputsArgs(type: Type): boolean {
   type = compressSuiType(type);
@@ -30,6 +21,14 @@ export class PublicInputsArgs {
   static readonly $typeName =
     '0xeb4c51db47d14a40856b5bf2878c458b190eb4f0abf87cefecffbe3fbba4dfd0::public_inputs::PublicInputsArgs';
   static readonly $numTypeParams = 0;
+
+  static get bcs() {
+    return bcs.struct('PublicInputsArgs', {
+      expected_digest: bcs.vector(bcs.u8()),
+      min: bcs.u64(),
+      max: bcs.u64(),
+    });
+  }
 
   readonly expectedDigest: Array<number>;
   readonly min: bigint;
@@ -60,7 +59,7 @@ export class PublicInputsArgs {
     });
   }
 
-  static fromBcs(data: Uint8Array | string, encoding?: Encoding): PublicInputsArgs {
-    return PublicInputsArgs.fromFields(bcs.de([PublicInputsArgs.$typeName], data, encoding));
+  static fromBcs(data: Uint8Array): PublicInputsArgs {
+    return PublicInputsArgs.fromFields(PublicInputsArgs.bcs.parse(data));
   }
 }

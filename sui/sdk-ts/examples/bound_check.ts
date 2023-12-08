@@ -119,7 +119,7 @@ const proverClient = new ProverClient('https://sion-prover.fly.dev');
     value: BigInt(121),
     lowerBoundGte: BigInt(100),
     upperBoundLt: BigInt(200),
-  }
+  };
   const verifier = await proverClient.boundCheck(proverArgs);
 
   const txb = new TransactionBlock();

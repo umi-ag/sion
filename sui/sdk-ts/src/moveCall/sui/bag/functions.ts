@@ -49,17 +49,11 @@ export function destroyEmpty(txb: TransactionBlock, bag: ObjectArg) {
 }
 
 export function isEmpty(txb: TransactionBlock, bag: ObjectArg) {
-  return txb.moveCall({
-    target: `${PUBLISHED_AT}::bag::is_empty`,
-    arguments: [obj(txb, bag)],
-  });
+  return txb.moveCall({ target: `${PUBLISHED_AT}::bag::is_empty`, arguments: [obj(txb, bag)] });
 }
 
 export function length(txb: TransactionBlock, bag: ObjectArg) {
-  return txb.moveCall({
-    target: `${PUBLISHED_AT}::bag::length`,
-    arguments: [obj(txb, bag)],
-  });
+  return txb.moveCall({ target: `${PUBLISHED_AT}::bag::length`, arguments: [obj(txb, bag)] });
 }
 
 export interface RemoveArgs {

@@ -15,10 +15,7 @@ export function update(txb: TransactionBlock, args: UpdateArgs) {
 }
 
 export function innerUrl(txb: TransactionBlock, self: ObjectArg) {
-  return txb.moveCall({
-    target: `${PUBLISHED_AT}::url::inner_url`,
-    arguments: [obj(txb, self)],
-  });
+  return txb.moveCall({ target: `${PUBLISHED_AT}::url::inner_url`, arguments: [obj(txb, self)] });
 }
 
 export function newUnsafe(txb: TransactionBlock, url: string | TransactionArgument) {

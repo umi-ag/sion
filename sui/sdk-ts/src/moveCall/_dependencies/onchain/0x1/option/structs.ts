@@ -1,16 +1,12 @@
-import { bcsOnchain as bcs } from '../../../../_framework/bcs';
 import { initLoaderIfNeeded } from '../../../../_framework/init-onchain';
 import { structClassLoaderOnchain } from '../../../../_framework/loader';
-import { FieldsWithTypes, Type, parseTypeName } from '../../../../_framework/util';
-import { Encoding } from '@mysten/bcs';
+import { FieldsWithTypes, Type, compressSuiType, parseTypeName } from '../../../../_framework/util';
+import { BcsType, bcs } from '@mysten/bcs';
 
 /* ============================== Option =============================== */
 
-bcs.registerStructType('0x1::option::Option<T0>', {
-  vec: `vector<T0>`,
-});
-
 export function isOption(type: Type): boolean {
+  type = compressSuiType(type);
   return type.startsWith('0x1::option::Option<');
 }
 
@@ -21,6 +17,13 @@ export interface OptionFields<T0> {
 export class Option<T0> {
   static readonly $typeName = '0x1::option::Option';
   static readonly $numTypeParams = 1;
+
+  static get bcs() {
+    return <T0 extends BcsType<any>>(T0: T0) =>
+      bcs.struct(`Option<${T0.name}>`, {
+        vec: bcs.vector(T0),
+      });
+  }
 
   readonly $typeArg: Type;
 
@@ -57,7 +60,14 @@ export class Option<T0> {
     );
   }
 
-  static fromBcs<T0>(typeArg: Type, data: Uint8Array | string, encoding?: Encoding): Option<T0> {
-    return Option.fromFields(typeArg, bcs.de([Option.$typeName, typeArg], data, encoding));
+  static fromBcs<T0>(typeArg: Type, data: Uint8Array): Option<T0> {
+    initLoaderIfNeeded();
+
+    const typeArgs = [typeArg];
+
+    return Option.fromFields(
+      typeArg,
+      Option.bcs(structClassLoaderOnchain.getBcsType(typeArgs[0])).parse(data),
+    );
   }
 }

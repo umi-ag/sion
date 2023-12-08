@@ -1,19 +1,13 @@
 import { String } from '../../_dependencies/source/0x1/string/structs';
-import { bcsSource as bcs } from '../../_framework/bcs';
-import { FieldsWithTypes, Type } from '../../_framework/util';
+import { FieldsWithTypes, Type, compressSuiType } from '../../_framework/util';
 import { UID } from '../object/structs';
-import { Encoding } from '@mysten/bcs';
+import { bcs } from '@mysten/bcs';
 import { SuiClient, SuiParsedData } from '@mysten/sui.js/client';
 
 /* ============================== ActiveJwk =============================== */
 
-bcs.registerStructType('0x2::authenticator_state::ActiveJwk', {
-  jwk_id: `0x2::authenticator_state::JwkId`,
-  jwk: `0x2::authenticator_state::JWK`,
-  epoch: `u64`,
-});
-
 export function isActiveJwk(type: Type): boolean {
+  type = compressSuiType(type);
   return type === '0x2::authenticator_state::ActiveJwk';
 }
 
@@ -26,6 +20,14 @@ export interface ActiveJwkFields {
 export class ActiveJwk {
   static readonly $typeName = '0x2::authenticator_state::ActiveJwk';
   static readonly $numTypeParams = 0;
+
+  static get bcs() {
+    return bcs.struct('ActiveJwk', {
+      jwk_id: JwkId.bcs,
+      jwk: JWK.bcs,
+      epoch: bcs.u64(),
+    });
+  }
 
   readonly jwkId: JwkId;
   readonly jwk: JWK;
@@ -56,19 +58,15 @@ export class ActiveJwk {
     });
   }
 
-  static fromBcs(data: Uint8Array | string, encoding?: Encoding): ActiveJwk {
-    return ActiveJwk.fromFields(bcs.de([ActiveJwk.$typeName], data, encoding));
+  static fromBcs(data: Uint8Array): ActiveJwk {
+    return ActiveJwk.fromFields(ActiveJwk.bcs.parse(data));
   }
 }
 
 /* ============================== AuthenticatorState =============================== */
 
-bcs.registerStructType('0x2::authenticator_state::AuthenticatorState', {
-  id: `0x2::object::UID`,
-  version: `u64`,
-});
-
 export function isAuthenticatorState(type: Type): boolean {
+  type = compressSuiType(type);
   return type === '0x2::authenticator_state::AuthenticatorState';
 }
 
@@ -80,6 +78,13 @@ export interface AuthenticatorStateFields {
 export class AuthenticatorState {
   static readonly $typeName = '0x2::authenticator_state::AuthenticatorState';
   static readonly $numTypeParams = 0;
+
+  static get bcs() {
+    return bcs.struct('AuthenticatorState', {
+      id: UID.bcs,
+      version: bcs.u64(),
+    });
+  }
 
   readonly id: string;
   readonly version: bigint;
@@ -100,14 +105,11 @@ export class AuthenticatorState {
     if (!isAuthenticatorState(item.type)) {
       throw new Error('not a AuthenticatorState type');
     }
-    return new AuthenticatorState({
-      id: item.fields.id.id,
-      version: BigInt(item.fields.version),
-    });
+    return new AuthenticatorState({ id: item.fields.id.id, version: BigInt(item.fields.version) });
   }
 
-  static fromBcs(data: Uint8Array | string, encoding?: Encoding): AuthenticatorState {
-    return AuthenticatorState.fromFields(bcs.de([AuthenticatorState.$typeName], data, encoding));
+  static fromBcs(data: Uint8Array): AuthenticatorState {
+    return AuthenticatorState.fromFields(AuthenticatorState.bcs.parse(data));
   }
 
   static fromSuiParsedData(content: SuiParsedData) {
@@ -137,12 +139,8 @@ export class AuthenticatorState {
 
 /* ============================== AuthenticatorStateInner =============================== */
 
-bcs.registerStructType('0x2::authenticator_state::AuthenticatorStateInner', {
-  version: `u64`,
-  active_jwks: `vector<0x2::authenticator_state::ActiveJwk>`,
-});
-
 export function isAuthenticatorStateInner(type: Type): boolean {
+  type = compressSuiType(type);
   return type === '0x2::authenticator_state::AuthenticatorStateInner';
 }
 
@@ -154,6 +152,13 @@ export interface AuthenticatorStateInnerFields {
 export class AuthenticatorStateInner {
   static readonly $typeName = '0x2::authenticator_state::AuthenticatorStateInner';
   static readonly $numTypeParams = 0;
+
+  static get bcs() {
+    return bcs.struct('AuthenticatorStateInner', {
+      version: bcs.u64(),
+      active_jwks: bcs.vector(ActiveJwk.bcs),
+    });
+  }
 
   readonly version: bigint;
   readonly activeJwks: Array<ActiveJwk>;
@@ -180,23 +185,15 @@ export class AuthenticatorStateInner {
     });
   }
 
-  static fromBcs(data: Uint8Array | string, encoding?: Encoding): AuthenticatorStateInner {
-    return AuthenticatorStateInner.fromFields(
-      bcs.de([AuthenticatorStateInner.$typeName], data, encoding),
-    );
+  static fromBcs(data: Uint8Array): AuthenticatorStateInner {
+    return AuthenticatorStateInner.fromFields(AuthenticatorStateInner.bcs.parse(data));
   }
 }
 
 /* ============================== JWK =============================== */
 
-bcs.registerStructType('0x2::authenticator_state::JWK', {
-  kty: `0x1::string::String`,
-  e: `0x1::string::String`,
-  n: `0x1::string::String`,
-  alg: `0x1::string::String`,
-});
-
 export function isJWK(type: Type): boolean {
+  type = compressSuiType(type);
   return type === '0x2::authenticator_state::JWK';
 }
 
@@ -210,6 +207,15 @@ export interface JWKFields {
 export class JWK {
   static readonly $typeName = '0x2::authenticator_state::JWK';
   static readonly $numTypeParams = 0;
+
+  static get bcs() {
+    return bcs.struct('JWK', {
+      kty: String.bcs,
+      e: String.bcs,
+      n: String.bcs,
+      alg: String.bcs,
+    });
+  }
 
   readonly kty: string;
   readonly e: string;
@@ -248,19 +254,15 @@ export class JWK {
     });
   }
 
-  static fromBcs(data: Uint8Array | string, encoding?: Encoding): JWK {
-    return JWK.fromFields(bcs.de([JWK.$typeName], data, encoding));
+  static fromBcs(data: Uint8Array): JWK {
+    return JWK.fromFields(JWK.bcs.parse(data));
   }
 }
 
 /* ============================== JwkId =============================== */
 
-bcs.registerStructType('0x2::authenticator_state::JwkId', {
-  iss: `0x1::string::String`,
-  kid: `0x1::string::String`,
-});
-
 export function isJwkId(type: Type): boolean {
+  type = compressSuiType(type);
   return type === '0x2::authenticator_state::JwkId';
 }
 
@@ -272,6 +274,13 @@ export interface JwkIdFields {
 export class JwkId {
   static readonly $typeName = '0x2::authenticator_state::JwkId';
   static readonly $numTypeParams = 0;
+
+  static get bcs() {
+    return bcs.struct('JwkId', {
+      iss: String.bcs,
+      kid: String.bcs,
+    });
+  }
 
   readonly iss: string;
   readonly kid: string;
@@ -299,7 +308,7 @@ export class JwkId {
     return new JwkId({ iss: item.fields.iss, kid: item.fields.kid });
   }
 
-  static fromBcs(data: Uint8Array | string, encoding?: Encoding): JwkId {
-    return JwkId.fromFields(bcs.de([JwkId.$typeName], data, encoding));
+  static fromBcs(data: Uint8Array): JwkId {
+    return JwkId.fromFields(JwkId.bcs.parse(data));
   }
 }

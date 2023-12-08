@@ -1,6 +1,6 @@
 import { Ed25519Keypair } from '@mysten/sui.js/keypairs/ed25519';
 
-const AUTHENTICATOR_SECRET_KEY = 'AAJmHboFSJUmenY3lH2pyNTCDHbzHkVkzBkw93iOgBn1'
+const AUTHENTICATOR_SECRET_KEY = 'AAJmHboFSJUmenY3lH2pyNTCDHbzHkVkzBkw93iOgBn1';
 // 0xf76d00a0951a421436d43f313544345701c4d3e30654f68f44a346a5df7bb2b7
 
 export const authenticatorKeypair = () => {

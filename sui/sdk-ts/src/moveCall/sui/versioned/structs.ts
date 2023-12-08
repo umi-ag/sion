@@ -1,17 +1,12 @@
-import { bcsSource as bcs } from '../../_framework/bcs';
-import { FieldsWithTypes, Type } from '../../_framework/util';
+import { FieldsWithTypes, Type, compressSuiType } from '../../_framework/util';
 import { ID, UID } from '../object/structs';
-import { Encoding } from '@mysten/bcs';
+import { bcs } from '@mysten/bcs';
 import { SuiClient, SuiParsedData } from '@mysten/sui.js/client';
 
 /* ============================== VersionChangeCap =============================== */
 
-bcs.registerStructType('0x2::versioned::VersionChangeCap', {
-  versioned_id: `0x2::object::ID`,
-  old_version: `u64`,
-});
-
 export function isVersionChangeCap(type: Type): boolean {
+  type = compressSuiType(type);
   return type === '0x2::versioned::VersionChangeCap';
 }
 
@@ -23,6 +18,13 @@ export interface VersionChangeCapFields {
 export class VersionChangeCap {
   static readonly $typeName = '0x2::versioned::VersionChangeCap';
   static readonly $numTypeParams = 0;
+
+  static get bcs() {
+    return bcs.struct('VersionChangeCap', {
+      versioned_id: ID.bcs,
+      old_version: bcs.u64(),
+    });
+  }
 
   readonly versionedId: string;
   readonly oldVersion: bigint;
@@ -49,19 +51,15 @@ export class VersionChangeCap {
     });
   }
 
-  static fromBcs(data: Uint8Array | string, encoding?: Encoding): VersionChangeCap {
-    return VersionChangeCap.fromFields(bcs.de([VersionChangeCap.$typeName], data, encoding));
+  static fromBcs(data: Uint8Array): VersionChangeCap {
+    return VersionChangeCap.fromFields(VersionChangeCap.bcs.parse(data));
   }
 }
 
 /* ============================== Versioned =============================== */
 
-bcs.registerStructType('0x2::versioned::Versioned', {
-  id: `0x2::object::UID`,
-  version: `u64`,
-});
-
 export function isVersioned(type: Type): boolean {
+  type = compressSuiType(type);
   return type === '0x2::versioned::Versioned';
 }
 
@@ -74,6 +72,13 @@ export class Versioned {
   static readonly $typeName = '0x2::versioned::Versioned';
   static readonly $numTypeParams = 0;
 
+  static get bcs() {
+    return bcs.struct('Versioned', {
+      id: UID.bcs,
+      version: bcs.u64(),
+    });
+  }
+
   readonly id: string;
   readonly version: bigint;
 
@@ -83,24 +88,18 @@ export class Versioned {
   }
 
   static fromFields(fields: Record<string, any>): Versioned {
-    return new Versioned({
-      id: UID.fromFields(fields.id).id,
-      version: BigInt(fields.version),
-    });
+    return new Versioned({ id: UID.fromFields(fields.id).id, version: BigInt(fields.version) });
   }
 
   static fromFieldsWithTypes(item: FieldsWithTypes): Versioned {
     if (!isVersioned(item.type)) {
       throw new Error('not a Versioned type');
     }
-    return new Versioned({
-      id: item.fields.id.id,
-      version: BigInt(item.fields.version),
-    });
+    return new Versioned({ id: item.fields.id.id, version: BigInt(item.fields.version) });
   }
 
-  static fromBcs(data: Uint8Array | string, encoding?: Encoding): Versioned {
-    return Versioned.fromFields(bcs.de([Versioned.$typeName], data, encoding));
+  static fromBcs(data: Uint8Array): Versioned {
+    return Versioned.fromFields(Versioned.bcs.parse(data));
   }
 
   static fromSuiParsedData(content: SuiParsedData) {

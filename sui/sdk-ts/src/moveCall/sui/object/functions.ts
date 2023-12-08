@@ -3,10 +3,7 @@ import { GenericArg, ObjectArg, Type, generic, obj, pure } from '../../_framewor
 import { TransactionArgument, TransactionBlock } from '@mysten/sui.js/transactions';
 
 export function new_(txb: TransactionBlock) {
-  return txb.moveCall({
-    target: `${PUBLISHED_AT}::object::new`,
-    arguments: [],
-  });
+  return txb.moveCall({ target: `${PUBLISHED_AT}::object::new`, arguments: [] });
 }
 
 export function id(txb: TransactionBlock, typeArg: Type, obj: GenericArg) {
@@ -18,10 +15,7 @@ export function id(txb: TransactionBlock, typeArg: Type, obj: GenericArg) {
 }
 
 export function authenticatorState(txb: TransactionBlock) {
-  return txb.moveCall({
-    target: `${PUBLISHED_AT}::object::authenticator_state`,
-    arguments: [],
-  });
+  return txb.moveCall({ target: `${PUBLISHED_AT}::object::authenticator_state`, arguments: [] });
 }
 
 export function borrowId(txb: TransactionBlock, typeArg: Type, obj: GenericArg) {
@@ -41,17 +35,11 @@ export function borrowUid(txb: TransactionBlock, typeArg: Type, obj: GenericArg)
 }
 
 export function clock(txb: TransactionBlock) {
-  return txb.moveCall({
-    target: `${PUBLISHED_AT}::object::clock`,
-    arguments: [],
-  });
+  return txb.moveCall({ target: `${PUBLISHED_AT}::object::clock`, arguments: [] });
 }
 
 export function delete_(txb: TransactionBlock, id: ObjectArg) {
-  return txb.moveCall({
-    target: `${PUBLISHED_AT}::object::delete`,
-    arguments: [obj(txb, id)],
-  });
+  return txb.moveCall({ target: `${PUBLISHED_AT}::object::delete`, arguments: [obj(txb, id)] });
 }
 
 export function deleteImpl(txb: TransactionBlock, id: string | TransactionArgument) {
@@ -123,10 +111,7 @@ export function recordNewUid(txb: TransactionBlock, id: string | TransactionArgu
 }
 
 export function suiSystemState(txb: TransactionBlock) {
-  return txb.moveCall({
-    target: `${PUBLISHED_AT}::object::sui_system_state`,
-    arguments: [],
-  });
+  return txb.moveCall({ target: `${PUBLISHED_AT}::object::sui_system_state`, arguments: [] });
 }
 
 export function uidAsInner(txb: TransactionBlock, uid: ObjectArg) {

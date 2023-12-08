@@ -31,10 +31,7 @@ export function borrowMut(txb: TransactionBlock, typeArg: Type, args: BorrowMutA
 }
 
 export function default_(txb: TransactionBlock) {
-  return txb.moveCall({
-    target: `${PUBLISHED_AT}::kiosk::default`,
-    arguments: [],
-  });
+  return txb.moveCall({ target: `${PUBLISHED_AT}::kiosk::default`, arguments: [] });
 }
 
 export function new_(txb: TransactionBlock) {
@@ -42,17 +39,11 @@ export function new_(txb: TransactionBlock) {
 }
 
 export function uid(txb: TransactionBlock, self: ObjectArg) {
-  return txb.moveCall({
-    target: `${PUBLISHED_AT}::kiosk::uid`,
-    arguments: [obj(txb, self)],
-  });
+  return txb.moveCall({ target: `${PUBLISHED_AT}::kiosk::uid`, arguments: [obj(txb, self)] });
 }
 
 export function owner(txb: TransactionBlock, self: ObjectArg) {
-  return txb.moveCall({
-    target: `${PUBLISHED_AT}::kiosk::owner`,
-    arguments: [obj(txb, self)],
-  });
+  return txb.moveCall({ target: `${PUBLISHED_AT}::kiosk::owner`, arguments: [obj(txb, self)] });
 }
 
 export interface TakeArgs {
@@ -490,10 +481,7 @@ export function setOwnerCustom(txb: TransactionBlock, args: SetOwnerCustomArgs) 
 }
 
 export function uidMut(txb: TransactionBlock, self: ObjectArg) {
-  return txb.moveCall({
-    target: `${PUBLISHED_AT}::kiosk::uid_mut`,
-    arguments: [obj(txb, self)],
-  });
+  return txb.moveCall({ target: `${PUBLISHED_AT}::kiosk::uid_mut`, arguments: [obj(txb, self)] });
 }
 
 export function uidMutInternal(txb: TransactionBlock, self: ObjectArg) {
