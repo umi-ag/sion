@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
+import { insuranceList } from './dataList';
 
 const Card = ({
   title,
@@ -37,34 +38,13 @@ const Card = ({
 };
 
 const Page = () => {
-  const data = [
-    {
-      title: 'ゴールド保険',
-      imgUrl: '/images/gold-insurance.png',
-      imgBgColor: 'bg-yellow-400',
-      disabled: true,
-    },
-    {
-      title: 'シルバー保険',
-      imgUrl: '/images/silver-insurance.png',
-      imgBgColor: 'bg-gray-400',
-      disabled: false,
-    },
-    {
-      title: 'ブロンズ保険',
-      imgUrl: '/images/bronze-insurance.png',
-      imgBgColor: 'bg-orange-400',
-      disabled: false,
-    },
-  ];
-
   return (
     <>
       <h1 className="text-2xl font-bold mb-10">保険</h1>
 
-      {data.map((d) => (
-        <Link href="/insurance/driver" key={d.title}>
-          <Card title={d.title} imgUrl={d.imgUrl} imgBgColor={d.imgBgColor} disabled={d.disabled} />
+      {insuranceList.map((i) => (
+        <Link href={`/insurance/${i.id}`} key={i.title}>
+          <Card title={i.title} imgUrl={i.imgUrl} imgBgColor={i.imgBgColor} disabled={i.disabled} />
         </Link>
       ))}
     </>
