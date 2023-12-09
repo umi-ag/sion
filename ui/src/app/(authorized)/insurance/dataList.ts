@@ -87,7 +87,7 @@ export const insuranceList = [
     id: 'bronze',
     title: 'ブロンズ保険',
     imgUrl: '/images/bronze-insurance.png',
-    imgBgColor: 'bg-orange-400',
+    imgBgColor: 'bg-teal-600',
     disabled: false,
   },
 ];
