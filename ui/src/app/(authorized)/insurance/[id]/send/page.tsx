@@ -41,7 +41,7 @@ const Page = () => {
   // 5秒おきにステータスを更新
   setTimeout(() => {
     setStatus(status + 1);
-  }, 6e3);
+  }, 3e3);
 
   return (
     <>
