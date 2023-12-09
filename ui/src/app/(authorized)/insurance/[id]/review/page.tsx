@@ -2,7 +2,8 @@
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import { insuranceList } from '../../dataList';
 
 export const runtime = 'edge';
 
@@ -34,8 +35,13 @@ const Status2 = () => {
   );
 };
 
-const Status3 = () => {
+const Status3 = ({
+  insurance,
+}: {
+  insurance: (typeof insuranceList)[0];
+}) => {
   const router = useRouter();
+
   return (
     <div className="grid place-items-center">
       <div className="w-60 mb-8">
@@ -49,7 +55,7 @@ const Status3 = () => {
         <button
           className="btn btn-active btn-accent"
           onClick={() => {
-            router.push('/rewards?claimed=roadster');
+            router.push(`/insurance?claimed=${insurance.id}`);
           }}
         >
           特典を受け取る
@@ -59,8 +65,14 @@ const Status3 = () => {
   );
 };
 
-const Page = () => {
+const Page = ({ params }: { params: { id: string } }) => {
   const [status, setStatus] = useState(1);
+  const id = params.id;
+  const insurance = useMemo(() => insuranceList.find((i) => i.id === id), [id]);
+
+  if (!insurance) {
+    return <div>Not found</div>;
+  }
 
   // 5秒おきにステータスを更新
   setTimeout(() => {
@@ -69,19 +81,23 @@ const Page = () => {
 
   return (
     <>
-      <h1 className="text-2xl font-bold mb-8">
-        MAZDAロードスター
-        <br />
-        無料レンタル券
-      </h1>
+      <h1 className="text-2xl font-bold mb-8">{insurance.title}</h1>
 
-      <figure className="bg-red-400 rounded-xl shadow-xl mb-8">
-        <Image src="/images/roadster.png" alt="MAZDA Roadster" width="440" height="220" />
+      <figure
+        className={`${insurance.imgBgColor} p-4 w-full h-[200px] relative rounded-xl shadow-xl mb-8 grid place-items-center`}
+      >
+        <Image
+          src={insurance.imgUrl}
+          alt={insurance.title}
+          width="440"
+          height="220"
+          className="object-scale-down max-h-[150px]"
+        />
       </figure>
 
       {status === 1 && <Status1 />}
       {status === 2 && <Status2 />}
-      {status >= 3 && <Status3 />}
+      {status >= 3 && <Status3 insurance={insurance} />}
     </>
   );
 };

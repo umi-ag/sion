@@ -1,108 +1,108 @@
 'use client';
 
-import { useParams, useRouter } from 'next/navigation';
-import React, { useState } from 'react';
-import { CredentialClaim } from 'sion-sdk';
-import { formatClaim } from 'src/utils/formatClaim';
-import { claimList } from '../data';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { useMemo } from 'react';
+import { Data, dataList, insuranceList, toPercent } from '../dataList';
 
 export const runtime = 'edge';
 
-const Checkbox: React.FC<{
-  label: React.ReactNode;
-  checked?: boolean;
-  onChange?: (checked: boolean) => void;
-}> = ({ label, checked, onChange }) => {
+const DataListItem = (data: Data) => {
+  const { title, description, value, threshold, active } = data;
   return (
-    <div className="form-control">
-      <label className="cursor-pointer label justify-start gap-4">
-        <input
-          type="checkbox"
-          checked={!!checked}
-          onChange={(e) => onChange?.(e.target.checked)}
-          className="checkbox checkbox-accent"
+    <li className="rounded border border-gray-200 px-2 py-4 mb-4 last:mb-0">
+      <div className="flex justify-start items-center gap-2 mb-2">
+        <div className={`badge ${active ? 'badge-accent' : 'bg-gray-400 border-gray-400'}`}>OK</div>
+        <p className="font-semibold">{title}</p>
+      </div>
+
+      <p className="mb-2">{description}</p>
+
+      <div className="w-full h-6 relative">
+        <progress
+          className="progress progress-warning w-full h-full"
+          value={toPercent(data)}
+          max="100"
         />
-        <span className="label-text">{label}</span>
-      </label>
-    </div>
+        <div className="absolute top-0 left-0 w-full h-full grid place-items-center font-semibold">
+          <span>
+            {value} / {threshold}
+          </span>
+        </div>
+      </div>
+    </li>
   );
 };
 
-const Card = ({
+const DataList = ({ data }: { data: Data[] }) => {
+  return (
+    <ul>
+      {data.map((item) => (
+        <DataListItem key={item.title} {...item} />
+      ))}
+    </ul>
+  );
+};
+
+const DataCard = ({
   title,
-  claims,
-  selectedClaims,
-  onChange,
+  data,
 }: {
   title: string;
-  claims: CredentialClaim[];
-  selectedClaims: string[];
-  onChange?: (claimKey: string, checked: boolean) => void;
+  data: Data[];
 }) => {
-  const [credClaims] = useState<CredentialClaim[]>(claims);
-
-  const toLabel = (claim: CredentialClaim) => {
-    const display = formatClaim(claim);
-    return (
-      <>
-        <span>{claim.label}: </span>
-        <span className="font-semibold">{display}</span>
-      </>
-    );
-  };
-
   return (
-    <div className="card w-96 bg-accent-200 shadow-xl mb-8">
-      <div className="card-body">
-        <h2 className="card-title">{title}</h2>
-        <ul>
-          {credClaims.map((claim) => (
-            <li key={claim.label}>
-              <Checkbox
-                label={toLabel(claim)}
-                checked={selectedClaims.includes(claim.claim_key)}
-                onChange={(checked) => onChange?.(claim.claim_key, checked)}
-              />
-            </li>
-          ))}
-        </ul>
+    <div className="mb-8">
+      <h2 className="text-xl font-semibold mb-2">{title}</h2>
+
+      <p className="text-sm text-gray-400">申請に使用されるデータ</p>
+      <div className="mb-2">
+        <DataList data={data.filter((d) => d.active)} />
       </div>
+
+      {/* <p className="text-sm text-gray-400">以下のデータは使用されません</p>
+      <DataList data={data.filter((d) => !d.active)} /> */}
     </div>
   );
 };
 
-const Page = () => {
-  const [selectedClaims, setSelectedClaims] = useState<string[]>([]);
+const Page = ({ params }: { params: { id: string } }) => {
   const router = useRouter();
-  const { id } = useParams();
-
-  const select = (key: string, checked: boolean) => {
-    if (checked) {
-      setSelectedClaims([...selectedClaims, key]);
-    } else {
-      setSelectedClaims(selectedClaims.filter((c) => c !== key));
-    }
-  };
-
-  const disclose = () => {
-    const path = `/insurance/${id}/send?claims=${selectedClaims.join(',')}`;
-    router.push(path);
-  };
+  const id = params.id;
+  const insurance = useMemo(() => insuranceList.find((i) => i.id === id), [id]);
+  if (!insurance) {
+    return <div>Not found</div>;
+  }
 
   return (
     <>
-      <h1 className="text-2xl font-bold mb-2">保険</h1>
-      <p className="text-sm text-gray-400 mb-8">開示するデータを選択してください</p>
+      <h1 className="text-2xl font-bold mb-8">{insurance.title}</h1>
 
-      <Card {...claimList.drivingData} selectedClaims={selectedClaims} onChange={select} />
+      <figure
+        className={`${insurance.imgBgColor} p-4 w-full h-[200px] relative rounded-xl shadow-xl mb-8 grid place-items-center`}
+      >
+        <Image
+          src={insurance.imgUrl}
+          alt={insurance.title}
+          width="440"
+          height="220"
+          className="object-scale-down max-h-[150px]"
+        />
+      </figure>
+
+      <p className="text-sm mb-8">以下のデータから証明を生成し、保険の申請をします。</p>
+
+      <DataCard {...dataList.marketing} />
+      <DataCard {...dataList.ownership} />
 
       <div className="grid place-items-center w-full">
         <button
           className="btn btn-active btn-accent"
-          disabled={selectedClaims.length === 0}
-          onClick={disclose}
+          onClick={() => {
+            router.push(`/insurance/${id}/review`);
+          }}
         >
-          データを開示する
+          申請する
         </button>
       </div>
     </>
